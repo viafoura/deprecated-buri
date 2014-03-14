@@ -1,0 +1,38 @@
+
+ROOT DEVICE (AMI)
+
+Instance store:
+
+	- image copies to root volume (sda1 typical)
+	- no persistence
+        - no "stop", only terminate
+
+EBS Store:
+
+	- can reconfig stopped machine (volumes, kernel, etc)
+	- can persist (don't by default)
+
+BLOCK DEVICE MAPPING
+
+	- depending on instance type, additional devices can be added
+	- AMIs may specify multiple devices.
+	- Instance mappings merge/overwrite the AMI mappings. Root can't be overwritten.
+
+PV MODE
+
+	- original xen, pure paravirtualized.
+	- well supported, several tools for AMI gen
+	- root is typically /dev/sda (?)
+		- I see mention of ephemeral on /dev/sda2/3 however...
+	- EBS can attatch as partitions to a ghost disk
+	- possible to boot custom kernel via "pv-grub" kernels
+
+HVM MODE
+
+	- more like vmware, full hardware virtualized.
+        - PV drivers available still
+	- root/boot more typically /dev/sda1
+		- EC2 docs say HVM bundling must spec --partition
+	- EBS only attaches as whole disks
+
+
