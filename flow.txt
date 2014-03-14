@@ -1,0 +1,54 @@
+
+Initially, this describes what is happening in the netflixoss-ansible foundation script.
+
+1) Get an image size (up to 10GB)
+
+2) Adds multiverse to local repos
+3) Installs git plus ec2-ami-tools and ec2-api-tools locally
+4) Wgets an even newer version of ec2-api-tools and installs w/ dpkg
+5) Downloads and extracts a UEC distribution tarball, IE:
+     http://uec-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64.tar.gz
+
+6) Mounts an image file from the archive loopback
+
+7) Sets up mount for chroot
+	a) copies resolve.conf in
+	b) mounts special filesystems (proc, etc)
+	c) adds policy-rc.d to disable startup of items
+
+8) Sets DEBIAN_FRONTEND to noninteractive
+
+9) More chroot setup
+	a) Enables multiverse within chroot, as well as a template sources.list
+	b) Enables backports repo (for ansible)
+	c) Generates a locale for en_US.UTF-8
+	d) Run apt-get update
+	e) Run apt-get dist-upgrade
+	f) apt-get install a number of packages
+	g) modify fstab/grub (replace cloudimg w/ euc)
+
+10) create an EBS volume with the size specified in #1, recording it's ID, and confirming success
+
+11) determine local instance ID
+
+12) ask EC2 to attach the new EBS volume to local instance, wait for it to show up
+
+13) Format the EBS volume ext4, giving it a label of uec-rootfs
+
+14) Mount the EBS volume
+
+15) Use rsync to migrate everything from mounted image to mounted EBS
+
+16) Unmount image and other items below it
+
+17) Setup for chroot into the EBS volume
+
+18) Offer user ability to chroot in, and exit, with instructions for next stage
+
+
+
+
+
+
+
+

@@ -1,4 +1,9 @@
 
+Latest tools URLS:
+
+http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip
+http://s3.amazonaws.com/ec2-downloads/ec2-ami-tools-1.5.1.zip
+
 ROOT DEVICE (AMI)
 
 Instance store:

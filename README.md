@@ -12,7 +12,7 @@ The initial goal, is to allow the building of an AMI, from "scratch". That is to
 
 It must do so for at a minimum, all combinations of HVM and paravirtualized systems, in either instance storage or EBS-backed root volumes, on Amazon EC2, with aim to also support Eucalyptus clouds as well.
 
-Out of scope for now are supporting any other cloud types, or non-cloud installations.
+Out of scope for now are supporting any other cloud types, or non-cloud installations. As well, 32-bit will not be considered here.
 
 Ubuntu will be the initial OS target. Others might follow.
 
