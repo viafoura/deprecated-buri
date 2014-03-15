@@ -27,8 +27,10 @@ PV MODE
 
 	- original xen, pure paravirtualized.
 	- well supported, several tools for AMI gen
-	- root is typically /dev/sda (?)
+	- root is typically /dev/sda1 (?)
 		- I see mention of ephemeral on /dev/sda2/3 however...
+		- Partitions are a magical thing that don't really exist in PV. All attachment is at the partition level
+			- IE: you will have /dev/sda1 without a /dev/sda!
 	- EBS can attatch as partitions to a ghost disk
 	- possible to boot custom kernel via "pv-grub" kernels
 
@@ -36,6 +38,7 @@ HVM MODE
 
 	- more like vmware, full hardware virtualized.
         - PV drivers available still
+	- block devices are sane, not like in PV
 	- root/boot more typically /dev/sda1
 		- EC2 docs say HVM bundling must spec --partition
 	- EBS only attaches as whole disks

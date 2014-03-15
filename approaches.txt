@@ -1,0 +1,35 @@
+
+Possible approaches discussed at high level here.
+
+1) Work from tarball of an assembled system
+
+	- we have to setup a boot/partition environment for HVM
+	- could do custom partitioning, but hampers ability to share images.
+		- with hd00 pvgrub, should be fine?
+
+2) Work from an "hd0" image
+
+	- we have to setup a boot environment, PV vs not, etc.
+	- could do custom partitioning, but hampers ability to share images.
+        - if used directly, would be "odd" to the HVM setup perhaps? VBR vs MBR?
+	- should allow expanding the primay volume to consume all of the image space
+
+3) Work from an "hd00" image
+
+	- has partitioning, and a boot environment described
+	- should be PV bootable with pvgrub-hd00
+	- could use custom partitioning, as long as /boot is on first
+	- should be easier to be universal (distro agnostic)
+	- closely translates to common VM disk cases (encapsulate a whole device w/ partitions)
+	- !!! need to use grub-legacy, ubuntu 1204 seems to have both grub2 and legacy, but doesn't include tooling installing it looks.
+	- should allow expanding the primay volume to consume all of the image space
+		- maybe better as a firstboot process?
+	- if we assume one partition, mounted as /dev/sda1
+		- for PV, extract partition image from disk image
+		
+
+
+
+
+
+
