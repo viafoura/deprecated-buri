@@ -1,0 +1,19 @@
+
+- make a foundation-create-volume that
+	- works with the "disk1" image
+	- registers both HVM and PVM EBS AMIs
+	- later:
+	- creates an instance bundle
+	- registers both HVM and PVM Instance AMIs
+
+- test all cases of above.
+
+- EC2 docs describe Instance->EBS transfer, which is nice, however
+	- it would be a lot more convenient to go the other way
+	- making bundles the primary target would be smelly
+	- so prove a path towards instead doing EBS->Instance
+		- could be a post-process against snapshot or
+		- done before volume disconnected
+
+
+	

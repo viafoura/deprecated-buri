@@ -1,0 +1,32 @@
+
+- Inputs:
+	- Distro and version. (Ubuntu 12.04.4)
+	- Machine target: HVM/PVM
+	- Boot volume type: EBS/Instance
+	- AMI size: 10GB max (?)
+	- debugging options (IE: leave volume mounted, etc)
+
+- Outputs:
+	- A registered AMI containing the distro
+	- the AMI/Snap ID of the volume created
+
+- Assumptions:
+	- no 32-bit support
+	- we always use a partitioned format in the target, where possible
+		- can pvgrub boot gpt? is it even worth bothering with here? maybe just do mbr and be happy with our 10GB root. TBD
+	- pv mode will always use a pv-grub hd00 AKI, attempt to emulate HVM, re: disk layout mostly for image sharing
+		- why the heck not? treat the no-partition case as legacy.
+		- the compromise is, we always assume one partition, in case we need to build the legacy type (as an extraction from a built "normal" image)
+	- we always work with volumes of a single partition
+		- really, we could handle other cases, but to allow growing into a volume, the final partition would be the one to grow.
+			- for now, i'm ignoring the case, because it adds other complexities.
+		- elaborate arrangements of partitioning really don't add value to ephemeral disks. stay simple
+	- Aminator can be coaxed into supporting hd00 type volumes
+		- if we stick to a one-partition rule, we should fine.
+		- wrap a new volume handler into the existing framework for the case, and define an environment for it. (I think?)
+
+- Distro image source is aquired.
+	- sources: local file, URL, maybe a stored EBS snapshot or bundle?
+- Source is aquired/connected, and mounted
+
+

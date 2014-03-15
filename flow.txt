@@ -46,6 +46,32 @@ Initially, this describes what is happening in the netflixoss-ansible foundation
 18) Offer user ability to chroot in, and exit, with instructions for next stage
 
 
+Second stage:
+
+1) Determine a name for the AMI
+
+2) Shut down chroot environment
+
+3) Clean up sensitive files, remove policy-rc.d
+
+4) Unmount and detatch the EBS volume, wait for completion
+
+5) Create a snapshot of the volume
+
+6) Register an AMI based on snap
+
+7) Delete the working volume
+
+8) Tag snapshot / AMI
+
+
+
+
+
+
+
+
+
 
 
 
