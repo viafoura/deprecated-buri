@@ -16,11 +16,11 @@
 - name: Attacting new EBS volume to instance
   action:
     module: ec2_vol
-    instance: {{ ansible_ec2_instance_id }}
-    region: {{ ansible_ec2_placement_region }}
-    zone: {{ ansible_ec2_placement_availability_zone }}
-    volume_size: {{ ami.root_size }}
-    device_name: {{ ami.device_aws }}
+    instance: '{{ ansible_ec2_instance_id }}'
+    region: '{{ ansible_ec2_placement_region }}'
+    zone: '{{ ansible_ec2_placement_availability_zone }}'
+    volume_size: '{{ ami.root_size }}'
+    device_name: '{{ ami.device_aws }}'
     register: ec2_vol
 
 - name: Saving Volume ID as a fact for later use

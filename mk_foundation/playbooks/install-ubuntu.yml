@@ -6,6 +6,4 @@
   tags: base
   hosts: all
   roles:
-    - base
-  vars_files:
-    - vars/ubuntu.yml
+    - ubuntu

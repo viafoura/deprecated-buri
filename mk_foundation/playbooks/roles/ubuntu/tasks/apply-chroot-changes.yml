@@ -3,7 +3,7 @@
 # use more modules and less executions of commands
 - name: Ensure Chroot APT sources list includes multiverse
   copy:
-    src: {{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list
+    src: '{{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list'
     dest: '/mnt/{{ distro.image.basename }}/etc/apt/sources.list'
     owner: root
     group: root
@@ -11,7 +11,7 @@
 
 - name: Ensure Chroot APT sources list includes multiverse
   copy:
-    src: {{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list.tmpl
+    src: '{{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list.tmpl'
     dest: '/mnt/{{ distro.image.basename }}/etc/cloud/templates/sources.list.tmpl'
     owner: root
     group: root
@@ -34,5 +34,5 @@
   command: 'chroot /mnt/{{ distro.image.basename }} apt-get install --no-install-recommends -y coreutils git-core libapt-pkg4.12 make python-crypto python-support python-jinja2 python-pip ansible'
 
 - name: Fix menu.lst for pvgrub in chroot
-  command: "perl -pi -e 's/\(hd0\)/(hd0,0)/' /mnt/{{ distro.image.basename }}/boot/grub/menu.lst"
+  command: "perl -pi -e 's/(hd0)/(hd0,0)/' /mnt/{{ distro.image.basename }}/boot/grub/menu.lst"
 

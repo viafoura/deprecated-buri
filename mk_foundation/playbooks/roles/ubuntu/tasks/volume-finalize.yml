@@ -23,7 +23,7 @@
 - name: Waiting for completion of volume detatch
   command: 'ec2-describe-volumes --region {{ ansible_ec2_placement_region }} "{{ ami_ebs_volume_id }}"'
   register: result
-  unti: result.stdout.find("ATTACHMENT") == -1
+  until: result.stdout.find("ATTACHMENT") == -1
   retries: 10
   delay: 3
 
@@ -40,7 +40,7 @@
 - name: Waiting for completion of snapshot
   command: 'ec2-describe-snapshots --region {{ ansible_ec2_placement_region }} "{{ ami_snapshot_id }}"'
   register: result
-  unti: result.stdout.find("pending") == -1
+  until: result.stdout.find("pending") == -1
   retries: 15
   delay: 3
 
