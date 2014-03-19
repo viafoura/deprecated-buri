@@ -1,0 +1,30 @@
+---
+# Set up package repositories
+# main.yml must have a when: ansible_distribution == 'Ubuntu' on including this
+
+- name: Ensure APT sources list includes multiverse
+  copy: src={{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list dest=/etc/apt/sources.list owner=root group=root mode=0444
+
+- name: Patch cloud-init APT sources template
+  copy: src={{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list.tmpl dest=/etc/cloud/templates/sources.list.tmpl owner=root group=root mode=0444
+
+- name: Add PPA for AWS tools backports
+  apt_repository: repo='ppa:jhohertz/aws-ppa'
+
+- name: Update APT repo information
+  apt: update-cache=yes
+
+# Upgrade/install packages
+
+- name: Upgrade APT packages to current
+  apt: upgrade=dist
+
+- name: Install ec2-api-tools
+  apt: pkg=ec2-api-tools state=latest install_recommends=no
+
+- name: Install ec2-ami-tools
+  apt: pkg=ec2-ami-tools state=latest install_recommends=no
+
+- name: Install qemu-utils
+  apt: pkg=qemu-utils state=latest install_recommends=no
+
