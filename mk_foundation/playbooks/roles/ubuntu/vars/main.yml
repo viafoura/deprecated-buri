@@ -1,27 +1,27 @@
 release_archnames:
-  x86_64: amd64
-  i386: i386
+  x86_64: "amd64"
+  i386: "i386"
 distro:
-  name: Ubuntu
+  name: 'Ubuntu'
   release: '{{ ansible_distribution_release }}'
   version: '{{ ansible_distribution_version }}'
-  archname: '{{ release_archnames[ ${ansible_archtecture} ] }}'
+  archname: "{{ release_archnames[ansible_archtecture] }}"
   image:
     basename: '{{ distro.release }}-server-cloudimg-{{ distro.archname }}'
     urlhd00: 'http://uec-images.ubuntu.com/{{ distro.release }}/current/{{ distro.image.basename }}-disk1.img'
     urltar: 'http://uec-images.ubuntu.com/{{ distro.release }}/current/{{ distro.image.basename }}.tar.gz'
     query: 'http://uec-images.ubuntu.com/query/{{ distro.release }}/server/released.current.txt'
 ephemeral_dev:
-  x86_64: /dev/sdb
-  i386: /dev/sda2
+  x86_64: '/dev/sdb'
+  i386: '/dev/sda2'
 ami:
-  basename: foundation
+  basename: 'foundation'
   root_size: 8
-  root_mode: disk
+  root_mode: 'disk'
   timestamp: '{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}'
   name: '{{ ami.basename }}-ubuntu-{{ distro.release }}-{{ ansible_architecture }}-{{ ami.timestamp }}'
   description: '{{ ami.basename }} on Ubuntu {{ distro.release }}'
-  device_aws: /dev/sdi
-  device: /dev/xvdi
+  device_aws: '/dev/sdi'
+  device: '/dev/xvdi'
   ephemeral: '{{ ephemeral_dev[ansible_architecture] }}'
 

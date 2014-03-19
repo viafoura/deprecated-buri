@@ -1,13 +1,12 @@
 ---
 # Setup a volume with base OS
-# main.yml must have a when: ansible_distribution == 'Ubuntu' on including this
 
 - name: Fetch distribution hard disk image
   get_url:
-    url: '{{ distro.image.urlhd00 }} '
+    url: '{{ distro.image.urlhd00 }}'
     dest: '/mnt/{{ distro.image.basename }}.img'
-    owner: root
-    group: root
+    owner: 'root'
+    group: 'root'
     mode: 0444
 
 - name: Gather EC2 facts on build instance
