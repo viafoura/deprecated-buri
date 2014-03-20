@@ -2,10 +2,10 @@
 # Tear down and snapshot a volume with base OS + changes
 
 - name: Unmount /proc filesystem from chroot
-  command: 'chroot /mnt/{{ distro_image_basename }} unmount /proc'
+  command: 'chroot /mnt/{{ distro_image_basename }} umount /proc'
 
 - name: Unmount /dev filesystem from chroot
-  command: 'unmount /mnt/{{ distro_image_basename }}/dev'
+  command: 'umount /mnt/{{ distro_image_basename }}/dev'
 
 - name: Re-enable rc.d before snapshot
   file:
@@ -13,7 +13,7 @@
     state: absent
 
 - name: Unmount EBS volume for chroot
-  command: 'unmount /mnt/{{ distro_image_basename }}'
+  command: 'umount /mnt/{{ distro_image_basename }}'
 
 # This is ugly, but ec2_vol does not support detachment oddly...
 
@@ -78,10 +78,10 @@
   command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_snapshot_id }} --tag Name="{{ ami_basename }} AMI"'
 
 - name: Tagging PVM AMI
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami_basename }} PVM" --tag creation_time="{{ ami.timestamp }}"'
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami_basename }} PVM" --tag creation_time="{{ ami_timestamp }}"'
 
 - name: Tagging HVM AMI
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_hvm }} --tag Name="{{ ami_basename }} HVM" --tag creation_time="{{ ami.timestamp }}"'
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_hvm }} --tag Name="{{ ami_basename }} HVM" --tag creation_time="{{ ami_timestamp }}"'
 
 # output details of the run
 - debug: 'name:            {{ ami_name}}'

@@ -12,10 +12,6 @@
 - name: Gather EC2 facts on build instance
   action: ec2_facts
 
-
-
-
-
 - name: Creating new EBS work volume
   command: 'ec2-create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ ami_root_size }}'
   register: amivol
@@ -27,7 +23,6 @@
 
 - name: Attaching EBS work volume
   command: 'ec2-attach-volume --region {{ ansible_ec2_placement_region }} --device {{ ami_device_aws }} --instance "{{ ansible_ec2_instance_id }}" "{{ ami_ebs_volume_id }}"'
-
 
 - name: Waiting for EBS work volume attachment to complete
   wait_for:
@@ -57,10 +52,12 @@
 - name: Mount (bind) /dev filesystem into chroot
   command: 'mount -o bind /dev /mnt/{{ distro_image_basename }}/dev'
 
-- name: Add resolv.conf to chroot environment
-  copy:
-    src: /etc/resolv.conf
-    dest: '/mnt/{{ distro_image_basename }}/etc/resolv.conf'
+# Don't use copy action, just command cp on remote
+- name: Remove resolv.conf (maybe link) from chroot environment
+  command: 'rm -f /mnt/{{ distro_image_basename }}/etc/resolv.conf'
+
+- name: Add working resolv.conf to chroot environment
+  command: 'cp /etc/resolv.conf /mnt/{{ distro_image_basename }}/etc/resolv.conf'
 
 - name: Disable rc.d for rest of the process.
   copy:
