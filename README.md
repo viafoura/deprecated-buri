@@ -16,10 +16,25 @@ Out of scope for now are supporting any other cloud types, or non-cloud installa
 
 Ubuntu will be the initial OS target. Others might follow.
 
+This will be implemented in terms of ansible playbooks, with the intent to be able to be added to a set of more "normal" playbooks, used together to emerge fully setup AMIs to be used in auto-scale groups.
+
 how
 ===
 
-This will be implemented in terms of ansible playbooks, with the intent to be able to be added to a set of more "normal" playbooks, used together to emerge fully setup AMIs to be used in auto-scale groups.
+In the current state:
+
+1. Boot an official version of Ubuntu in EC2
+  - can be a t1.micro
+  - 12.04 current testing target, but should work for any version after (14.04 next testing target)
+  - You boot the version you wish to make a foundation for
+  - Need an IAM policy allowing volume/snapshot/ami management, such as the one [here](https://github.com/Netflix/aminator/wiki/Configuration)
+
+2. From a workstation with ansible (1.4.4 from presice-backports tested), and this project, and ec2.py inventory for ansible:
+
+```
+cd mk_foundation
+ansible-playbook playbooks/install-ubuntu.yml -i ~/path/to/ec2.py -l 'tag_Name_ANSIBLE_TEST' -vvvv | tee ~/path/to/logs/out.log
+```
 
 why
 ===

@@ -34,5 +34,5 @@
   command: 'chroot /mnt/{{ distro_image_basename }} apt-get install --no-install-recommends -y coreutils git-core libapt-pkg4.12 make python-crypto python-support python-jinja2 python-pip ansible'
 
 - name: Fix menu.lst for pvgrub in chroot
-  command: "perl -pi -e 's/(hd0)/(hd0,0)/' /mnt/{{ distro_image_basename }}/boot/grub/menu.lst"
+  command: "perl -pi -e 's/\\(hd0\\)/(hd0,0)/g' /mnt/{{ distro_image_basename }}/boot/grub/menu.lst"
 

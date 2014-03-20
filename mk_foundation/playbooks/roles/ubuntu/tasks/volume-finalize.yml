@@ -84,15 +84,25 @@
   command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_hvm }} --tag Name="{{ ami_basename }} HVM" --tag creation_time="{{ ami_timestamp }}"'
 
 # output details of the run
-- debug: 'name:            {{ ami_name}}'
-- debug: 'description:     {{ ami_description }}'
-- debug: 'os:              Ubuntu {{ distro_release }} {{ distro_version }}'
-- debug: 'architecture:    {{ ansible_architecture }} ({{ distro_arch_name }})'
-- debug: 'region:          {{ ansible_ec2_placement_region }} ({{ ansible_ec2_placement_availability_zone }})'
-- debug: 'PVM AMI ID:      {{ ami_id_pvm }}'
-- debug: 'HVM AMI ID:      {{ ami_id_hvm }}'
-- debug: 'AKI ID:          {{ ami_aki_id }}'
-- debug: 'EBS volume ID:   {{ ami_ebs_volume_id }} (deleted)'
-- debug: 'EBS snapshot ID: {{ ami_snapshot_id }}'
+- debug:
+    msg: 'name:            {{ ami_name}}'
+- debug:
+    msg: 'description:     {{ ami_description }}'
+- debug:
+    msg: 'os:              Ubuntu {{ distro_release }} {{ distro_version }}'
+- debug:
+    msg: 'architecture:    {{ ansible_architecture }} ({{ distro_archname }})'
+- debug:
+    msg: 'region:          {{ ansible_ec2_placement_region }} ({{ ansible_ec2_placement_availability_zone }})'
+- debug:
+    msg: 'PVM AMI ID:      {{ ami_id_pvm }}'
+- debug:
+    msg: 'HVM AMI ID:      {{ ami_id_hvm }}'
+- debug:
+    msg: 'AKI ID:          {{ ami_aki_id }}'
+- debug:
+    msg: 'EBS volume ID:   {{ ami_ebs_volume_id }} (deleted)'
+- debug:
+    msg: 'EBS snapshot ID: {{ ami_snapshot_id }}'
 
 
