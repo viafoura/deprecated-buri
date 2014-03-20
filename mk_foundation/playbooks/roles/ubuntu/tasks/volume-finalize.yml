@@ -2,18 +2,18 @@
 # Tear down and snapshot a volume with base OS + changes
 
 - name: Unmount /proc filesystem from chroot
-  command: 'chroot /mnt/{{ distro.image.basename }} unmount /proc'
+  command: 'chroot /mnt/{{ distro_image_basename }} unmount /proc'
 
 - name: Unmount /dev filesystem from chroot
-  command: 'unmount /mnt/{{ distro.image.basename }}/dev'
+  command: 'unmount /mnt/{{ distro_image_basename }}/dev'
 
 - name: Re-enable rc.d before snapshot
   file:
-    path: '/mnt/{{ distro.image.basename }}/usr/sbin/policy-rc.d'
+    path: '/mnt/{{ distro_image_basename }}/usr/sbin/policy-rc.d'
     state: absent
 
 - name: Unmount EBS volume for chroot
-  command: 'unmount /mnt/{{ distro.image.basename }}'
+  command: 'unmount /mnt/{{ distro_image_basename }}'
 
 # This is ugly, but ec2_vol does not support detachment oddly...
 
@@ -29,7 +29,7 @@
 
 # Not using snapshot module from ansible, as supporting 1.4.4 is needed
 - name: Create snapshot from EBS volume
-  command: 'ec2-create-snapshot --region {{ ansible_ec2_placement_region }} --description "{{ ami.name }}" "{{ ami_ebs_volume_id }}"'
+  command: 'ec2-create-snapshot --region {{ ansible_ec2_placement_region }} --description "{{ ami_name }}" "{{ ami_ebs_volume_id }}"'
   register: snap
 
 - name: Saving Snapshot ID as a fact for later use
@@ -45,7 +45,7 @@
   delay: 3
 
 - name: Find correct AKI ID for PV registration
-  shell: 'wget -qO- {{ distro.image.query }} | egrep "ebs.{{ distro.arch_name }}.{{ ansible_ec2_placement_region }}.*paravirtual"'
+  shell: 'wget -qO- {{ distro_image_query }} | egrep "ebs.{{ distro_archname }}.{{ ansible_ec2_placement_region }}.*paravirtual"'
   register: aki
 
 - name: Saving AKI ID as a fact for later use
@@ -54,7 +54,7 @@
   with_items: aki.stdout
 
 - name: Registering PVM AMI to snapshot
-  command: 'ec2-register --name "{{ ami.name }}-pvm" --description "{{ ami.description }}" --architecture "{{ ansible_archtecture }}" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ami_snapshot_id}}::true --block-device-mapping {{ ami.ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }}'
+  command: 'ec2-register --name "{{ ami_name }}-pvm" --description "{{ ami_description }}" --architecture "{{ ansible_architecture }}" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ami_snapshot_id}}::true --block-device-mapping {{ ami_ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }}'
   register: amipvm
 
 - name: Saving PVM AMI ID as a fact for later use
@@ -63,7 +63,7 @@
   with_items: amipvm.stdout
 
 - name: Registering HVM AMI to snapshot
-  command: 'ec2-register --name "{{ ami.name }}-hvm" --description "{{ ami.description }}" --architecture "{{ ansible_archtecture }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda1={{ ami_snapshot_id}}::true --block-device-mapping {{ ami.ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
+  command: 'ec2-register --name "{{ ami_name }}-hvm" --description "{{ ami_description }}" --architecture "{{ ansible_architecture }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda1={{ ami_snapshot_id}}::true --block-device-mapping {{ ami_ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
   register: amihvm
 
 - name: Saving HVM AMI ID as a fact for later use
@@ -75,19 +75,19 @@
   command: 'ec2-delete-volume --region {{ ansible_ec2_placement_region }} "{{ ami_ebs_volume_id }}"'
 
 - name: Tagging snapshot
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_snapshot_id }} --tag Name="{{ ami.basename }} AMI"'
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_snapshot_id }} --tag Name="{{ ami_basename }} AMI"'
 
 - name: Tagging PVM AMI
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami.basename }} PVM" --tag creation_time="{{ ami.timestamp }}"'
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami_basename }} PVM" --tag creation_time="{{ ami.timestamp }}"'
 
 - name: Tagging HVM AMI
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_hvm }} --tag Name="{{ ami.basename }} HVM" --tag creation_time="{{ ami.timestamp }}"'
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_hvm }} --tag Name="{{ ami_basename }} HVM" --tag creation_time="{{ ami.timestamp }}"'
 
 # output details of the run
-- debug: 'name:            {{ ami.name}}'
-- debug: 'description:     {{ ami.description }}'
-- debug: 'os:              Ubuntu {{ distro.release }} {{ distro.version }}'
-- debug: 'architecture:    {{ ansible_archtecture }} ({{ distro.arch_name }})'
+- debug: 'name:            {{ ami_name}}'
+- debug: 'description:     {{ ami_description }}'
+- debug: 'os:              Ubuntu {{ distro_release }} {{ distro_version }}'
+- debug: 'architecture:    {{ ansible_architecture }} ({{ distro_arch_name }})'
 - debug: 'region:          {{ ansible_ec2_placement_region }} ({{ ansible_ec2_placement_availability_zone }})'
 - debug: 'PVM AMI ID:      {{ ami_id_pvm }}'
 - debug: 'HVM AMI ID:      {{ ami_id_hvm }}'

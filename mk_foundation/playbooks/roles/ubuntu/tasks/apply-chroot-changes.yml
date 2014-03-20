@@ -4,7 +4,7 @@
 - name: Ensure Chroot APT sources list includes multiverse
   copy:
     src: '{{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list'
-    dest: '/mnt/{{ distro.image.basename }}/etc/apt/sources.list'
+    dest: '/mnt/{{ distro_image_basename }}/etc/apt/sources.list'
     owner: root
     group: root
     mode: 0444
@@ -12,27 +12,27 @@
 - name: Ensure Chroot APT sources list includes multiverse
   copy:
     src: '{{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list.tmpl'
-    dest: '/mnt/{{ distro.image.basename }}/etc/cloud/templates/sources.list.tmpl'
+    dest: '/mnt/{{ distro_image_basename }}/etc/cloud/templates/sources.list.tmpl'
     owner: root
     group: root
     mode: 0444
 
 - name: Add PPA for AWS tools backports to chroot
-  command: 'chroot /mnt/{{ distro.image.basename }} add-apt-repository -y ppa:jhohertz/aws-ppa'
+  command: 'chroot /mnt/{{ distro_image_basename }} add-apt-repository -y ppa:jhohertz/aws-ppa'
 
 # FIXME: externalize locale to generate
 - name: Add locale to chroot
-  command: 'chroot /mnt/{{ distro.image.basename }} locale-gen en_US.UTF-8'
+  command: 'chroot /mnt/{{ distro_image_basename }} locale-gen en_US.UTF-8'
 
 - name: Update APT repo information in chroot
-  command: 'chroot /mnt/{{ distro.image.basename }} apt-get update'
+  command: 'chroot /mnt/{{ distro_image_basename }} apt-get update'
 
 - name: Upgrade APT packages to current in chroot
-  command: 'chroot /mnt/{{ distro.image.basename }} apt-get dist-upgrade -y'
+  command: 'chroot /mnt/{{ distro_image_basename }} apt-get dist-upgrade -y'
 
 - name: Install packages to chroot
-  command: 'chroot /mnt/{{ distro.image.basename }} apt-get install --no-install-recommends -y coreutils git-core libapt-pkg4.12 make python-crypto python-support python-jinja2 python-pip ansible'
+  command: 'chroot /mnt/{{ distro_image_basename }} apt-get install --no-install-recommends -y coreutils git-core libapt-pkg4.12 make python-crypto python-support python-jinja2 python-pip ansible'
 
 - name: Fix menu.lst for pvgrub in chroot
-  command: "perl -pi -e 's/(hd0)/(hd0,0)/' /mnt/{{ distro.image.basename }}/boot/grub/menu.lst"
+  command: "perl -pi -e 's/(hd0)/(hd0,0)/' /mnt/{{ distro_image_basename }}/boot/grub/menu.lst"
 

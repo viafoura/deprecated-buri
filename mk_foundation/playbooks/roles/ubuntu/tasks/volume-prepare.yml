@@ -3,8 +3,8 @@
 
 - name: Fetch distribution hard disk image
   get_url:
-    url: '{{ distro.image.urlhd00 }}'
-    dest: '/mnt/{{ distro.image.basename }}.img'
+    url: '{{ distro_image_urlhd00 }}'
+    dest: '/mnt/{{ distro_image_basename }}.img'
     owner: 'root'
     group: 'root'
     mode: 0444
@@ -18,8 +18,8 @@
     instance: '{{ ansible_ec2_instance_id }}'
     region: '{{ ansible_ec2_placement_region }}'
     zone: '{{ ansible_ec2_placement_availability_zone }}'
-    volume_size: '{{ ami.root_size }}'
-    device_name: '{{ ami.device_aws }}'
+    volume_size: '{{ ami_root_size }}'
+    device_name: '{{ ami_device_aws }}'
     register: ec2_vol
 
 - name: Saving Volume ID as a fact for later use
@@ -28,38 +28,38 @@
   with_items: ec2_vol.results
 
 - name: Writing disk image to volume
-  command: 'qemu-img convert -O host_device /mnt/{{ distro.image.basename }}.img {{ ami.device }}'
+  command: 'qemu-img convert -O host_device /mnt/{{ distro_image_basename }}.img {{ ami_device }}'
 
 - name: Scanning EBS volume for new partition table
-  command: 'partprobe {{ ami.device }}'
+  command: 'partprobe {{ ami_device }}'
 
-# Don't use ansible module "mount", as this is a transient thing
+# Don't use ansible module 'mount', as this is a transient thing
 - name: Creating mount point for EBS volume
   file:
-    path: '/mnt/{{ distro.image.basename }}'
+    path: '/mnt/{{ distro_image_basename }}'
     state: directory
     owner: root
     group: root
     mode: 0444
 
 - name: Mount EBS volume for chroot
-  command: 'mount {{ ami.device }} /mnt/{{ distro.image.basename }}'
+  command: 'mount {{ ami_device }} /mnt/{{ distro_image_basename }}'
 
 - name: Mount /proc filesystem into chroot
-  command: 'chroot /mnt/{{ distro.image.basename }} mount -t proc none /proc'
+  command: 'chroot /mnt/{{ distro_image_basename }} mount -t proc none /proc'
 
 - name: Mount (bind) /dev filesystem into chroot
-  command: 'mount -o bind /dev /mnt/{{ distro.image.basename }}/dev'
+  command: 'mount -o bind /dev /mnt/{{ distro_image_basename }}/dev'
 
 - name: Add resolv.conf to chroot environment
   copy:
     src: /etc/resolv.conf
-    dest: '/mnt/{{ distro.image.basename }}/etc/resolv.conf'
+    dest: '/mnt/{{ distro_image_basename }}/etc/resolv.conf'
 
 - name: Disable rc.d for rest of the process.
   copy:
     src: policy-rc.d
-    dest: '/mnt/{{ distro.image.basename }}/usr/sbin/policy-rc.d'
+    dest: '/mnt/{{ distro_image_basename }}/usr/sbin/policy-rc.d'
     owner: root
     group: root
     mode: 0755
