@@ -1,0 +1,10 @@
+---
+# Base playbook for initial setup of build host
+- name: InitBuildHost
+  user: ubuntu
+  sudo: True
+  tags: base
+  hosts: localhost
+  connection: local
+  roles:
+    - build_host
