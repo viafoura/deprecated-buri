@@ -1,0 +1,5 @@
+---
+- name: Prepare the host environment for building
+  include: package-setup-ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+

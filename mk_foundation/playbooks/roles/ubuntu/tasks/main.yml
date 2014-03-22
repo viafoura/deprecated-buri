@@ -1,7 +1,4 @@
 ---
-- name: Prepare the host environment for building
-  include: package-setup.yml
-
 - name: Prepare the new EBS volume
   include: volume-prepare.yml
 

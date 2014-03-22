@@ -3,7 +3,7 @@
 # use more modules and less executions of commands
 - name: Ensure Chroot APT sources list includes multiverse
   copy:
-    src: '{{ ansible_distribution_release }}/sources.list'
+    src: '/etc/apt/sources.list'
     dest: '/mnt/{{ distro_image_basename }}/etc/apt/sources.list'
     owner: root
     group: root
@@ -11,7 +11,7 @@
 
 - name: Ensure Chroot APT sources list includes multiverse (old form)
   copy:
-    src: '{{ ansible_distribution_release }}/sources.list.tmpl'
+    src: '/etc/cloud/templates/sources.list.tmpl'
     dest: '/mnt/{{ distro_image_basename }}/etc/cloud/templates/sources.list.tmpl'
     owner: root
     group: root
