@@ -1,0 +1,10 @@
+---
+- name: Find correct AKI ID for PV registration
+  shell: 'wget -qO- {{ distro_image_query }} | egrep "ebs.amd64.{{ ansible_ec2_placement_region }}.*paravirtual"'
+  register: aki
+
+- name: Saving AKI ID as a fact for later use
+  set_fact:
+    ami_aki_id: '{{ item.split("\t")[8] }}'
+  with_items: aki.stdout
+

@@ -1,0 +1,14 @@
+---
+- name: Registering HVM AMI to snapshot
+  command: 'ec2-register --name "{{ ami.name }}-HVM" --description "{{ ami.description }}" --architecture "x86_64" --root-device-name /dev/sda1 --block-device-mapping /dev/sda1={{ ami_snapshot_id }}::true --block-device-mapping {{ ami.ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
+  register: amihvm
+
+- name: Saving HVM AMI ID as a fact for later use
+  set_fact:
+    ami_id_hvm: '{{ item.split("\t")[1] }}'
+  with_items: amihvm.stdout
+
+- name: Tagging HVM AMI
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_hvm }} --tag Name="{{ ami.name }}-HVM" --tag creation_time="{{ ami.timestamp }}"'
+
+

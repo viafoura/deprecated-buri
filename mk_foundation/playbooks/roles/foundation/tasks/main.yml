@@ -1,0 +1,15 @@
+---
+- name: Setup package repositories
+  include: package-setup-ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Setup Locale
+  include: locale.yml
+
+- name: Update and install packages
+  include: package-update-install-ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Fixup boot loader
+  include: boot-fix.yml
+

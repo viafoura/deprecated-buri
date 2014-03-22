@@ -1,0 +1,20 @@
+---
+# chroot_mountpoint:    where unmount
+
+- name: Fix menu.lst for pvgrub in chroot
+  command: "perl -pi -e 's/\\(hd0\\)/(hd0,0)/g' /mnt/{{ distro_image_basename }}/boot/grub/menu.lst"
+
+- name: Unmount /proc filesystem from chroot
+  command: 'chroot {{ chroot_mountpoint }} umount /proc'
+
+- name: Unmount /dev filesystem from chroot
+  command: 'umount {{ chroot_mountpoint }}/dev'
+
+- name: Re-enable rc.d before snapshot
+  file:
+    path: '{{ chroot_mountpoint }}/usr/sbin/policy-rc.d'
+    state: absent
+
+- name: Unmount EBS volume for chroot
+  command: 'umount {{ chroot_mountpoint }}'
+

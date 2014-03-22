@@ -1,0 +1,4 @@
+---
+- name: Gather EC2 facts on build instance
+  action: ec2_facts
+

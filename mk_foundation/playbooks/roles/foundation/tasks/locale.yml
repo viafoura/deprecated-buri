@@ -1,0 +1,4 @@
+
+- name: Add locale to chroot
+  command: 'chroot /mnt/{{ distro_image_basename }} locale-gen en_US.UTF-8'
+

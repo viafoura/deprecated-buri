@@ -1,9 +1,0 @@
----
-# Base playbook for ubuntu
-- name: Base
-  user: ubuntu
-  sudo: True
-  tags: base
-  hosts: all
-  roles:
-    - ubuntu
