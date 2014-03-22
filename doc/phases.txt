@@ -1,0 +1,41 @@
+
+For the foundation install: NOW
+
+- init build host
+- prep volume
+  - EBS attachment/mount
+  - install phase
+  - chroot prep
+- execute foundation "role" on chroot (apply-chroot-changes.yml)
+- finalize volume
+  - chroot teardown
+  - file cleanups
+  - EBS unmount/detachment
+  - EBS snapshot
+  - tagging
+  - report output
+
+
+For the foundation install, and others: NEXT
+
+- init build host (done externally)
+
+- prep volume
+  - aquire a device handle (not simple, hardcode for first go)
+  - attach EBS, new or by snapshot
+  - if new
+    - install phase
+  - EBS mount
+- chroot prep (ansible lifts some need, might still need policy-rc.d)
+- register to inventory chroot based "host"
+- execute foundation (or other) role on chroot (old apply-chroot-changes.yml)
+- be nice if we could offer a pause to inspect at this point for debug
+- finalize volume
+  - chroot teardown (same as prep, if we need it)
+  - file cleanups
+  - EBS unmount/detachment
+  - EBS snapshot
+  - tagging
+  - Instance conversion/tagging
+  - report output
+
