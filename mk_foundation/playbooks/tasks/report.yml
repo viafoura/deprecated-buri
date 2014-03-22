@@ -1,10 +1,10 @@
 ---
 - debug:
-    msg: 'name:            {{ ami_name}}'
+    msg: 'name:            {{ ami.name}}'
 - debug:
-    msg: 'description:     {{ ami_description }}'
+    msg: 'description:     {{ ami.description }}'
 - debug:
-    msg: 'os:              Ubuntu {{ distro_release }} {{ distro_version }}'
+    msg: 'os:              Ubuntu {{ distro.release }} {{ distro.version }}'
 - debug:
     msg: 'region:          {{ ansible_ec2_placement_region }} ({{ ansible_ec2_placement_availability_zone }})'
 - debug:
@@ -14,7 +14,7 @@
 - debug:
     msg: 'AKI ID:          {{ ami_aki_id }}'
 - debug:
-    msg: 'EBS volume ID:   {{ ami_ebs_volume_id }} (deleted)'
+    msg: 'EBS volume ID:   {{ ebs_volume_id }} (deleted)'
 - debug:
     msg: 'EBS snapshot ID: {{ ami_snapshot_id }}'
 

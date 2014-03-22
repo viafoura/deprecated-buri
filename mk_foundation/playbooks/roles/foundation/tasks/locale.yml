@@ -1,4 +1,6 @@
 
+# FIXME: use ansible native
+# FIXME: parameterize what to generate
 - name: Add locale to chroot
-  command: 'chroot /mnt/{{ distro_image_basename }} locale-gen en_US.UTF-8'
+  command: 'locale-gen en_US.UTF-8'
 

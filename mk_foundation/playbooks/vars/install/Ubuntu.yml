@@ -2,7 +2,7 @@ distro:
   name: "Ubuntu"
   release: "{{ ansible_distribution_release }}"
   version: "{{ ansible_distribution_version }}"
-  image_name: "{{ distro_release }}-server-cloudimg-amd64"
+  image_name: "{{ distro.release }}-server-cloudimg-amd64"
   image_url: "http://uec-images.ubuntu.com/{{ distro.release }}/current/{{ distro.image_name }}-disk1.img"
   image_path: "/mnt/{{ distro.image_name }}.img"
   image_mount: "/mnt/{{ distro.image_name }}"
