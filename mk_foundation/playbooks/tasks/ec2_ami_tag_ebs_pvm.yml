@@ -1,7 +1,6 @@
 ---
-
 - name: Registering PVM AMI to snapshot
-  command: 'ec2-register --name "{{ ami_name }}-PVM" --description "{{ ami_description }}" --architecture "x86_64" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ami_snapshot_id }}::true --block-device-mapping {{ ami_ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }}'
+  command: 'ec2-register --name "{{ ami_name }}-PVM" --description "{{ ami_description }}" --architecture "x86_64" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ebs_snapshot_id }}::true --block-device-mapping {{ ami_ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }}'
   register: amipvm
 
 - name: Saving PVM AMI ID as a fact for later use

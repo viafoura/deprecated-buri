@@ -1,6 +1,6 @@
 ---
 - name: Registering HVM AMI to snapshot
-  command: 'ec2-register --name "{{ ami_name }}-HVM" --description "{{ ami_description }}" --architecture "x86_64" --root-device-name /dev/sda1 --block-device-mapping /dev/sda1={{ ami_snapshot_id }}::true --block-device-mapping {{ ami_ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
+  command: 'ec2-register --name "{{ ami_name }}-HVM" --description "{{ ami_description }}" --architecture "x86_64" --root-device-name /dev/sda1 --block-device-mapping /dev/sda1={{ ebs_snapshot_id }}::true --block-device-mapping {{ ami_ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
   register: amihvm
 
 - name: Saving HVM AMI ID as a fact for later use

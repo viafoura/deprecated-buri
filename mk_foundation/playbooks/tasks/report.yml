@@ -16,5 +16,5 @@
 - debug:
     msg: 'EBS volume ID:   {{ ebs_volume_id }} (deleted)'
 - debug:
-    msg: 'EBS snapshot ID: {{ ami_snapshot_id }}'
+    msg: 'EBS snapshot ID: {{ ebs_snapshot_id }}'
 
