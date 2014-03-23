@@ -29,13 +29,13 @@
         chroot_mountpoint: '{{ distro_image_mount }}'
         chroot_device: '{{ ami_device }}'
     - name: Register chroot target in ansible inventory
-      add_host: hostname={{ distro_image_mount }} groupname=chroot
+      add_host: hostname={{ distro_image_mount }} groupname=chroots
 
 
 - name: Ubuntu Foundation Provision
-  hosts: '{{ distro_image_mount }}'
+  hosts: chroots
   connection: chroot
-  user: ubuntu
+  user: root
   sudo: True
   tags: foundation
   roles:
