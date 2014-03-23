@@ -18,7 +18,7 @@
 
 - name: Add PPA for AWS tools backports
   apt_repository: repo='ppa:jhohertz/aws-ppa'
-  when: ansible_distribution_version == 12.04
+  when: ansible_distribution_version == '12.04'
 ## FIXME: we only have PPAs for 12.04 right now
 
 - name: Update APT repo information

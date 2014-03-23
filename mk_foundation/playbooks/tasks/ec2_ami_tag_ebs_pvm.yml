@@ -1,7 +1,7 @@
 ---
 
 - name: Registering PVM AMI to snapshot
-  command: 'ec2-register --name "{{ ami.name }}-PVM" --description "{{ ami.description }}" --architecture "x86_64" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ami_snapshot_id }}::true --block-device-mapping {{ ami.ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }}'
+  command: 'ec2-register --name "{{ ami_name }}-PVM" --description "{{ ami_description }}" --architecture "x86_64" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ami_snapshot_id }}::true --block-device-mapping {{ ami_ephemeral }}=ephemeral0 --region {{ ansible_ec2_placement_region }}'
   register: amipvm
 
 - name: Saving PVM AMI ID as a fact for later use
@@ -10,5 +10,5 @@
   with_items: amipvm.stdout
 
 - name: Tagging PVM AMI
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami.name }}-PVM" --tag creation_time="{{ ami.timestamp }}"'
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami_name }}-PVM" --tag creation_time="{{ ami_timestamp }}"'
 

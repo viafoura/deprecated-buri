@@ -13,15 +13,22 @@
   register: amivol
   when: ebs_snap is not defined or ebs_snap == ''
 
+- name: Saving Empty Volume ID as a fact for later use
+  set_fact:
+    ebs_volume_id: '{{ item.split("\t")[1] }}'
+  with_items: amivol.stdout
+  when: ebs_snap is not defined or ebs_snap == ''
+
 - name: Creating new EBS volume from snapshot
   command: 'ec2-create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ ebs_size }} --snapshot {{ ebs_snap }}'
   register: amivol
   when: ebs_snap is defined and ebs_snap != ''
 
-- name: Saving Volume ID as a fact for later use
+- name: Saving Snapshot New Volume ID as a fact for later use
   set_fact:
     ebs_volume_id: '{{ item.split("\t")[1] }}'
   with_items: amivol.stdout
+  when: ebs_snap is defined and ebs_snap != ''
 
 - name: Attaching EBS work volume
   command: "ec2-attach-volume --region {{ ansible_ec2_placement_region }} --device {{ ebs_device_id.replace('/dev/xvd', '/dev/sd') }} --instance '{{ ansible_ec2_instance_id }}' '{{ ebs_volume_id }}'"

@@ -1,14 +1,12 @@
-distro:
-  name: "Ubuntu"
-  release: "{{ ansible_distribution_release }}"
-  version: "{{ ansible_distribution_version }}"
-  image_name: "{{ distro.release }}-server-cloudimg-amd64"
-  image_url: "http://uec-images.ubuntu.com/{{ distro.release }}/current/{{ distro.image_name }}-disk1.img"
-  image_path: "/mnt/{{ distro.image_name }}.img"
-  image_mount: "/mnt/{{ distro.image_name }}"
-  image_query: "http://uec-images.ubuntu.com/query/{{ distro.release }}/server/released.current.txt"
-ami:
-  basename: "foundation"
-  name: "{{ ami.basename }}-{{ distro.name }}-{{ distro.release }}-{{ ami.timestamp }}"
-  description: "{{ ami.basename }} on {{ distro.name }} {{ distro.release }}"
-  root_size: 5
+distro_name: "Ubuntu"
+distro_release: "{{ ansible_distribution_release }}"
+distro_version: "{{ ansible_distribution_version }}"
+distro_image_name: "{{ distro_release }}-server-cloudimg-amd64"
+distro_image_url: "http://uec-images.ubuntu.com/{{ distro_release }}/current/{{ distro_image_name }}-disk1.img"
+distro_image_path: "/mnt/{{ distro_image_name }}.img"
+distro_image_mount: "/mnt/{{ distro_image_name }}"
+distro_image_query: "http://uec-images.ubuntu.com/query/{{ distro.release }}/server/released.current.txt"
+ami_basename: "foundation"
+ami_name: "{{ ami_basename }}-{{ distro_name }}-{{ distro_release }}-{{ ami_timestamp }}"
+ami_description: "{{ ami_basename }} on {{ distro_name }} {{ distro_release }}"
+ami_root_size: 5

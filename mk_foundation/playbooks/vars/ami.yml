@@ -1,12 +1,11 @@
-ami:
-  # Something must override these
-  basename: ""
-  name: "{{ ami.basename }}-ubuntu-{{ distro.release }}-{{ ami.timestamp }}"
-  description: "{{ ami.basename }} on Ubuntu {{ distro.release }}"
-  # In GB
-  root_size: 5
-  timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"
-  # FIXME: this should be more dynamic than this
-  device: "/dev/xvdi"
-  # FIXME: this is kind of naive, better mapping possible
-  ephemeral: "/dev/sdb"
+# Something must override these
+ami_basename: ""
+ami_name: ""
+ami_description: ""
+# In GB
+ami_root_size: 5
+ami_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"
+# FIXME: this should be more dynamic than this
+ami_device: "/dev/xvdi"
+# FIXME: this is kind of naive, better mapping possible
+ami_ephemeral: "/dev/sdb"

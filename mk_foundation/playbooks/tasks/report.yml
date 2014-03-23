@@ -1,10 +1,10 @@
 ---
 - debug:
-    msg: 'name:            {{ ami.name}}'
+    msg: 'name:            {{ ami_name}}'
 - debug:
-    msg: 'description:     {{ ami.description }}'
+    msg: 'description:     {{ ami_description }}'
 - debug:
-    msg: 'os:              Ubuntu {{ distro.release }} {{ distro.version }}'
+    msg: 'os:              Ubuntu {{ distro_release }} {{ distro_version }}'
 - debug:
     msg: 'region:          {{ ansible_ec2_placement_region }} ({{ ansible_ec2_placement_availability_zone }})'
 - debug:
