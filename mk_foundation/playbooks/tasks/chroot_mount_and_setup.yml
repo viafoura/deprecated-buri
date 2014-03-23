@@ -30,7 +30,7 @@
 # FIXME: file source... 
 - name: Disable rc.d for rest of the process.
   copy:
-    src: policy-rc.d
+    src: files/policy-rc.d
     dest: '{{ chroot_mountpoint }}/usr/sbin/policy-rc.d'
     owner: root
     group: root

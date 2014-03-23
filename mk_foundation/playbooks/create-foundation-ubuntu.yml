@@ -17,23 +17,23 @@
     - include: tasks/ec2_get_facts.yml
     - include: tasks/ec2_create_vol_and_attach.yml
       vars:
-        ebs_size: {{ ami.size }}
-        ebs_device_id: {{ ami.device }}
+        ebs_size: '{{ ami.size }}'
+        ebs_device_id: '{{ ami.device }}'
     - include: tasks/image_write_qcow_from_url.yml
       vars:
-        image_url: {{ distro.image_url }}
-        image_path: {{ distro.image_path }}
-        image_device: {{ distro.image_device }}
+        image_url: '{{ distro.image_url }}'
+        image_path: '{{ distro.image_path }}'
+        image_device: '{{ distro.image_device }}'
     - include: tasks/chroot_mount_and_setup.yml
       vars:
-        chroot_mountpoint: {{ distro.image_mount }}
-        chroot_device: {{ distro.image_device }}
+        chroot_mountpoint: '{{ distro.image_mount }}'
+        chroot_device: '{{ distro.image_device }}'
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ distro.image_mount }} groupname=chroot
 
 
 - name: Ubuntu Foundation Provision
-  hosts: {{ distro.image_mount }}
+  hosts: '{{ distro.image_mount }}'
   connection: chroot
   user: ubuntu
   sudo: True
@@ -54,14 +54,14 @@
     - vars/install/Ubuntu.yml
   tasks:
     - include: tasks/ec2_get_facts.yml
-    - include: tasks/chroot_clean_and_umount.yml
+    - include: tasks/chroot_clean_and_unmount.yml
       vars:
-        chroot_mountpoint: {{ distro.image_mount }}
+        chroot_mountpoint: '{{ distro.image_mount }}'
     - include: tasks/ec2_detach_and_snapshot_vol.yml
       vars:
         # ebs_volume_id: (comes via stored fact)
-        ebs_snap_desc: {{ ami.description }}
-        ebs_tag_name: {{ ami.name }}
+        ebs_snap_desc: '{{ ami.description }}'
+        ebs_tag_name: '{{ ami.name }}'
     - include: tasks/ec2_ami_find_aki_ubuntu.yml
     - include: tasks/ec2_ami_tag_ebs_pvm.yml
     - include: tasks/ec2_ami_tag_ebs_hvm.yml
