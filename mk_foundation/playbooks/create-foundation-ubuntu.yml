@@ -10,6 +10,7 @@
     foo: bar
   vars_files:
     - vars/ami.yml
+    - vars/system/Ubuntu.yml
     - vars/install/Ubuntu.yml
   roles:
     - build_host
@@ -38,6 +39,8 @@
   user: root
   sudo: True
   tags: foundation
+  vars:
+    image_build: True
   roles:
     - foundation
 
@@ -51,6 +54,7 @@
     foo: bar
   vars_files:
     - vars/ami.yml
+    - vars/system/Ubuntu.yml
     - vars/install/Ubuntu.yml
   tasks:
     - include: tasks/ec2_get_facts.yml

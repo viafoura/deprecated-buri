@@ -1,0 +1,12 @@
+---
+# Install some helpful system packages
+
+- name: Install boto Python library
+  pip: name=boto state=latest
+
+- name: Install AWS CLI
+  pip: name=awscli state=latest
+
+- name: Install s3get to be used by user-data on boot
+  copy: src=s3get dest=/usr/bin/s3get owner=root group=root mode=0755
+

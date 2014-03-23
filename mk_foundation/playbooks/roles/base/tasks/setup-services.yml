@@ -1,0 +1,35 @@
+---
+
+- name: Make sure rsync is not running as a service
+  service: name=rsync enabled=off
+  when: ansible_distribution == 'Ubuntu'
+  
+- name: Enable NTP service
+  service: name={{ ntp_service_name }} enabled=yes
+
+- name: Starting NTP
+  service: name={{ ntp_service_name }} state=started
+  when: not image_build
+
+- name: Stopping NTP
+  service: name={{ ntp_service_name }} state=stopped
+  when: image_build
+  
+# SSH settings
+- name: Set SSH config
+  copy: src={{ ansible_distribution }}/ssh_config dest=/etc/ssh/ssh_config owner=root mode=0440
+    
+- name: Set SSHd config
+  copy: src={{ ansible_distribution }}/sshd_config dest=/etc/ssh/sshd_config owner=root mode=0440
+    
+- name: Enable SSH service
+  service: name={{ ssh_service_name }} enabled=yes
+  
+- name: Starting SSH service
+  service: name={{ ssh_service_name }} state=started
+  when: not image_build
+  
+- name: Stopping SSH service
+  service: name={{ ssh_service_name }} state=stopped
+  when: image_build
+  

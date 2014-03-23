@@ -1,0 +1,47 @@
+---
+# Basic hardening of any linux system
+
+- name: Remove unnecessary users
+  user: name={{ item }} state=absent
+  with_items:
+    - games
+    - gnats
+    - irc
+    - list
+    - news
+    - proxy
+    - uucp
+  
+- name: Set shell to nologin for users
+  user: name={{ item }} shell=/usr/sbin/nologin
+  with_items:
+    - daemon
+    - bin
+    - lp
+    - sys
+    - man
+    - mail
+    - backup
+    - nobody
+    - libuuid
+  when: ansible_distribution == 'Ubuntu'
+  
+- name: Remove unnecessary groups
+  group: name={{ item }} state=absent
+  with_items:
+    - news
+    - uucp
+    - proxy
+    - list
+    - irc
+    - src
+    - gnats
+    - games
+  
+- name: Secure root's home directory
+  file: dest=/root state=directory mode=700
+  
+# Shared memory
+- name: Secure tmpfs read only
+  mount: name=/dev/shm src=tmpfs fstype=tmpfs opts=rw,nosuid,nodev,noexec state=present
+  tags: tmpfs

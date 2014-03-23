@@ -1,0 +1,8 @@
+---
+# Main task list for Base
+
+- include: harden-basic.yml
+- include: packages-install-ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+- include: install-other.yml
+- include: setup-services.yml
