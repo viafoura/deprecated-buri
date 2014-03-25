@@ -1,0 +1,19 @@
+---
+- name: Find AKI ID for parent image.
+  shell: 'ec2-describe-images {{ ami_parent }} | grep ^IMAGE'
+  register: aki
+
+- name: Saving AKI ID as a fact for later use
+  set_fact:
+    ami_aki_id: '{{ item.split("\t")[9] }}'
+  with_items: aki.stdout
+
+- name: Find EBS Snapshot ID for parent image.
+  shell: 'ec2-describe-images {{ ami_parent }} | grep ^BLOCK | grep /dev/sda'
+  register: ebsparent
+
+- name: Saving ebs_parent_id as a fact for later use
+  set_fact:
+    ebs_parent_id: '{{ item.split("\t")[4] }}'
+  with_items: ebsparent.stdout
+
