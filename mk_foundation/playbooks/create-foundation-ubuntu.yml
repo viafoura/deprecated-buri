@@ -27,10 +27,10 @@
         image_device: '{{ ami_device }}'
     - include: tasks/chroot_mount_and_setup.yml
       vars:
-        chroot_mountpoint: '{{ distro_image_mount }}'
+        chroot_mountpoint: '{{ image_mount }}'
         chroot_device: '{{ ami_device }}'
     - name: Register chroot target in ansible inventory
-      add_host: hostname={{ distro_image_mount }} groupname=chroots
+      add_host: hostname={{ image_mount }} groupname=chroots
 
 
 - name: Ubuntu Foundation Provision
@@ -60,7 +60,7 @@
     - include: tasks/ec2_get_facts.yml
     - include: tasks/chroot_clean_and_unmount.yml
       vars:
-        chroot_mountpoint: '{{ distro_image_mount }}'
+        chroot_mountpoint: '{{ image_mount }}'
     - include: tasks/ec2_detach_and_snapshot_vol.yml
       vars:
         # ebs_volume_id: (comes via stored fact)
