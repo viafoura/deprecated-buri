@@ -15,7 +15,7 @@
   register: zkdir
 
 - name: Download zookeeper {{ zookeeper_version }} release archive
-  get_url: url={{ zookeeper_mirror }} dest=/tmp/{{ zookeeper_basename }}.tar.gz sha256sum={{ zookeeper_checksum }} user=root mode=0644
+  get_url: url={{ zookeeper_mirror }} dest=/tmp/{{ zookeeper_basename }}.tar.gz sha256sum={{ zookeeper_checksum }} owner=root mode=0644
   when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
 
 - name: Extract zookeeper {{ zookeeper_version }} release archive to install dir
@@ -24,7 +24,7 @@
 
 - name: Set ownership of installed release archive
   #command: chown -R {{ zookeeper_user }}:{{ zookeeper_group }} {{ zookeeper_install_dir }}'
-  file: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }} state=directory recurse=yes user={{ zookeeper_user }} group={{ zookeeper_group }}
+  file: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }} state=directory recurse=yes owner={{ zookeeper_user }} group={{ zookeeper_group }}
   when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
 
 - name: Create Exhibitor install directory
@@ -45,7 +45,7 @@
 
 # FIXME: set checksum
 - name: Download Exhibitor {{ exhibitor_version }} release archive to install location
-  get_url: url={{ exhibitor_mirror }} dest={{ exhibitor_jar_dest }}.tar.gz sha256sum={{ exhibitor_checksum }} user=root mode=0644
+  get_url: url={{ exhibitor_mirror }} dest={{ exhibitor_jar_dest }}.tar.gz sha256sum={{ exhibitor_checksum }} owner=root mode=0644
   when: exjar.stat.exists is not defined or exjar.stat.exists != true
 
 - name: Install local zookeeper check script.
