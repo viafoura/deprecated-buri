@@ -1,4 +1,4 @@
 #!/bin/bash
 
-ansible-playbook playbooks/create-foundation-ubuntu.yml -i inventory/local 
+ansible-playbook playbooks/create-foundation-ubuntu.yml -i inventory/local -vvvv
 
