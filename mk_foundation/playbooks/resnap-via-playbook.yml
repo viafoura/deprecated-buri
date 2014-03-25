@@ -27,7 +27,7 @@
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ image_mount }} groupname=chroots
 
-- name: Ubuntu Foundation Provision
+- name: Provisioning role against chroot
   hosts: chroots
   connection: chroot
   user: root
@@ -35,10 +35,10 @@
   tags: foundation
   vars:
     image_build: True
-  var_files:
+  vars_files:
     - vars/system/{{ ansible_distribution }}.yml
   roles:
-    - {{ ami_role }}
+    - '{{ ami_role }}'
 
 - name: Disconnect, snapshot, and register newly formed AMI
   hosts: localhost
@@ -60,8 +60,7 @@
         # ebs_volume_id: (comes via stored fact)
         ebs_snap_desc: '{{ ami_description }}'
         ebs_tag_name: '{{ ami_name }}'
-    - include: tasks/ec2_ami_find_aki_ubuntu.yml
     - include: tasks/ec2_ami_tag_ebs_pvm.yml
     - include: tasks/ec2_ami_tag_ebs_hvm.yml
-    - include: tasks/report.yml
+    - include: tasks/report-resnap.yml
 

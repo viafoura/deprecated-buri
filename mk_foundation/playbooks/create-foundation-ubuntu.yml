@@ -69,5 +69,5 @@
     - include: tasks/ec2_ami_find_aki_ubuntu.yml
     - include: tasks/ec2_ami_tag_ebs_pvm.yml
     - include: tasks/ec2_ami_tag_ebs_hvm.yml
-    - include: tasks/report.yml
+    - include: tasks/report-foundation.yml
 
