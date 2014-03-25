@@ -9,10 +9,10 @@
   apt: update-cache=yes
 
 - name: Marking oracle license as accepted
-  shell: 'debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections'
+  shell: 'echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections'
 
 - name: Marking oracle license as seen
-  shell: 'debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections'
+  shell: 'echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections'
 
 - name: Install oracle-java{{ java_version }}-installer
   apt: pkg=oracle-java{{ java_version }}-installer state=latest install_recommends=no
