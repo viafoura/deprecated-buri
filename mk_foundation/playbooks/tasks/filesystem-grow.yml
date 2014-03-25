@@ -13,6 +13,9 @@
   shell: 'echo -e "p\nd\n1\nn\np\n1\n{{ partition_start }}\n\np\nw\n" | fdisk {{ ami_device }}'
   register: partout
 
+- name: Running filesystem check required before resize
+  shell: 'e2fsck -y -f {{ ami_device }}1'
+
 - name: Growing filesystem to fill partition
   shell: 'resize2fs {{ ami_device }}1'
 
