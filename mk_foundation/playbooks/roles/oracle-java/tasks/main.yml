@@ -1,0 +1,5 @@
+---
+- name: Setup package repositories
+  include: oracle-java-ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+

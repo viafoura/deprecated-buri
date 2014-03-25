@@ -1,0 +1,26 @@
+---
+# Set up package repositories
+# main.yml must have a when: ansible_distribution == 'Ubuntu' on including this
+
+- name: Add PPA for webupd8 PPA for oracle java installers
+  apt_repository: repo='ppa:webupd8team/java'
+
+- name: Update APT repo information
+  apt: update-cache=yes
+
+- name: Marking oracle license as accepted
+  shell: 'debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections'
+
+- name: Marking oracle license as seen
+  shell: 'debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections'
+
+- name: Install oracle-java{{ java_version }}-installer
+  apt: pkg=oracle-java{{ java_version }}-installer state=latest install_recommends=no
+
+- name: Setting java alternatives to oracle java
+  shell: 'update-java-alternatives -s java-{{ java_version }}-oracle'
+
+- name: Install oracle-java{{ java_version }}-set-default
+  apt: pkg=oracle-java{{ java_version }}-set-default state=latest install_recommends=no
+
+
