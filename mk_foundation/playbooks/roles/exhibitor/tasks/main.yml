@@ -1,0 +1,81 @@
+---
+# Exhibitor role
+- name: Add group zookeeper
+  group: name={{ zookeeper_group }}
+
+- name: Add user zookeeper
+  user: name={{ zookeeper_user }} group={{ zookeeper_group }}
+
+- name: Create zookeeper install directory
+  file: path={{ zookeeper_install_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
+
+# Not sure yet if this re-evaluates
+- name: Testing if zookeeper already installed
+  stat: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }}
+  register: zkdir
+
+- name: Download zookeeper {{ zookeeper_version }} release archive
+  get_url: url={{ zookeeper_mirror }} dest=/tmp/{{ zookeeper_basename }}.tar.gz sha256sum={{ zookeeper_checksum }} user=root mode=0644
+  when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
+
+- name: Extract zookeeper {{ zookeeper_version }} release archive to install dir
+  command: tar -C {{ zookeeper_install_dir }} -zxf /tmp/{{ zookeeper_basename }}.tar.gz
+  when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
+
+- name: Set ownership of installed release archive
+  #command: chown -R {{ zookeeper_user }}:{{ zookeeper_group }} {{ zookeeper_install_dir }}'
+  file: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }} state=directory recurse=yes user={{ zookeeper_user }} group={{ zookeeper_group }}
+  when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
+
+- name: Create Exhibitor install directory
+  file: path={{ exhibitor_install_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
+
+- name: Create Exhibitor snapshot directory
+  file: path={{ exhibitor_snapshot_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
+
+- name: Create Exhibitor transaction directory
+  file: path={{ exhibitor_transaction_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
+
+- name: Create Exhibitor log_index directory
+  file: path={{ exhibitor_log_index_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
+
+- name: Testing if exhibitor is already installed
+  stat: path={{ exhibitor_jar_dest }}
+  register: exjar
+
+# FIXME: set checksum
+- name: Download Exhibitor {{ exhibitor_version }} release archive to install location
+  get_url: url={{ exhibitor_mirror }} dest={{ exhibitor_jar_dest }}.tar.gz sha256sum={{ exhibitor_checksum }} user=root mode=0644
+  when: exjar.stat.exists is not defined or exjar.stat.exists != true
+
+- name: Install local zookeeper check script.
+  template: src=check-local-zk.py dest={{ exhibitor_script_dir }}/check-local-zk.py owner={{ zookeeper_user }} mode=0744
+
+- name: Install Exhibitor S3 access key information to property file.
+  template: src=exhibitor.s3.properties dest={{ exhibitor_install_dir }}/exhibitor.s3.properties owner={{ zookeeper_user }} mode=0440
+  when: exhibitor_opts_configtype == 's3' and exhibitor_s3key != '' and exhibitor_s3secret != ''
+
+- name: Install Exhibitor logging properties.
+  template: src=log4j.properties dest={{ exhibitor_install_dir }}/log4j.properties owner=root group=root mode=0644
+
+- name: Install Exhibitor upstart script.
+  template: src=exhibitor.upstart.conf dest=/etc/init/exhibitor.conf owner=root group=root mode=0644
+
+- name: Install Exhibitor default property file.
+  template: src=exhibitor.properties dest={{ exhibitor_install_dir }}/exhibitor.properties owner={{ zookeeper_user }} mode=0644
+
+- name: Enable Exhibitor on boot.
+  service: name=exhibitor enable=yes
+
+
+
+
+
+
+
+
+
+
+
+
+
