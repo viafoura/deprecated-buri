@@ -22,9 +22,8 @@ exhibitor_loglevel: 'info'
 # For --configtype s3, backups
 exhibitor_s3key: ''
 exhibitor_s3secret: ''
-exhibitor_opts_
 exhibitor_opts_port: '8080'
-exhibitor_opts_hostname: node[:ipaddress]
+exhibitor_opts_hostname: '{{ ansible_default_ipv4.address }}'
 exhibitor_opts_defaultconfig: '{{ exhibitor_install_dir }}/exhibitor.properties'
 exhibitor_opts_s3credentials: '{{ exhibitor_install_dir }}/exhibitor.s3.properties'
 exhibitor_opts_configtype: 'file'
@@ -64,5 +63,5 @@ exhibitor_defaultconfig_election_port: '3888'
 exhibitor_defaultconfig_zoo_cfg_extra: 'tickTime\=2000&initLimit\=10&syncLimit\=5'
 exhibitor_defaultconfig_auto_manage_instances_settling_period_ms: '0'
 exhibitor_defaultconfig_auto_manage_instances: '1'
-exhibitor_defaultconfig_servers_spec: '1:#{node[:ipaddress]}'
+exhibitor_defaultconfig_servers_spec: '1:{{ ansible_default_ipv4.address }}'
 
