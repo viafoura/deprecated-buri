@@ -1,0 +1,25 @@
+---
+# Tomcat role
+- name: Install Apache Tomcat 7 (apt version)
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - tomcat7
+    - libtcnative-1
+    - libapr1
+    - authbind
+  
+# FIXME: should we really do this?
+- name: Symlink to /usr/local/tomcat
+  file: dest=/usr/local/tomcat state=link src=/var/lib/tomcat7
+  
+- name: Fix webapps permissions so tomcat can deploy
+  file: dest=/usr/local/tomcat/webapps state=directory owner={{ tomcat_user }}  group={{ tomcat_user }}  mode=0775
+
+- name: Tomcat service config (Ubuntu/Debian version)
+  template: src=default.j2 dest=/etc/default/tomcat7 owner=root group=root mode=0644
+  notify: restart tomcat
+
+- name: Stopping tomcat7 service
+  service: name=tomcat7 state=stopped
+  when: image_build
+
