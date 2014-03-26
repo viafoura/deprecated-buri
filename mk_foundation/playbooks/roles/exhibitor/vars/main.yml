@@ -13,7 +13,7 @@ exhibitor_checksum: '21b08ec5a2debc16ec3948b3f334b9decf537828bcfb139133681eb25ee
 exhibitor_install_dir: '/opt/exhibitor'
 exhibitor_script_dir: '/usr/local/bin/'
 exhibitor_snapshot_dir: '/tmp/zookeeper'
-exhibitor_transaction_dir: '/tmp/zookeeper'
+exhibitor_transaction_dir: '/mnt/zookeeper'
 exhibitor_log_index_dir: '/tmp/zookeeper_log_indexes'
 exhibitor_jar_dest: '{{ exhibitor_install_dir }}/{{ exhibitor_version }}.jar'
 exhibitor_log4j_props: '{{ exhibitor_install_dir }}/log4j.properties'
@@ -32,7 +32,7 @@ exhibitor_opts_fsconfigdir: '/tmp'
 exhibitor_opts_s3config: 'exhibitor:exhibitor-config'
 exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
 # If true, enables AWS S3 backup of ZooKeeper log files (s3credentials may be provided as well).
-exhibitor_opts_s3backup: "false"
+exhibitor_opts_s3backup: False
 # Max lines of logging to keep in memory for display.
 exhibitor_opts_loglines: "1000"
 # If true, the Explorer UI will allow nodes to be modified (use with caution).

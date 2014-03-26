@@ -50,7 +50,7 @@
 
 - name: Install Exhibitor S3 access key information to property file.
   template: src=exhibitor.s3.properties dest={{ exhibitor_install_dir }}/exhibitor.s3.properties owner={{ zookeeper_user }} mode=0440
-  when: exhibitor_opts_configtype == 's3' and exhibitor_s3key != '' and exhibitor_s3secret != ''
+  when: exhibitor_s3key != '' and exhibitor_s3secret != ''
 
 - name: Install Exhibitor logging properties.
   template: src=log4j.properties dest={{ exhibitor_install_dir }}/log4j.properties owner=root group=root mode=0644
