@@ -62,7 +62,7 @@
   template: src=exhibitor.properties dest={{ exhibitor_install_dir }}/exhibitor.properties owner={{ zookeeper_user }} mode=0644
 
 - name: Enable Exhibitor on boot.
-  service: name=exhibitor enable=yes
+  service: name=exhibitor enabled=yes
 
 
 
