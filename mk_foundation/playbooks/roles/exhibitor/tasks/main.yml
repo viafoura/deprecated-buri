@@ -48,9 +48,6 @@
   get_url: url={{ exhibitor_mirror }} dest={{ exhibitor_jar_dest }}.tar.gz sha256sum={{ exhibitor_checksum }} owner=root mode=0644
   when: exjar.stat.exists is not defined or exjar.stat.exists != true
 
-- name: Install local zookeeper check script.
-  template: src=check-local-zk.py dest={{ exhibitor_script_dir }}/check-local-zk.py owner={{ zookeeper_user }} mode=0744
-
 - name: Install Exhibitor S3 access key information to property file.
   template: src=exhibitor.s3.properties dest={{ exhibitor_install_dir }}/exhibitor.s3.properties owner={{ zookeeper_user }} mode=0440
   when: exhibitor_opts_configtype == 's3' and exhibitor_s3key != '' and exhibitor_s3secret != ''

@@ -37,12 +37,14 @@ cd mk_foundation
 ```
 
 3. Create a new foundation set, for ubuntu:
+
 ```
 # cd mk_foundation (if not already there)
 ./create-ubuntu-foundation.sh
 ```
 
 4. Create a new base set, using as input, the PVM AMI ID from previous step
+
 ```
 # cd mk_foundation (if not already there)
 ./resnap.sh <foundation-pvm-ami-ID> base
