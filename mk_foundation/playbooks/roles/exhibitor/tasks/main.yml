@@ -45,7 +45,7 @@
 
 # FIXME: set checksum
 - name: Download Exhibitor {{ exhibitor_version }} release archive to install location
-  get_url: url={{ exhibitor_mirror }} dest={{ exhibitor_jar_dest }}.tar.gz sha256sum={{ exhibitor_checksum }} owner=root mode=0644
+  get_url: url={{ exhibitor_mirror }} dest={{ exhibitor_jar_dest }} sha256sum={{ exhibitor_checksum }} owner=root mode=0644
   when: exjar.stat.exists is not defined or exjar.stat.exists != true
 
 - name: Install Exhibitor S3 access key information to property file.
