@@ -62,5 +62,5 @@ exhibitor_defaultconfig_election_port: '3888'
 exhibitor_defaultconfig_zoo_cfg_extra: 'tickTime\=2000&initLimit\=10&syncLimit\=5'
 exhibitor_defaultconfig_auto_manage_instances_settling_period_ms: '0'
 exhibitor_defaultconfig_auto_manage_instances: '1'
-exhibitor_defaultconfig_servers_spec: '1:localhost'
+exhibitor_defaultconfig_servers_spec: '1:$'
 
