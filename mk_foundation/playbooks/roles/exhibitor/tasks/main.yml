@@ -14,11 +14,11 @@
   stat: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }}
   register: zkdir
 
-- name: Download zookeeper {{ zookeeper_version }} release archive
+- name: Download zookeeper release archive
   get_url: url={{ zookeeper_mirror }} dest=/tmp/{{ zookeeper_basename }}.tar.gz sha256sum={{ zookeeper_checksum }} owner=root mode=0644
   when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
 
-- name: Extract zookeeper {{ zookeeper_version }} release archive to install dir
+- name: Extract zookeeper release archive to install dir
   command: tar -C {{ zookeeper_install_dir }} -zxf /tmp/{{ zookeeper_basename }}.tar.gz
   when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
 
