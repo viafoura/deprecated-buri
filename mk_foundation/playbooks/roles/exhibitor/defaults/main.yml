@@ -26,14 +26,14 @@ exhibitor_s3secret: ''
 exhibitor_opts_port: '8080'
 exhibitor_opts_defaultconfig: '{{ exhibitor_install_dir }}/exhibitor.properties'
 exhibitor_opts_s3credentials: '{{ exhibitor_install_dir }}/exhibitor.s3.properties'
-exhibitor_opts_configtype: 'file'
+exhibitor_opts_configtype: 's3'
 # For --contiftype file
 exhibitor_opts_fsconfigdir: '/tmp'
 # For --configtype s3, set:
 exhibitor_opts_s3config: 'exhibitor:exhibitor-config'
 exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
 # If true, enables AWS S3 backup of ZooKeeper log files (s3credentials may be provided as well).
-exhibitor_opts_s3backup: False
+exhibitor_opts_s3backup: True
 # Max lines of logging to keep in memory for display.
 exhibitor_opts_loglines: "1000"
 # If true, the Explorer UI will allow nodes to be modified (use with caution).
