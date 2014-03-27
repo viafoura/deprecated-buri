@@ -1,1 +1,2 @@
 # Most defaults actually in the roles. File exsists mostly to allow a local version
+site_defaults: True
