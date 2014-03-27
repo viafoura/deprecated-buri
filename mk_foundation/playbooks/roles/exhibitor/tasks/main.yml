@@ -56,7 +56,7 @@
   template: src=log4j.properties dest={{ exhibitor_install_dir }}/log4j.properties owner=root group=root mode=0644
 
 - name: Install local zookeeper check script.
-  template: src=check-local-zk.py dest={{ exhibitor_check_script }} owner={{ zookeeper.user }} mode=0744
+  template: src=check-local-zk.py dest={{ exhibitor_check_script }} owner={{ zookeeper_user }} mode=0744
 
 - name: Install Exhibitor upstart script.
   template: src=exhibitor.upstart.conf dest=/etc/init/exhibitor.conf owner=root group=root mode=0644
