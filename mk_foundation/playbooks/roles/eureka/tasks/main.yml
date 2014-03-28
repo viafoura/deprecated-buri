@@ -1,0 +1,6 @@
+---
+# Eureka role
+- name: Download snapshot build of Eureka from Cloudbees
+  get_url: url={{ eureka_build_url }} dest=/usr/local/tomcat/webapps/eureka.war
+  tags: deploy
+  
