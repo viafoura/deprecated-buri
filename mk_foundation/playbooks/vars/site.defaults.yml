@@ -6,4 +6,5 @@ site_defaults: True
 # 
 #exhibitor_opts_s3config: 'prefix-exhibitor:config'
 #exhibitor_opts_s3region: 'us-east-1'
+#eureka_dns_txt_domain: eureka.mydomain.net
 

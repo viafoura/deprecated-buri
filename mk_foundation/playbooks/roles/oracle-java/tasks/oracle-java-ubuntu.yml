@@ -23,4 +23,6 @@
 - name: Install oracle-java{{ java_version }}-set-default
   apt: pkg=oracle-java{{ java_version }}-set-default state=latest install_recommends=no
 
+- name: Provide symlink to default java per debian conventions
+  file: src=/usr/lib/jvm/java-7-oracle dest=/usr/lib/jvm/default-java state=link
 
