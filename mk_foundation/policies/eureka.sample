@@ -1,0 +1,22 @@
+{
+  "Statement": [
+    {
+      "Sid": "Stmt1355974636752",
+      "Action": [
+        "ec2:DescribeAddresses",
+        "ec2:AssociateAddress",
+        "ec2:DisassociateAddress"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Sid": "Stmt1358974395291",
+      "Action": [
+        "autoscaling:DescribeAutoScalingGroups"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
