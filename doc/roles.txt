@@ -1,0 +1,40 @@
+
+Misc note on role setups
+
+EUREKA
+
+  - one ASG per REGION, spreads equal cross-zone
+    - needs to defined in config, as:
+
+eureka.asgName
+
+  - One EIP per Eureka Node
+  - Eureka will take care of binding it's EIP
+  - DNS model strongly recommended
+    - Region records point to Zone records
+
+txt.us-east-1.mydomaintest.netflix.net="us-east-1c.mydomaintest.netflix.net" "us-east-1d.mydomaintest.netflix.net" "us-east-1e.mydomaintest.netflix.net"
+
+    - Then, you can define TXT records recursively for each zone similar to the following
+
+txt.us-east-1c.mydomaintest.netflix.net="http://ec2-552-627-568-165.compute-1.amazonaws.com:7001/discovery/v2/" "http://ec2-168-101-182-134.compute-1.amazonaws.com:7001/discovery/v2/"
+txt.us-east-1d.mydomaintest.netflix.net="http://ec2-552-627-568-170.compute-1.amazonaws.com:7001/discovery/v2/"
+txt.us-east-1e.mydomaintest.netflix.net="http://ec2-50-179-285-592.compute-1.amazonaws.com:7001/discovery/v2/"
+
+    - And client properties for all nodes, configure as follows:
+
+eureka.shouldUseDns=true
+eureka.eurekaServer.domainName=mydomaintest.netflix.net
+eureka.eurekaServer.port=7001
+eureka.eurekaServer.context=eureka/v2
+
+    - Also needs:
+
+-Deureka.datacenter=cloud             # in launch
+
+    - May also need? (But shouldn't w/ an IAM role really...)
+
+eureka.awsAccessId=
+eureka.awsSecretKey=
+
+
