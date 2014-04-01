@@ -1,6 +1,22 @@
 ---
 # ebs_volume_id:
 
+- name: Identify mount to tear down
+  shell: "df | grep {{ ami_device }} | awk '{ print $6 }'"
+  register: old_mount
+
+- name: Unmount /proc filesystem from chroot
+  command: 'chroot {{ item }} umount /proc'
+  with_items: old_mount.stdout
+
+- name: Unmount /dev filesystem from chroot
+  command: 'umount {{ item }}/dev'
+  with_items: old_mount.stdout
+
+- name: Unmount EBS volume for chroot
+  command: 'umount {{ item }}'
+  with_items: old_mount.stdout
+
 - name: Detatch failed working volume
   command: 'ec2-detach-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
 
