@@ -8,10 +8,21 @@ sudo add-apt-repository -y ppa:jhohertz/aws-ppa
 sudo apt-get update
 sudo -E apt-get upgrade -y
 sudo -E apt-get install --no-install-recommends -y \
+ coreutils                \
  ec2-ami-tools            \
  ec2-api-tools            \
+ python                   \
+ python-support           \
+ python-pip               \
+ python-crypto            \
+ python-jinja2            \
+ libapt-pkg4.12           \
+ make                     \
  qemu-utils               \
  git-core                 \
  ansible
+
+pip install boto
+pip install awscli
 
 

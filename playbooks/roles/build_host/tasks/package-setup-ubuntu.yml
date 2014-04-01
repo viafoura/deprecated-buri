@@ -29,12 +29,27 @@
 - name: Upgrade APT packages to current
   apt: upgrade=dist
 
-- name: Install ec2-api-tools
-  apt: pkg=ec2-api-tools state=latest install_recommends=no
+- name: Install build dependencies
+  apt: pkg={{ item }} state=latest install_recommends=no
+  with_items:
+    - coreutils
+    - ec2-ami-tools
+    - ec2-api-tools
+    - python
+    - python-support
+    - python-pip
+    - python-crypto
+    - python-jinja2
+    - libapt-pkg4.12
+    - make
+    - qemu-utils
+    - git-core
+    - ansible
 
-- name: Install ec2-ami-tools
-  apt: pkg=ec2-ami-tools state=latest install_recommends=no
+- name: Install boto Python library
+  pip: name=boto state=latest
 
-- name: Install qemu-utils
-  apt: pkg=qemu-utils state=latest install_recommends=no
+- name: Install AWS CLI
+  pip: name=awscli state=latest
+
 
