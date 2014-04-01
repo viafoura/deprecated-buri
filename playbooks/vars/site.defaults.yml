@@ -8,3 +8,13 @@ site_defaults: True
 #exhibitor_opts_s3region: 'us-east-1'
 #eureka_dns_txt_domain: eureka.mydomain.net
 
+# S3 info for billing data from AWS
+#ice_billing_s3_bucket_names: example-billing
+#ice_billing_s3_bucket_prefix: 
+# Your company's name
+#ice_company_name: Your Company Name
+# The S3 bucket Ice can use as it's workspace (needs read and write access)
+#ice_work_s3_bucket_name: example-ice-work
+# Your AWS Account ID
+#ice_account1_aws_id: 123456789011
+
