@@ -1,6 +1,2 @@
-image_mount: "/mnt/{{ ami_basename }}-{{ ami_timestamp }}"
 ami_basename: "ice"
-ami_name: "{{ ami_basename }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ ami_timestamp }}"
-ami_description: "{{ ami_basename }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
 ami_root_size: 8
-ami_parent: ami-abc123d4

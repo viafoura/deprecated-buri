@@ -1,10 +1,14 @@
-# Something must override these
+# Something must override this
 ami_basename: ""
-ami_name: ""
-ami_description: ""
+# Can, but probably shouldn't refrain from overriding these. Convention is good
+ami_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"
+ami_name: "{{ ami_basename }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ ami_timestamp }}"
+# Maybe this one if you want a custom name
+ami_description: "{{ ami_basename }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
+# FIXME: prefix this with ami_, should maybe even be pushed out
+image_mount: "/mnt/{{ ami_basename }}-{{ ami_timestamp }}"
 # In GB
 ami_root_size: 5
-ami_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"
 # FIXME: this should be more dynamic than this
 ami_device: "/dev/xvdi"
 # FIXME: this is kind of naive, better mapping possible
