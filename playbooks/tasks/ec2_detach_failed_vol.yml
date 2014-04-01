@@ -1,0 +1,16 @@
+---
+# ebs_volume_id:
+
+- name: Detatch failed working volume
+  command: 'ec2-detach-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+
+- name: Waiting for completion of volume detatch
+  command: 'ec2-describe-volumes --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+  register: result
+  until: result.stdout.find("ATTACHMENT") == -1
+  retries: 30
+  delay: 3
+
+- name: Delete EBS working volume
+  command: 'ec2-delete-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+
