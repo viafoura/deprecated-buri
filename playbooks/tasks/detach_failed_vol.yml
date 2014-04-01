@@ -17,6 +17,15 @@
   command: 'umount {{ item }}'
   with_items: old_mount.stdout
 
+- name: Discover Volume ID to detatch
+  command: "ec2-describe-instances {{ ansible_ec2_instance_id }} | grep BLOCKDEVICE | grep {{ ami_device.replace('/dev/xvd', '/dev/sd') }}"
+  register: ebsvol
+
+- name: Saving Volume ID as a fact for later use
+  set_fact:
+    ebs_volume_id: '{{ item.split("\t")[2] }}'
+  with_items: ebsvol.stdout
+
 - name: Detatch failed working volume
   command: 'ec2-detach-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
 
