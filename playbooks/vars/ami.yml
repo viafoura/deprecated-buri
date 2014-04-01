@@ -14,5 +14,3 @@ ami_root_size: 5
 ami_root_resize: False
 # FIXME: this should be more dynamic than this
 ami_device: "/dev/xvdi"
-# FIXME: this is kind of naive, better mapping possible
-ami_ephemeral: "/dev/sdb"
