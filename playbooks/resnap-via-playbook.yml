@@ -1,0 +1,69 @@
+---
+# Playbook to create a foundation snapshot/AMI from ubuntu's source images
+- name: Mounting EBS snapshot to work from
+  hosts: localhost
+  connection: local
+  sudo: True
+  tags: resnap
+  vars:
+    foo: bar
+  vars_files:
+    - vars/ami.yml
+    - [ "vars/site.yml", "vars/site.defaults.yml" ]
+  roles:
+    - build_host
+  tasks:
+    - include: tasks/ec2_get_facts.yml
+    - include: tasks/ec2_ami_lookup.yml
+    - include: tasks/ec2_create_vol_and_attach.yml
+      vars:
+        ebs_size: '{{ ami_root_size }}'
+        ebs_device_id: '{{ ami_device }}'
+        ebs_snap: '{{ ebs_parent_id }}'
+    - include: tasks/filesystem-grow.yml
+      when: ami_root_resize
+    - include: tasks/chroot_mount_and_setup.yml
+      vars:
+        chroot_mountpoint: '{{ image_mount }}'
+        chroot_device: '{{ ami_device }}'
+    - name: Register chroot target in ansible inventory
+      add_host: hostname={{ image_mount }} groupname=chroots
+
+- name: Provisioning role against chroot
+  hosts: chroots
+  connection: chroot
+  user: root
+  sudo: True
+  tags: foundation
+  vars:
+    image_build: True
+  vars_files:
+    - vars/system/{{ ansible_distribution }}.yml
+    - [ "vars/site.yml", "vars/site.defaults.yml" ]
+  roles:
+    - '{{ ami_role }}'
+
+- name: Disconnect, snapshot, and register newly formed AMI
+  hosts: localhost
+  connection: local
+  sudo: True
+  tags: resnap
+  vars:
+    foo: bar
+  vars_files:
+    - vars/ami.yml
+    - [ "vars/site.yml", "vars/site.defaults.yml" ]
+  tasks:
+    - include: tasks/ec2_get_facts.yml
+    - include: tasks/chroot_clean_and_unmount.yml
+      vars:
+        chroot_mountpoint: '{{ image_mount }}'
+    - include: tasks/ec2_detach_and_snapshot_vol.yml
+      vars:
+        # ebs_volume_id: (comes via stored fact)
+        ebs_snap_desc: '{{ ami_description }}'
+        ebs_tag_name: '{{ ami_name }}'
+    - include: tasks/ec2_ami_tag_ebs_pvm.yml
+    - include: tasks/ec2_ami_tag_ebs_hvm.yml
+    - include: tasks/report-resnap.yml
+

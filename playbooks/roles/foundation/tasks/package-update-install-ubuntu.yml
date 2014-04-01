@@ -1,0 +1,12 @@
+
+- name: Update APT repo information
+  apt: update-cache=yes
+
+- name: Upgrade APT packages to current
+  apt: upgrade=dist
+
+- name: Install coreutils
+  apt: pkg={{ item }} state=latest install_recommends=no
+  with_items:
+    - coreutils
+

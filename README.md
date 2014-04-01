@@ -19,14 +19,12 @@ In the current state:
 2. Install ansible, git, and ec2 api/ami tools. There is a helper script for ubuntu:
 
 ```
-cd mk_foundation
 ./setup_ubuntu.sh
 ```
 
 3. Create a new foundation AMI set, for ubuntu:
 
 ```
-# cd mk_foundation (if not already there)
 ./create-ubuntu-foundation.sh
 ```
 

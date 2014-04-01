@@ -1,0 +1,35 @@
+
+- name: Install packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    # editors
+    - vim
+    - nano
+    # networking
+    - dnsutils
+    - lynx
+    - openssh-client
+    - openssh-server
+    - ngrep
+    - ntp
+    - rsync
+    - ssh
+    - tcpdump
+    - telnet
+    - traceroute
+    # system
+    - git-core
+    - less
+    - perl
+    - perl-modules
+    - python
+    - python-support
+    - python-pip
+    - sudo
+    - sysstat
+    - unzip
+    - xfsprogs
+    - zip
+    - make
+
+

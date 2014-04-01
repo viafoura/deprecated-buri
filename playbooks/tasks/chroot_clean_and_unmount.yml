@@ -1,0 +1,33 @@
+---
+# chroot_mountpoint:    where unmount
+
+- name: Unmount /proc filesystem from chroot
+  command: 'chroot {{ chroot_mountpoint }} umount /proc'
+
+- name: Unmount /dev filesystem from chroot
+  command: 'umount {{ chroot_mountpoint }}/dev'
+
+- name: Re-enable rc.d before snapshot
+  file:
+    path: '{{ chroot_mountpoint }}/usr/sbin/policy-rc.d'
+    state: absent
+
+- name: Create Buri build label folder
+  file:
+    path: '{{ chroot_mountpoint }}/var/lib/buri'
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Record Buri build label
+  file:
+    path: '{{ chroot_mountpoint }}/var/lib/buri/{{ ami_name }}'
+    state: touch
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Unmount EBS volume for chroot
+  command: 'umount {{ chroot_mountpoint }}'
+

@@ -1,0 +1,18 @@
+# Something must override this at commandline, do not set elsewhere.
+#ami_role: ""
+# Can, but probably shouldn't refrain from overriding these. Convention is good
+ami_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"
+ami_name: "{{ ami_role }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ ami_timestamp }}"
+# Maybe this one if you want a custom name
+ami_description: "{{ ami_role }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
+# FIXME: prefix this with ami_, should maybe even be pushed out
+image_mount: "/mnt/{{ ami_role }}-{{ ami_timestamp }}"
+# In GB, a default. whole numbers only.
+ami_root_size: 5
+# Grow the extfs partition to fill the volume fully
+# Mostly used for foundation/base
+ami_root_resize: False
+# FIXME: this should be more dynamic than this
+ami_device: "/dev/xvdi"
+# FIXME: this is kind of naive, better mapping possible
+ami_ephemeral: "/dev/sdb"
