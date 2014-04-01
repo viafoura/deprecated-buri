@@ -30,5 +30,6 @@
     - unzip
     - xfsprogs
     - zip
+    - make
 
 
