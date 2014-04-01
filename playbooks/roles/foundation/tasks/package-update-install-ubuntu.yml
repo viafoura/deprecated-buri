@@ -6,29 +6,7 @@
   apt: upgrade=dist
 
 - name: Install coreutils
-  apt: pkg=coreutils state=latest install_recommends=no
-
-- name: Install git-core
-  apt: pkg=git-core state=latest install_recommends=no
-
-- name: Install libapt-pkg4.12
-  apt: pkg=libapt-pkg4.12 state=latest install_recommends=no
-
-- name: Install make
-  apt: pkg=make state=latest install_recommends=no
-
-- name: Install python-crypto
-  apt: pkg=python-crypto state=latest install_recommends=no
-
-- name: Install python-support
-  apt: pkg=python-support state=latest install_recommends=no
-
-- name: Install python-jinja2
-  apt: pkg=python-jinja2 state=latest install_recommends=no
-
-- name: Install python-pip
-  apt: pkg=python-pip state=latest install_recommends=no
-
-- name: Install ansible
-  apt: pkg=ansible state=latest install_recommends=no
+  apt: pkg={{ item }} state=latest install_recommends=no
+  with_items:
+    - coreutils
 
