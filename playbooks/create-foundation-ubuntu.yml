@@ -27,6 +27,7 @@
         image_path: '{{ distro_image_path }}'
         image_device: '{{ ami_device }}'
     - include: tasks/filesystem-grow.yml
+      when: ami_root_resize
     - include: tasks/chroot_mount_and_setup.yml
       vars:
         chroot_mountpoint: '{{ image_mount }}'
