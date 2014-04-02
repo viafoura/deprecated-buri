@@ -1,0 +1,4 @@
+---
+- name: Making local image of EBS Volume to bundle
+  command: 'qemu-img convert -f host_device -O raw {{ ami_device }} /mnt/{{ ami_name }}.img'
+

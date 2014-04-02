@@ -16,5 +16,5 @@ ami_root_resize: False
 ami_device: "/dev/xvdi"
 ami_build_pvm_ebs: True
 ami_build_hvm_ebs: True
-ami_build_pvm_instance: True
-ami_build_hvm_instance: True
+ami_build_pvm_instance: False
+ami_build_hvm_instance: False

@@ -9,7 +9,7 @@
     foo: bar
   vars_files:
     - vars/ami.yml
-    - [ "vars/site.yml", "vars/site.defaults.yml" ]
+    - [ "local/site.yml", "vars/site.defaults.yml" ]
   roles:
     - build_host
   tasks:
@@ -39,7 +39,7 @@
     image_build: True
   vars_files:
     - vars/system/{{ ansible_distribution }}.yml
-    - [ "vars/site.yml", "vars/site.defaults.yml" ]
+    - [ "local/site.yml", "vars/site.defaults.yml" ]
   roles:
     - '{{ ami_role }}'
 
@@ -52,12 +52,14 @@
     foo: bar
   vars_files:
     - vars/ami.yml
-    - [ "vars/site.yml", "vars/site.defaults.yml" ]
+    - [ "local/site.yml", "vars/site.defaults.yml" ]
   tasks:
     - include: tasks/ec2_get_facts.yml
     - include: tasks/chroot_clean_and_unmount.yml
       vars:
         chroot_mountpoint: '{{ image_mount }}'
+    - include: tasks/copy_raw_image.yml
+      when: ami_build_pvm_instance or ami_build_hvm_instance
     - include: tasks/ec2_detach_and_snapshot_vol.yml
       vars:
         # ebs_volume_id: (comes via stored fact)

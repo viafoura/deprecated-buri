@@ -1,8 +1,8 @@
 # Most defaults actually in the roles. File exsists mostly to allow a local version
-# Don't edit this file, make a site.yml instead
+# Don't edit this file, make a local/site.yml instead
 site_defaults: True
 #
-# Will try to capture values that may need overriding for a typical site.yml file here
+# Will try to capture values that may need overriding for a typical local/site.yml file here
 # 
 #exhibitor_opts_s3config: 'prefix-exhibitor:config'
 #exhibitor_opts_s3region: 'us-east-1'
