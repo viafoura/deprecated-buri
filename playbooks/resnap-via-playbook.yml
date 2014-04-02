@@ -4,9 +4,7 @@
   hosts: localhost
   connection: local
   sudo: True
-  tags: resnap
-  vars:
-    foo: bar
+  #vars:
   vars_files:
     - vars/ami.yml
     - [ "local/site.yml", "vars/site.defaults.yml" ]
@@ -34,11 +32,10 @@
   connection: chroot
   user: root
   sudo: True
-  tags: foundation
   vars:
     image_build: True
   vars_files:
-    - vars/system/{{ ansible_distribution }}.yml
+    - 'vars/system/{{ ansible_distribution }}.yml'
     - [ "local/site.yml", "vars/site.defaults.yml" ]
   roles:
     - '{{ ami_role }}'
@@ -47,9 +44,7 @@
   hosts: localhost
   connection: local
   sudo: True
-  tags: resnap
-  vars:
-    foo: bar
+  #vars:
   vars_files:
     - vars/ami.yml
     - [ "local/site.yml", "vars/site.defaults.yml" ]
