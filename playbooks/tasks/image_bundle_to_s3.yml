@@ -8,5 +8,7 @@
 
 # TODO: --region us-west-2
 - name: Bundling image for S3
-  command: 'ec2-upload-bundle -b {{ ami_bucket_path }}/{{ ami_name }} -m /mnt/{{ ami_name }}-bundled/image.manifest.xml
+  command: 'ec2-upload-bundle -b {{ ami_bucket_path }}/{{ ami_name }} -m /mnt/{{ ami_name }}-bundled/image.manifest.xml'
+
+# FIXME: clean up image, bundle folder
 

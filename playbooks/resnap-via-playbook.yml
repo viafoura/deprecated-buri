@@ -60,6 +60,10 @@
         chroot_mountpoint: '{{ image_mount }}'
     - include: tasks/image_bundle_to_s3.yml
       when: ami_build_pvm_instance or ami_build_hvm_instance
+    - include: tasks/ec2_ami_tag_s3_pvm.yml
+      when: ami_build_pvm_instance
+    - include: tasks/ec2_ami_tag_s3_hvm.yml
+      when: ami_build_hvm_instance
     - include: tasks/ec2_detach_and_snapshot_vol.yml
       vars:
         # ebs_volume_id: (comes via stored fact)

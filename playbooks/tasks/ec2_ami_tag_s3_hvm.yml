@@ -1,0 +1,15 @@
+---
+- name: Registering Instance HVM AMI to snapshot
+  # FIXME: check if we override bundle re: volumes here, if so, rely on it for consistency.
+  #command: 'ec2-register --name "{{ ami_name }}-HVM-S3" --description "{{ ami_description }}" --architecture "x86_64" --root-device-name /dev/sda1 --block-device-mapping /dev/sda1={{ ebs_snapshot_id }}::true --block-device-mapping /dev/sdb=ephemeral0 --block-device-mapping /dev/sdc=ephemeral1 --block-device-mapping /dev/sdd=ephemeral2 --block-device-mapping /dev/sde=ephemeral3 --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
+  command: 'ec2-register {{ ami_bucket_path }}/{{ ami_name }}/image.manifest.xml --name "{{ ami_name }}-HVM-S3" --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
+  register: amihvminstance
+
+- name: Saving Instance HVM AMI ID as a fact for later use
+  set_fact:
+    ami_id_hvm_instance: '{{ item.split("\t")[1] }}'
+  with_items: amihvminstance.stdout
+
+- name: Tagging Instance HVM AMI
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_hvm_instance }} --tag Name="{{ ami_name }}-HVM-S3" --tag creation_time="{{ ami_timestamp }}"'
+
