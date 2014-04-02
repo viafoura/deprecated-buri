@@ -69,7 +69,7 @@
       vars:
         chroot_mountpoint: '{{ image_mount }}'
     - include: tasks/ec2_ami_find_aki_ubuntu.yml
-    - include: tasks/copy_raw_image.yml
+    - include: tasks/image_bundle_to_s3.yml
       when: ami_build_pvm_instance or ami_build_hvm_instance
     - include: tasks/ec2_detach_and_snapshot_vol.yml
       vars:
