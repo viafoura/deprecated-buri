@@ -75,6 +75,8 @@
         ebs_tag_name: '{{ ami_name }}'
     - include: tasks/ec2_ami_find_aki_ubuntu.yml
     - include: tasks/ec2_ami_tag_ebs_pvm.yml
+      when: ami_build_pvm_ebs
     - include: tasks/ec2_ami_tag_ebs_hvm.yml
+      when: ami_build_hvm_ebs
     - include: tasks/report-foundation.yml
 
