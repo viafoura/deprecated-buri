@@ -1,3 +1,5 @@
+# These variables control
+
 # Something must override this at commandline, do not set elsewhere.
 #ami_role: ""
 # Can, but probably shouldn't refrain from overriding these. Convention is good
@@ -7,6 +9,16 @@ ami_name: "{{ ami_role }}-{{ ansible_distribution }}-{{ ansible_distribution_rel
 ami_description: "{{ ami_role }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
 # FIXME: prefix this with ami_, should maybe even be pushed out
 image_mount: "/mnt/{{ ami_role }}-{{ ami_timestamp }}"
+
+# For S3 bundling:
+ami_bundle_pk: 'local/bundle_pk.pem'
+ami_bundle_cert: 'local/bundle_cert.pem'
+# set these ones in site.yml
+ami_bundle_account: '123456789012'
+ami_bundle_bucket_path: 'yourbucket/basepath'
+
+# These are more likely to be set in a site config or on command line
+
 # In GB, a default. whole numbers only.
 ami_root_size: 5
 # Grow the extfs partition to fill the volume fully
@@ -18,3 +30,4 @@ ami_build_pvm_ebs: True
 ami_build_hvm_ebs: True
 ami_build_pvm_instance: False
 ami_build_hvm_instance: False
+
