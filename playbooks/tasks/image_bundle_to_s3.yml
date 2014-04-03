@@ -13,10 +13,11 @@
 
 # TODO: --product-codes blabla,foo
 - name: Bundling image for S3
-  command: 'ec2-bundle-image -k {{ ami_bundle_pk }} -c {{ ami_bundle_cert }} -u {{ ami_bundle_account }} -i /mnt/{{ ami_name }}.img -d /mnt/{{ ami_name }}-bundled -r x86_64 --block-device-mapping ami=sda,root=/dev/sda1,ephemeral0=sdb,ephemeral1=sdc,ephemeral2=sdd,ephemeral3=sde --kernel {{ ami_aki_id }}'
+  #command: 'ec2-bundle-image -k {{ ami_bundle_pk }} -c {{ ami_bundle_cert }} -u {{ ami_bundle_account }} -i /mnt/{{ ami_name }}.img -d /mnt/{{ ami_name }}-bundled -r x86_64 --block-device-mapping ami=sda,root=/dev/sda1,ephemeral0=sdb,ephemeral1=sdc,ephemeral2=sdd,ephemeral3=sde --kernel {{ ami_aki_id }}'
+  command: 'ec2-bundle-image -k {{ ami_bundle_pk }} -c {{ ami_bundle_cert }} -u {{ ami_bundle_account }} -i /mnt/{{ ami_name }}.img -d /mnt/{{ ami_name }}-bundled -r x86_64'
 
 # TODO: --region us-west-2
-- name: Bundling image for S3
+- name: Uploading image to S3
   command: "ec2-upload-bundle -b {{ ami_bundle_bucket_path }}/{{ ami_name }} -m /mnt/{{ ami_name }}-bundled/{{ ami_name }}.img.manifest.xml -a {{ iam_access_key }} -s {{ iam_secret_key }} -t {{ iam_token }}"
 
 # FIXME: clean up image, bundle folder
