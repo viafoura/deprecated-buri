@@ -4,21 +4,25 @@
 - name: Identify mount to tear down
   shell: "df | grep {{ ami_device }} | awk '{ print $6 }'"
   register: old_mount
+  #ignore_errors: yes
 
 - name: Unmount /proc filesystem from chroot
   command: 'chroot {{ item }} umount /proc'
   with_items: old_mount.stdout
+  when: old_mount.stdout != ""
 
 - name: Unmount /dev filesystem from chroot
   command: 'umount {{ item }}/dev'
   with_items: old_mount.stdout
+  when: old_mount.stdout != ""
 
 - name: Unmount EBS volume for chroot
   command: 'umount {{ item }}'
   with_items: old_mount.stdout
+  when: old_mount.stdout != ""
 
 - name: Discover Volume ID to detatch
-  command: "ec2-describe-instances {{ ansible_ec2_instance_id }} | grep BLOCKDEVICE | grep {{ ami_device.replace('/dev/xvd', '/dev/sd') }}"
+  shell: "ec2-describe-instances {{ ansible_ec2_instance_id }} | grep BLOCKDEVICE | grep {{ ami_device.replace('/dev/xvd', '/dev/sd') }}"
   register: ebsvol
 
 - name: Saving Volume ID as a fact for later use
