@@ -17,7 +17,7 @@
 
 # TODO: --region us-west-2
 - name: Bundling image for S3
-  command: 'ec2-upload-bundle -b {{ ami_bucket_path }}/{{ ami_name }} -m /mnt/{{ ami_name }}-bundled/image.manifest.xml'
+  command: "ec2-upload-bundle -b {{ ami_bundle_bucket_path }}/{{ ami_name }} -m /mnt/{{ ami_name }}-bundled/{{ ami_name }}.img.manifest.xml -a {{ iam_access_key }} -s {{ iam_secret_key }} -t {{ iam_token }}"
 
 # FIXME: clean up image, bundle folder
 
