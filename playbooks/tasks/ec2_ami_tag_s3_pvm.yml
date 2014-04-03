@@ -1,7 +1,6 @@
 ---
 - name: Registering Instance PVM AMI to snapshot
-  # FIXME: See HVM's fixme for details
-  command: 'ec2-register {{ ami_bundle_bucket_path }}/{{ ami_name }}/{{ ami_name }}.img.manifest.xml --name "{{ ami_name }}-PVM-S3" --description "{{ ami_description }}" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda=ami --block-device-mapping /dev/sdb=ephemeral0 --block-device-mapping /dev/sdc=ephemeral1 --block-device-mapping /dev/sdd=ephemeral2 --block-device-mapping /dev/sde=ephemeral3 --region {{ ansible_ec2_placement_region }}'
+  command: 'ec2-register {{ ami_bundle_bucket_path }}/{{ ami_name }}/{{ ami_name }}.img.manifest.xml --name "{{ ami_name }}-PVM-S3" --description "{{ ami_description }}" --kernel "{{ ami_aki_id }}" --region {{ ansible_ec2_placement_region }}'
   register: amipvminstance
 
 - name: Saving Instance PVM AMI ID as a fact for later use
