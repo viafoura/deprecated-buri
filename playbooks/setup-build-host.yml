@@ -1,0 +1,11 @@
+---
+# Playbook to create a foundation snapshot/AMI from ubuntu's source images
+- name: Setup build host
+  hosts: localhost
+  connection: local
+  sudo: True
+  vars_files:
+    - [ "local/site.yml", "vars/site.defaults.yml" ]
+  roles:
+    - build_host
+
