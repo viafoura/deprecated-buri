@@ -9,6 +9,3 @@
   retries: 30
   delay: 3
 
-- name: Delete EBS working volume
-  command: 'ec2-delete-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
-
