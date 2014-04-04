@@ -16,9 +16,6 @@
     - include: tasks/filesystem-grow.yml
       when: ami_root_resize
     - include: tasks/chroot_mount_and_setup.yml
-      vars:
-        chroot_mountpoint: '{{ image_mount }}'
-        chroot_device: '{{ ami_device }}'
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ image_mount }} groupname=chroots
 

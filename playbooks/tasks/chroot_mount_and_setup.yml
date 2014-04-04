@@ -1,37 +1,33 @@
 ---
-# chroot_mountpoint:	where to mount
-# chroot_device:	device to mount
-
 # Don't use ansible module 'mount', as this is a transient thing
 - name: Creating mount point for EBS volume
   file:
-    path: '{{ chroot_mountpoint }}'
+    path: '{{ image_mount }}'
     state: directory
     owner: root
     group: root
     mode: 0444
 
 - name: Mount EBS volume for chroot
-  command: 'mount {{ chroot_device }}1 {{ chroot_mountpoint }}'
+  command: 'mount {{ ami_device }}1 {{ image_mount }}'
 
 - name: Mount /proc filesystem into chroot
-  command: 'chroot {{ chroot_mountpoint }} mount -t proc none /proc'
+  command: 'chroot {{ image_mount }} mount -t proc none /proc'
 
 - name: Mount (bind) /dev filesystem into chroot
-  command: 'mount -o bind /dev {{ chroot_mountpoint }}/dev'
+  command: 'mount -o bind /dev {{ image_mount }}/dev'
 
 # Don't use copy action, just command cp on remote
 - name: Remove resolv.conf (maybe link) from chroot environment
-  command: 'rm -f {{ chroot_mountpoint }}/etc/resolv.conf'
+  command: 'rm -f {{ image_mount }}/etc/resolv.conf'
 
 - name: Add working resolv.conf to chroot environment
-  command: 'cp /etc/resolv.conf {{ chroot_mountpoint }}/etc/resolv.conf'
+  command: 'cp /etc/resolv.conf {{ image_mount }}/etc/resolv.conf'
 
-# FIXME: file source... 
 - name: Disable rc.d for rest of the process.
   copy:
     src: files/policy-rc.d
-    dest: '{{ chroot_mountpoint }}/usr/sbin/policy-rc.d'
+    dest: '{{ image_mount }}/usr/sbin/policy-rc.d'
     owner: root
     group: root
     mode: 0755
