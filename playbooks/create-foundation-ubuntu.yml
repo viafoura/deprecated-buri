@@ -31,47 +31,5 @@
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ image_mount }} groupname=chroots
 
-
-- name: Provisioning role against chroot
-  hosts: chroots
-  connection: chroot
-  user: root
-  sudo: True
-  vars:
-    image_build: True
-  vars_files:
-    - 'vars/system/{{ ansible_distribution }}.yml'
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
-  roles:
-    - '{{ ami_role }}'
-
-- name: Disconnect, snapshot, and register newly formed AMI
-  hosts: localhost
-  connection: local
-  sudo: True
-  #vars:
-  vars_files:
-    - vars/ami.yml
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
-  tasks:
-    - include: tasks/ec2_get_facts.yml
-    - include: tasks/chroot_clean_and_unmount.yml
-      vars:
-        chroot_mountpoint: '{{ image_mount }}'
-    - include: tasks/image_bundle_to_s3.yml
-      when: ami_build_pvm_instance or ami_build_hvm_instance
-    - include: tasks/ec2_ami_tag_s3_pvm.yml
-      when: ami_build_pvm_instance
-    - include: tasks/ec2_ami_tag_s3_hvm.yml
-      when: ami_build_hvm_instance
-    - include: tasks/ec2_detach_and_snapshot_vol.yml
-      vars:
-        # ebs_volume_id: (comes via stored fact)
-        ebs_snap_desc: '{{ ami_description }}'
-        ebs_tag_name: '{{ ami_name }}'
-    - include: tasks/ec2_ami_tag_ebs_pvm.yml
-      when: ami_build_pvm_ebs
-    - include: tasks/ec2_ami_tag_ebs_hvm.yml
-      when: ami_build_hvm_ebs
-    - include: tasks/report.yml
-
+- include: _image_apply_role.yml
+- include: _image_finalize.yml

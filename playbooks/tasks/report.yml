@@ -1,7 +1,7 @@
 ---
-- main: Generate build report
+- name: Generate build report
   template: src=report.js dest=/mnt/{{ ami_name }}-report.txt owner=root group=root mode=0644
 
-- main: Output build report
+- name: Output build report
   command: cat /mnt/{{ ami_name }}-report.txt
  
