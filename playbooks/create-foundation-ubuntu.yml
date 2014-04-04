@@ -75,5 +75,5 @@
       when: ami_build_pvm_ebs
     - include: tasks/ec2_ami_tag_ebs_hvm.yml
       when: ami_build_hvm_ebs
-    #- include: tasks/report-foundation.yml
+    - include: tasks/report.yml
 
