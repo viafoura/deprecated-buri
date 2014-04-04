@@ -12,6 +12,8 @@ EBS Parent:        {{ ebs_parent_id }}
 AMI AKI ID:        {{ ami_aki_id }}
 {% if ebs_volume_id is defined and ebs_volume_id != "" %}
 EBS volume ID:     {{ ebs_volume_id }} (deleted)
+{% endif %}
+{% if ebs_snapshot_id is defined and ebs_snapshot_id != "" %}
 EBS snapshot ID:   {{ ebs_snapshot_id }}
 {% endif %}
 {% if ami_id_pvm is defined and ami_id_pvm != "" %}
