@@ -13,10 +13,6 @@
     - include: tasks/ec2_get_iam_info.yml
     - include: tasks/ec2_ami_lookup.yml
     - include: tasks/ec2_create_vol_and_attach.yml
-      vars:
-        ebs_size: '{{ ami_root_size }}'
-        ebs_device_id: '{{ ami_device }}'
-        ebs_snap: '{{ ebs_parent_id }}'
     - include: tasks/filesystem-grow.yml
       when: ami_root_resize
     - include: tasks/chroot_mount_and_setup.yml

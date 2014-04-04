@@ -14,9 +14,6 @@
     - include: tasks/ec2_get_iam_info.yml
     - include: tasks/ec2_ami_find_aki_ubuntu.yml
     - include: tasks/ec2_create_vol_and_attach.yml
-      vars:
-        ebs_size: '{{ ami_root_size }}'
-        ebs_device_id: '{{ ami_device }}'
     - include: tasks/image_write_qcow_from_url.yml
       vars:
         image_url: '{{ distro_image_url }}'
