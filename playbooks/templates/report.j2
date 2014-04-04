@@ -21,9 +21,9 @@ AMI ID - PVM/EBS:  {{ ami_id_pvm }}'
 AMI ID - HVM/EBS:  {{ ami_id_hvm }}'
 {% endif %}
 {% if ami_id_pvm_instance is defined and ami_id_pvm_instance != "" %}
-AMI ID - PVM/S3:   {{ ami_id_pvm_instance }}'
+AMI ID - PVM/S3:   {{ ami_id_pvm_instance }}
 {% endif %}
 {% if ami_id_hvm_instance is defined and ami_id_hvm_instance != "" %}
-AMI ID - HVM/S3:   {{ ami_id_hvm_instance }}'
+AMI ID - HVM/S3:   {{ ami_id_hvm_instance }}
 {% endif %}
 
