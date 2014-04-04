@@ -1,0 +1,13 @@
+---
+- name: Provisioning role against chroot
+  hosts: chroots
+  connection: chroot
+  user: root
+  sudo: True
+  vars:
+    image_build: True
+  vars_files:
+    - 'vars/system/{{ ansible_distribution }}.yml'
+    - [ "local/site.yml", "vars/site.defaults.yml" ]
+  roles:
+    - '{{ ami_role }}'
