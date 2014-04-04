@@ -19,10 +19,6 @@
     - include: tasks/ec2_ami_tag_s3_hvm.yml
       when: ami_build_hvm_instance
     - include: tasks/ec2_detach_and_snapshot_vol.yml
-      vars:
-        # ebs_volume_id: (comes via stored fact)
-        ebs_snap_desc: '{{ ami_description }}'
-        ebs_tag_name: '{{ ami_name }}'
     - include: tasks/ec2_ami_tag_ebs_pvm.yml
       when: ami_build_pvm_ebs
     - include: tasks/ec2_ami_tag_ebs_hvm.yml

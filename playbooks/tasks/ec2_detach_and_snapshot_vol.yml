@@ -1,8 +1,4 @@
 ---
-# ebs_volume_id:
-# ebs_snap_desc:
-# ebs_tag_name:
-
 - name: Detatch working volume for snapshotting
   command: 'ec2-detach-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
 
@@ -15,7 +11,7 @@
 
 # Not using snapshot module from ansible, as supporting 1.4.4 is needed
 - name: Create snapshot from EBS volume
-  command: 'ec2-create-snapshot --region {{ ansible_ec2_placement_region }} --description "{{ ebs_snap_desc }}" "{{ ebs_volume_id }}"'
+  command: 'ec2-create-snapshot --region {{ ansible_ec2_placement_region }} --description "{{ ami_description }}" "{{ ebs_volume_id }}"'
   register: snap
 
 - name: Saving Snapshot ID as a fact for later use
@@ -31,7 +27,7 @@
   delay: 3
 
 - name: Tagging snapshot
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ebs_snapshot_id }} --tag Name="{{ ebs_tag_name }} AMI"'
+  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ebs_snapshot_id }} --tag Name="{{ ami_name }} AMI"'
 
 - name: Delete EBS working volume
   command: 'ec2-delete-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
