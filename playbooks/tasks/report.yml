@@ -1,6 +1,6 @@
 ---
 - name: Generate build report
-  template: src=report.js dest=/mnt/{{ ami_name }}-report.txt owner=root group=root mode=0644
+  template: src=report.j2 dest=/mnt/{{ ami_name }}-report.txt owner=root group=root mode=0644
 
 - name: Output build report
   command: cat /mnt/{{ ami_name }}-report.txt
