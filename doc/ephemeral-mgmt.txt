@@ -1,0 +1,43 @@
+
+This is a brainstorm around how to handle ephemeral disks, and filesystem structure an AMI may need.
+
+There are several things to consider, which have touchpoints/dependencies on eachother.
+
+1) We need a means to create structures apps need on the ephemeral file systems, as the simplest case, some folders on the ephemeral disk
+
+2) We get our first ephemeral disk mounted/formatted for "free", but all others are left, and require mounting/formatting, or something even more elaborate
+
+3) One approach is to stripe all ephemeral disks into one, put it on /mnt, and build structure from there.
+
+4) It is desirable to have more flexibility than #3, as it may be indicated to split volumes (and thus IO queues) for some configurations
+
+5) We should probably have everything occur in /mnt, just because...
+
+
+
+Possible flow:
+
+1) Unmount anything auto-mounted
+
+2) Find whole set of ephemeral disks available
+
+3) Reserve the first N of that set per configuration
+
+4) If only one disk remaining
+
+  a) Format remaining disk, mount as /mnt
+
+   ELSE
+
+  b) Stripe remaining devices into md0 volume, format, mount as /mnt
+
+5) For each of the reserved ephemerals
+
+  a) format
+  b) mount as /mnt/ephemeralXX
+
+
+
+
+
+
