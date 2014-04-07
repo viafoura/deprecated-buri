@@ -62,18 +62,9 @@ POSSIBLE CONFIGS:
   - will already be formatted, mounted on /mnt
   - just exit
 - 2 disks (several types)
-  - if no reservations, unmount, add to raid
+  - if no reservations, unmount, add both to raid
   - if 1 reservation, just format/mount the 2nd drive
 - 4,8,24 disks (several types)
   - general reservation logic should apply
-
-
-
-
-
-
-
-
-
 
 
