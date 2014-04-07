@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# ephemeral-setup
+#
+### BEGIN INIT INFO
+# Provides: ephemeral-setup
+# Default-Start: S
+# Default-Stop: 1
+# Required-Start: 
+# Required-Stop:
+# Short-Description: Tool to automatically setup ephemeral disks
+# Description: A tool that sets up ephemeral disks on EC2
+### END INIT INFO
+
+# Source function library.
+. /lib/lsb/init-functions
+. /lib/init/vars.sh
+
+service="Ephemeral disk setup service"
+
+
+case "$1" in
+  start)
+	METADATA_URL_BASE="http://169.254.169.254/2012-01-12"
+        ;;
+  *)
+        echo "Usage: /etc/init.d/$NAME start" >&2
+        exit 1
+        ;;
+esac
+
+
+exit 0
