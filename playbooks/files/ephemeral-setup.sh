@@ -20,6 +20,7 @@ reserved=0
 #  - verify a matching device is available in /dev/
 raid_drives=()
 reserved_drives=()
+ephemeral_drives=()
 
 ephemeral_count=0
 ephemerals=$(curl --silent $METADATA_URL_BASE/meta-data/block-device-mapping/ | grep ephemeral)
@@ -39,32 +40,45 @@ for e in $ephemerals; do
     else 
       reserved_drives+=($device_path)
     fi
+    ephemeral_drives+=($device_path)
     ephemeral_count=$((ephemeral_count + 1 ))
   else
     echo "Ephemeral disk $e, $device_path is not present. skipping"
   fi
 done
+
+
+# 1 = device, 2 = mountpoint
+function format_and_mount() {
+	echo "Format/Mount $1 to $2";
+}
  
-if [ "$ephemeral_count" = 0 ]; then
-  echo "No ephemeral disk detected. exiting"
-  exit 0
-fi
+# 1 = list to raid, 2 = list to manage single
+function remake_volumes() {
+}
 
-if [ ${#reserved_drives[@]} -lt $reserved ]; then
-  echo "Unable to fulfill requested disk reservations (want: $reserved, have: ${#reserved_drives[@]}). exiting"
-  exit 0
-fi
-
-if [ ${#raid_drives[@]} = 1 ]; then
-  echo "Not creating raid of one. Moving disk to reserved list"
-      reserved_drives=("${raid_drives[@]}" "${reserved_drives[@]}")
-      raid_drives=()
-fi
-
-echo "Total Count: $ephemeral_count"
-echo "RAID count : ${#raid_drives[@]}"
-echo "RAID drives: ${raid_drives[@]}"
-echo "Reserved count : ${#reserved_drives[@]}"
-echo "Reserved drives: ${reserved_drives[@]}"
-
+case "$ephemeral_count" in
+  0)
+	echo "No ephemeral disk detected. No action taken."
+        ;;
+  1)
+	echo "Single ephemeral disk detected. No action taken."
+	#exit 0
+        ;;
+  2)
+	echo "Two ephemeral disks detected."
+	if [ ${reserved} != 0 ]; then
+		format_and_mount(${ephemeral_drives[1]}, "/mnt/reserved")
+		# Format/mount the 2nd ephemeral
+        else
+		remake_volumes("${ephemeral_drives[@]}", "")
+		# Unmount 1st ephemeral, make raid
+        fi
+	#exit 0
+        ;;
+  *)
+	echo "Multiple ephemeral disks detected."
+        #exit 1
+        ;;
+esac
 
