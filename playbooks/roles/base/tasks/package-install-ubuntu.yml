@@ -2,34 +2,33 @@
 - name: Install packages
   apt: pkg={{ item }} state=latest
   with_items:
-    # editors
-    - vim
-    - nano
-    # networking
+    - curl
     - dnsutils
-    - lynx
-    - openssh-client
-    - openssh-server
-    - ngrep
-    - ntp
-    - rsync
-    - ssh
-    - tcpdump
-    - telnet
-    - traceroute
-    # system
     - git-core
     - less
+    - lynx
+    - make
+    - mdadm
+    - nano
+    - ngrep
+    - ntp
+    - openssh-client
+    - openssh-server
     - perl
     - perl-modules
     - python
     - python-support
     - python-pip
+    - rsync
+    - ssh
     - sudo
     - sysstat
+    - tcpdump
+    - telnet
+    - traceroute
     - unzip
+    - vim
     - xfsprogs
     - zip
-    - make
 
 
