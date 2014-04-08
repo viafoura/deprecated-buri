@@ -21,7 +21,6 @@
 
 service="Ephemeral disk setup service"
 
-
 case "$1" in
   start)
 	if [ -e /dev/md0 ]; then
@@ -71,7 +70,7 @@ case "$1" in
 	partprobe
 	mdadm --create --verbose /dev/md0 --level=0 -c256 --raid-devices=${#ephemeral_drives[@]} ${ephemeral_drives[@]}
 	echo DEVICE ${ephemeral_drives[@]} | tee /etc/mdadm/mdadm.conf
-	mdadm --detail --scan  | grep -oP '.*(?=\sname=.*)' | tee -a /etc/mdadm/mdadm.conf
+	mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf
 	blockdev --setra 65536 /dev/md0
 	mkfs -t ext4 /dev/md0
 	mount -t ext4 -o noatime /dev/md0 /mnt
