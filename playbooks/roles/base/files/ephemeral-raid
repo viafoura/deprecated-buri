@@ -72,7 +72,7 @@ case "$1" in
 	echo DEVICE ${ephemeral_drives[@]} | tee /etc/mdadm/mdadm.conf
 	mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf
 	blockdev --setra 65536 /dev/md0
-	mkfs -t ext4 /dev/md0
+	mkfs -t ext4 /dev/md0 >> /var/log/ephemeral-fsck.log
 	mount -t ext4 -o noatime /dev/md0 /mnt
 	echo $((30*1024)) > /proc/sys/dev/raid/speed_limit_min
  
