@@ -19,13 +19,13 @@ Possible flow:
 
 1) Detect if run already, if so, exit
 
-1) Unmount anything auto-mounted
+2) Unmount anything auto-mounted
 
-2) Find whole set of ephemeral disks available
+3) Find whole set of ephemeral disks available
 
-3) Reserve the first N of that set per configuration
+4) Reserve the first N of that set per configuration
 
-4) If only one disk remaining
+5) If only one disk remaining
 
   a) Format remaining disk, mount as /mnt
 
@@ -33,26 +33,24 @@ Possible flow:
 
   b) Stripe remaining devices into md0 volume, format, mount as /mnt
 
-5) For the count of requested reserved spindles
+6) For the count of requested reserved spindles
 
   a) create folder/mountpoint
 
-5) For each of the reserved ephemerals
+7) For each of the reserved ephemerals
 
   a) format
   b) mount as /mnt/ephemeralXX
 
-6) Modify fstab
+8) Modify fstab
 
-7) Record change has been made
+9) Record change has been made
 
 
 CONSISTENCY
 -----------
 
 One of the primary things we need to consider, is that we need to see uniformity of filesystem structure regardless of what the specific ephemeral availability is, even faking things where needed.
-
-
 
 POSSIBLE CONFIGS:
 
@@ -66,5 +64,6 @@ POSSIBLE CONFIGS:
   - if 1 reservation, just format/mount the 2nd drive
 - 4,8,24 disks (several types)
   - general reservation logic should apply
+
 
 
