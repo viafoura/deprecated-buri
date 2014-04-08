@@ -33,10 +33,17 @@
   service: name={{ ssh_service_name }} state=stopped
   when: image_build
 
- # SSH settings
+# Ephemeral RAID
 - name: Add first-boot ephemeral raid setup script
   copy: src=ephemeral-raid dest=/etc/init.d owner=root mode=0755
   
 - name: Activating first-boot ephemeral raid setup script
   command: update-rc.d ephemeral-raid defaults
+
+# Ephemeral Directories 
+- name: Add ephemeral mkdir script
+  copy: src=ephemeral-mkdirs dest=/etc/init.d owner=root mode=0755
+  
+- name: Activating ephemeral mkdir script
+  command: update-rc.d ephemeral-mkdirs defaults
  
