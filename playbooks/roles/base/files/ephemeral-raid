@@ -6,7 +6,7 @@
 #
 ### BEGIN INIT INFO
 # Provides: ephemeral-setup
-# X-Start-Before: mdadm postfix
+# X-Start-Before: mdadm postfix ephemeral-mkdirs
 # Default-Start: S
 # Default-Stop: 1
 # Required-Start: 

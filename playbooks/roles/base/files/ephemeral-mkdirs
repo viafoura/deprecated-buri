@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# ephemeral-setup
+#
+# chkconfig S 02 98
+#
+### BEGIN INIT INFO
+# Provides: ephemeral-setup
+# X-Start-Before: mdadm postfix
+# X-Start-After: ephemeral-raid
+# Default-Start: S
+# Default-Stop: 1
+# Required-Start: 
+# Required-Stop:
+# Short-Description: Tool to automatically setup ephemeral disks
+# Description: A tool that sets up ephemeral disks on EC2
+### END INIT INFO
+
+# Source function library.
+. /lib/lsb/init-functions
+. /lib/init/vars.sh
+
+service="Ephemeral directory setup service"
+
+case "$1" in
+  start)
+        MKDIRLIST="/etc/ephemeral-dirs"
+
+	if [ ! -e ${MKDIRLIST} ]; then
+          echo "No ephemeral directories defined, skipping"
+	fi
+
+	while read line
+	do
+	  parts=(${line//,/ })
+	  echo "### ${parts[0]}"
+	  echo "mkdir -p ${parts[0]}"
+	  echo "chown ${parts[1]}:${parts[2]} ${parts[0]}"
+	  echo "chmod ${parts[3]} ${parts[0]}"
+	done < ${MKDIRLIST}
+
+        exit 0
+        ;;
+  stop)
+        exit 0
+        ;;
+  *)
+        echo "Usage: /etc/init.d/$NAME start" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
+
