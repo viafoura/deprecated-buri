@@ -44,6 +44,6 @@
   tags: config
 
 - name: Adding ephemeral_dirs spec for ice
-  template: src=ephemeral_dirs dest=/etc/ephemeral_dirs owner=root group=root mode=0644
+  template: src=ephemeral-dirs dest=/etc/ephemeral-dirs owner=root group=root mode=0644
   tags: config
    
