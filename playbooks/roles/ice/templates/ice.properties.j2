@@ -29,7 +29,7 @@ ice.ondemandCostAlertEmails=
 # s3 bucket name where the billing files are. multiple bucket names are delimited by ",". Ice must have read access to billing s3 bucket.
 ice.billing_s3bucketname={{ ice_billing_s3_bucket_names }}
 # prefix of the billing files. multiple prefixes are delimited by ","
-ice.billing_s3bucketprefix={{ ice_billing_s3_bucket_prefix }}
+#ice.billing_s3bucketprefix={{ ice_billing_s3_bucket_prefix }}
 # specify your payer account id here if across-accounts IAM role access is used. multiple account ids are delimited by ",". "ice.billing_payerAccountId=,222222222222" means assumed role access is only used for the second bucket.
 #ice.billing_payerAccountId=,123456789012
 # specify the assumed role name here if you use IAM role access to read from billing s3 bucket. multiple role names are delimited by ",". "ice.billing_accessRoleName=,ice" means assumed role access is only used for the second bucket.
@@ -42,7 +42,7 @@ ice.billing_s3bucketprefix={{ ice_billing_s3_bucket_prefix }}
 #ice.customTags=tag1,tag2
 
 # start date in millis from when you want to start processing the billing files
-ice.startmillis=1396366000000
+ice.startmillis=1390000000000
 
 # you company name. it will be used by UI
 ice.companyName={{ ice_company_name }}
