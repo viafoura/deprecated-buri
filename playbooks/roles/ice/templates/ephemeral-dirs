@@ -1,0 +1,2 @@
+/mnt/ice_processor,{{ tomcat user }},{{ tomcat user }},0755
+/mnt/ice_reader,{{ tomcat user }},{{ tomcat user }},0755

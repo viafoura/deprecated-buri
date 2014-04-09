@@ -32,20 +32,6 @@
   notify: restart tomcat
   tags: deploy
 
-
-## FIXME: do this with some better volume management
-#- name: Copy configuration script
-#  template: src=configure-ice.sh.j2 dest=/usr/bin/configure-ice.sh owner=root group=root mode=0755
-#  notify: run rc.local
-#  tags:
-#   - rc
-#   - config
-
-#- name: Add configuration script to rc.local
-#  lineinfile: dest={{ rc_local_path }}  insertbefore="^# ADD HERE" regexp="configure-ice" line="/usr/bin/configure-ice.sh"
-#  notify: run rc.local
-#  tags: rc
-
 - name: Copy ice.properties
   template: src=ice.properties.j2 dest=/usr/local/tomcat/webapps/ice/WEB-INF/classes/ice.properties owner=root group=root mode=0644
   notify: restart tomcat
@@ -57,4 +43,7 @@
   notify: restart tomcat
   tags: config
 
-  
+- name: Adding ephemeral_dirs spec for ice
+  template: src=ephemeral_dirs dest=/etc/ephemeral_dirs owner=root group=root mode=0644
+  tags: config
+   
