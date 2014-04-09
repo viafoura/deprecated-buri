@@ -1,0 +1,4 @@
+/mnt/zookeeper,zookeeper,zookeeper,0755
+/mnt/zookeeper/snapshot,zookeeper,zookeeper,0755
+/mnt/zookeeper/transactions,zookeeper,zookeeper,0755
+/mnt/zookeeper/log_indexes,zookeeper,zookeeper,0755

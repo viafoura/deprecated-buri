@@ -38,12 +38,12 @@
   copy: src=ephemeral-raid dest=/etc/init.d owner=root mode=0755
   
 - name: Activating first-boot ephemeral raid setup script
-  command: update-rc.d ephemeral-raid defaults
-
+  command: /usr/lib/insserv/insserv ephemeral-raid
+ 
 # Ephemeral Directories 
 - name: Add ephemeral mkdir script
   copy: src=ephemeral-mkdirs dest=/etc/init.d owner=root mode=0755
   
 - name: Activating ephemeral mkdir script
-  command: update-rc.d ephemeral-mkdirs defaults
+  command: /usr/lib/insserv/insserv ephemeral-mkdirs
  

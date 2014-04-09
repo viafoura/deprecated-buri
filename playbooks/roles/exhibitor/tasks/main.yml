@@ -67,6 +67,10 @@
 #- name: Enable Exhibitor on boot.
 #  service: name=exhibitor enabled=yes
 
+- name: Add ephemeral mkdir spec for exhibitor role
+  copy: src=ephemeral-dirs dest=/etc owner=root mode=0644
+
+
 
 
 
