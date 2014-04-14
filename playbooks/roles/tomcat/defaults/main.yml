@@ -1,0 +1,3 @@
+---
+webapps_root: /usr/local/tomcat/webapps
+servlet_container: tomcat

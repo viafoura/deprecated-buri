@@ -11,4 +11,5 @@ jetty_install_dir: '{{ jetty_root }}/{{ jetty_basename }}'
 jetty_user: 'jetty'
 jetty_group: 'jetty'
 jetty_port: '80'
-
+webapps_root: '{{ jetty_app_root }}/webapps'
+servlet_container: 'jetty'

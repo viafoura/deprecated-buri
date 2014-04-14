@@ -14,6 +14,16 @@ NAME=$(echo $(basename $0) | sed -e 's/^[SK][0-9]*//' -e 's/\.sh$//')
 # description: Jetty 9 webserver
 # processname: jetty
 # ========================
+### BEGIN INIT INFO
+# Provides: jetty
+# X-Start-After: +ephemeral-mkdirs
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Required-Start: +ephemeral-mkdirs
+# Required-Stop:
+# Short-Description: Jetty web servelet container
+# Description: An efficient web servlet containter
+### END INIT INFO
 
 # Configuration files
 #

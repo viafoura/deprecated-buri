@@ -1,5 +1,5 @@
 ---
 - name: restart webapps container
-  service: name=tomcat7 state=restarted
+  service: name=jetty state=restarted
   when: not image_build
 

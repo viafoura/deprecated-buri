@@ -1,36 +1,36 @@
 ---
+- name: Create jetty root install directory
+  file: path={{ jetty_root }} state=directory owner=root group=root mode=0755
+
 - name: Add group jetty
   group: name={{ jetty_group }}
 
 - name: Add user jetty
-  user: name={{ jetty_user }} group={{ jetty_group }} shell="/bin/false" home="{{ jetty_root }}/temp"
-
-- name: Create jetty root install directory
-  file: path={{ jetty_root }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
+  user: name={{ jetty_user }} group={{ jetty_group }} shell="/bin/false" home={{ jetty_temp }}
 
 - name: Create jetty root temp directory
-  file: path={{ jetty_root }}/temp state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
+  file: path={{ jetty_temp }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
 
 - name: Download jetty release archive
-  get_url: url={{ jetty_mirror }} dest=/tmp/{{ jetty_filename }} sha256sum={{ zookeeper_checksum }} owner=root mode=0644
+  get_url: url={{ jetty_mirror }} dest=/tmp/{{ jetty_filename }} sha256sum={{ jetty_checksum }} owner=root mode=0644
 
 - name: Extract jetty release archive to install dir
   command: tar -C {{ jetty_root }} -zxf /tmp/{{ jetty_filename }}
 
 - name: Set ownership of installed release archive
-  file: path={{ jetty_root }}/{{ jetty_basename }} state=directory recurse=yes owner={{ jetty_user }} group={{ jetty_group }}
+  file: path={{ jetty_root }} state=directory recurse=yes owner={{ jetty_user }} group={{ jetty_group }}
 
 - name: Create jetty apps root directory
-  file: path={{ jetty_apps_root }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
+  file: path={{ jetty_app_root }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
 
 - name: Create jetty apps logs directory
-  file: path={{ jetty_apps_root }}/logs state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
+  file: path={{ jetty_app_root }}/logs state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
 
 - name: Create jetty apps webapps directory
-  file: path={{ jetty_apps_root }}/webapps state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
+  file: path={{ jetty_app_root }}/webapps state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
 
 - name: Install jetty apps start.ini file.
-  template: src=start.ini dest={{ jetty_apps_root }}/start.ini owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  template: src=start.ini dest={{ jetty_app_root }}/start.ini owner={{ jetty_user }} group={{ jetty_group }} mode=0644
 
 - name: Install jetty init script
   copy: src=jetty-init dest=/etc/init.d/jetty owner=root group=root mode=0755
@@ -38,4 +38,6 @@
 - name: Install jetty default settings file.
   template: src=jetty-defaults dest=/etc/default/jetty owner=root group=root mode=0644
 
+- name: Activating jetty init script
+  command: /usr/lib/insserv/insserv jetty
 

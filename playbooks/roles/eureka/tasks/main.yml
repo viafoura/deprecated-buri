@@ -4,45 +4,45 @@
 - name: Copy tomcat server.xml file
   copy: src=server.xml dest=/usr/local/tomcat/conf/server.xml owner=root group=root mode=0644
   tags: auth
-  notify: restart tomcat
-
+  notify: restart webapps container
+  when: servlet_container == "tomcat"
 
 - name: Download snapshot build of Eureka from Cloudbees
-  get_url: url={{ eureka_build_url }} dest=/usr/local/tomcat/webapps/eureka.war
+  get_url: url={{ eureka_build_url }} dest={{ webapps_root }}/eureka.war
   tags: deploy
   
 - name: Remove any old version
-  file: path=/usr/local/tomcat/webapps/eureka state=absent
-  notify: restart tomcat
+  file: path={{ webapps_root }}/eureka state=absent
+  notify: restart webapps container
   tags: deploy
   
 - name: Create eureka deployment directory
-  file: path=/usr/local/tomcat/webapps/eureka state=directory
+  file: path={{ webapps_root }}/eureka state=directory
   tags: deploy
 
 - name: Decompress eureka WAR file
-  command: chdir=/usr/local/tomcat/webapps/eureka unzip ../eureka.war
-  notify: restart tomcat
+  command: chdir={{ webapps_root }}/eureka unzip ../eureka.war
+  notify: restart webapps container
   tags: deploy
   
 - name: Remove source WAR file
-  file: path=/usr/local/tomcat/webapps/eureka.war state=absent
+  file: path={{ webapps_root }}/eureka.war state=absent
   tags: deploy
 
 - name: Remove test/prod client property files
   file: path={{ item }} state=absent
-  notify: restart tomcat
+  notify: restart webapps container
   tags: deploy
   with_items:
-    - /usr/local/tomcat/webapps/eureka/WEB-INF/classes/eureka-client-test.properties
-    - /usr/local/tomcat/webapps/eureka/WEB-INF/classes/eureka-client-prod.properties
-    - /usr/local/tomcat/webapps/eureka/WEB-INF/classes/eureka-server-test.properties
-    - /usr/local/tomcat/webapps/eureka/WEB-INF/classes/eureka-server-prod.properties
+    - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-client-test.properties'
+    - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-client-prod.properties'
+    - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-server-test.properties'
+    - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-server-prod.properties'
 
 - name: Add Eureka Client config
-  template: src=eureka-client.properties dest=/usr/local/tomcat/webapps/eureka/WEB-INF/classes/ owner=root mode=0644
+  template: src=eureka-client.properties dest={{ webapps_root }}/eureka/WEB-INF/classes/ owner=root mode=0644
 
 - name: Add Eureka Server config
-  template: src=eureka-server.properties dest=/usr/local/tomcat/webapps/eureka/WEB-INF/classes/ owner=root mode=0644
+  template: src=eureka-server.properties dest={{ webapps_root }}/eureka/WEB-INF/classes/ owner=root mode=0644
 
    
