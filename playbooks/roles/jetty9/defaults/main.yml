@@ -1,0 +1,14 @@
+---
+jetty_version: '9.1.4.v20140401'
+jetty_basename: 'jetty-distribution-{{ jetty_version }}'
+jetty_filename: '{{ jetty_basename }}.tar.gz'
+jetty_mirror: 'http://eclipse.org/downloads/download.php?file=/jetty/stable-9/dist/{{ jetty_filename }}&r=1'
+jetty_checksum: 'f18be620926e363b239ff8b4157b3a41d6fa69c1fee9345249821b2261b403bc'
+jetty_root: '/opt/jetty'
+jetty_temp: '{{ jetty_root }}/temp'
+jetty_app_root: '/opt/jetty_apps'
+jetty_install_dir: '{{ jetty_root }}/{{ jetty_basename }}'
+jetty_user: 'jetty'
+jetty_group: 'jetty'
+jetty_port: '80'
+

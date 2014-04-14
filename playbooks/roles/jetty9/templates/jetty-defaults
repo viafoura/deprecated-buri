@@ -1,0 +1,3 @@
+JETTY_HOME={{ jetty_install_dir }}
+JETTY_BASE={{ jetty_app_root }}
+TMPDIR={{ jetty_temp }}
