@@ -1,0 +1,24 @@
+Selected lines from Aminator inventorying the potential tags used.
+
+'purpose': cloud_config.get('tag_ami_purpose', 'amination'),
+'status': 'busy',
+'ami': context.base_ami.id,
+'ami-name': context.base_ami.name,
+'arch': context.base_ami.architecture,
+
+context.ami.tags.creator = creator
+context.snapshot.tags.creator = creator
+
+metadata = context.package.attributes
+metadata['arch'] = context.base_ami.architecture
+metadata['base_ami_name'] = context.base_ami.name
+metadata['base_ami_id'] = context.base_ami.id
+metadata['base_ami_version'] = context.base_ami.tags.get('base_ami_version', '')
+
+default_description = config.description_format.format(**metadata)
+description = context.snapshot.get('description', default_description)
+context.ami.description = description
+context.snapshot.description = description
+context.ami.tags.creation_time = '{0:%F %T UTC}'.format(datetime.utcnow())
+
+
