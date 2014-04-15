@@ -7,6 +7,12 @@
   notify: restart webapps container
   when: servlet_container == "tomcat"
 
+- name: Copy tomcat server.xml file
+  copy: src=eureka.xml dest={{ jetty_app_root}}/webapps/eureka.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  tags: auth
+  notify: restart webapps container
+  when: servlet_container == "jetty9"
+
 - name: Download snapshot build of Eureka from Cloudbees
   get_url: url={{ eureka_build_url }} dest={{ webapps_root }}/eureka.war
   tags: deploy
