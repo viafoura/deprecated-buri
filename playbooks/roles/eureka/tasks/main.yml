@@ -56,6 +56,8 @@
 
 # Mostly for jetty, and a pull request has been floated to fix this. doesn't hurt elsewhere, so left in for all
 - name: Fix status.jsp imports
-  lineinfile: dest={{ webapps_root }}/eureka/jsp/status.jsp regexp='^(.*)com\.netflix\.logging\.\*,(.*)$' line='\\1\\2' backrefs=yes
+  command: perl -pi -e 's/com[.]netflix[.]logging[.][*],//g' {{ webapps_root }}/eureka/jsp/status.jsp
+  # fixme, this should work, but doesn't
+  #lineinfile: dest={{ webapps_root }}/eureka/jsp/status.jsp regexp='^(.*)com\.netflix\.logging\.\*,(.*)$' line='\1\2' backrefs=yes
 
    
