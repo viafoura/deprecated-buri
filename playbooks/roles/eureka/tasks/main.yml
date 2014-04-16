@@ -3,13 +3,16 @@
 
 - name: Copy tomcat server.xml file
   copy: src=server.xml dest=/usr/local/tomcat/conf/server.xml owner=root group=root mode=0644
-  tags: auth
   notify: restart webapps container
   when: servlet_container == "tomcat"
 
 - name: Copy jetty app context xml file
   copy: src=eureka.xml dest={{ jetty_app_root}}/webapps/eureka.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
-  tags: auth
+  notify: restart webapps container
+  when: servlet_container == "jetty9"
+
+- name: Copy jetty webdefault.xml file
+  copy: src=webdefault.xml dest={{ jetty_app_root}}/etc/webdefault.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
@@ -50,5 +53,9 @@
 
 - name: Add Eureka Server config
   template: src=eureka-server.properties dest={{ webapps_root }}/eureka/WEB-INF/classes/ owner=root mode=0644
+
+# Mostly for jetty, and a pull request has been floated to fix this. doesn't hurt elsewhere, so left in for all
+- name: Fix status.jsp imports
+  lineinfile: dest={{ webapps_root }}/eureka/jsp/status.jsp regexp='^(.*)com\.netflix\.logging\.\*,(.*)$' line='\\1\\2' backrefs=yes
 
    

@@ -20,14 +20,14 @@
 - name: Set ownership of installed release archive
   file: path={{ jetty_root }} state=directory recurse=yes owner={{ jetty_user }} group={{ jetty_group }}
 
-- name: Create jetty apps root directory
-  file: path={{ jetty_app_root }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
-
-- name: Create jetty apps logs directory
-  file: path={{ jetty_app_root }}/logs state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
-
-- name: Create jetty apps webapps directory
-  file: path={{ jetty_app_root }}/webapps state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
+- name: Create jetty.base directory structure
+  file: path={{ item }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
+  with_items:
+    - '{{ jetty_app_root }}'
+    - '{{ jetty_app_root }}/etc'
+    - '{{ jetty_app_root }}/logs'
+    - '{{ jetty_app_root }}/resources'
+    - '{{ jetty_app_root }}/webapps'
 
 - name: Install jetty apps start.ini file.
   template: src=start.ini dest={{ jetty_app_root }}/start.ini owner={{ jetty_user }} group={{ jetty_group }} mode=0644
