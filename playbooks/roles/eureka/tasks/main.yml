@@ -7,12 +7,7 @@
   when: servlet_container == "tomcat"
 
 - name: Copy jetty app context xml file
-  copy: src=eureka.xml dest={{ jetty_app_root}}/webapps/eureka.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
-  notify: restart webapps container
-  when: servlet_container == "jetty9"
-
-- name: Copy jetty webdefault.xml file
-  copy: src=webdefault.xml dest={{ jetty_app_root}}/etc/webdefault.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=eureka.xml dest={{ webapp_root }}/webapps/eureka.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 

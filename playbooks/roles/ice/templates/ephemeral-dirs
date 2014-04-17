@@ -1,2 +1,2 @@
-/mnt/ice_processor,{{ tomcat_user }},{{ tomcat_user }},0755
-/mnt/ice_reader,{{ tomcat_user }},{{ tomcat_user }},0755
+/mnt/ice_processor,{{ servlet_container_user }},{{ servlet_container_group }},0755
+/mnt/ice_reader,{{ servlet_container_user }},{{ servlet_container_group }},0755

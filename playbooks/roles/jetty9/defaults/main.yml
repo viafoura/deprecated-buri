@@ -11,5 +11,9 @@ jetty_install_dir: '{{ jetty_root }}/{{ jetty_basename }}'
 jetty_user: 'jetty'
 jetty_group: 'jetty'
 jetty_port: '80'
+# These are used to abstract containers
 webapps_root: '{{ jetty_app_root }}/webapps'
 servlet_container: 'jetty9'
+servlet_container_user: '{{ jetty_user }}'
+servlet_container_group: '{{ jetty_group }}'
+
