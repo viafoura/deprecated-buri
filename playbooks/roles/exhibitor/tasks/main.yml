@@ -1,73 +1,58 @@
 ---
 # Exhibitor role
-- name: Add group zookeeper
-  group: name={{ zookeeper_group }}
-
-- name: Add user zookeeper
-  user: name={{ zookeeper_user }} group={{ zookeeper_group }}
-
 - name: Create zookeeper install directory
-  file: path={{ zookeeper_install_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
-
-# Not sure yet if this re-evaluates
-- name: Testing if zookeeper already installed
-  stat: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }}
-  register: zkdir
+  file: path={{ zookeeper_install_dir }} state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
 
 - name: Download zookeeper release archive
   get_url: url={{ zookeeper_mirror }} dest=/tmp/{{ zookeeper_basename }}.tar.gz sha256sum={{ zookeeper_checksum }} owner=root mode=0644
-  when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
 
 - name: Extract zookeeper release archive to install dir
   command: tar -C {{ zookeeper_install_dir }} -zxf /tmp/{{ zookeeper_basename }}.tar.gz
-  when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
 
 - name: Set ownership of installed release archive
-  #command: chown -R {{ zookeeper_user }}:{{ zookeeper_group }} {{ zookeeper_install_dir }}'
-  file: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }} state=directory recurse=yes owner={{ zookeeper_user }} group={{ zookeeper_group }}
-  when: zkdir.stat.isdir is not defined or zkdir.stat.isdir != true
+  file: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }} state=directory recurse=yes owner={{ servlet_container_user }} group={{ servlet_container_group }}
 
-- name: Create Exhibitor install directory
-  file: path={{ exhibitor_install_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
 
-- name: Create Exhibitor snapshot directory
-  file: path={{ exhibitor_snapshot_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
+- name: Remove default root webapp
+  file: path={{ webapps_root }}/ROOT state=absent
+  notify: restart webapps container
 
-- name: Create Exhibitor transaction directory
-  file: path={{ exhibitor_transaction_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
+- name: Download Exhibitor release WAR
+  get_url: url={{ exhibitor_mirror }} dest=/tmp/exhibitor.war sha256sum={{ exhibitor_checksum }} owner=root mode=0644
+  
+- name: Remove any old version
+  file: path={{ webapps_root }}/exhibitor state=absent
+  
+- name: Create Exhibitor deployment directory
+  file: path={{ webapps_root }}/exhibitor state=directory
 
-- name: Create Exhibitor log_index directory
-  file: path={{ exhibitor_log_index_dir }} state=directory owner={{ zookeeper_user }} group={{ zookeeper_group }} mode=0755
-
-- name: Testing if exhibitor is already installed
-  stat: path={{ exhibitor_jar_dest }}
-  register: exjar
-
-- name: Download Exhibitor release archive to install location
-  get_url: url={{ exhibitor_mirror }} dest={{ exhibitor_jar_dest }} sha256sum={{ exhibitor_checksum }} owner=root mode=0644
-  when: exjar.stat.exists is not defined or exjar.stat.exists != true
+- name: Decompress Exhibitor WAR file
+  command: chdir={{ webapps_root }}/exhibitor unzip /tmp/exhibitor.war
+  notify: restart webapps container
+  
+- name: Remove source WAR file
+  file: path=/tmp/exhibitor.war state=absent
 
 - name: Install Exhibitor S3 access key information to property file.
-  template: src=exhibitor.s3.properties dest={{ exhibitor_install_dir }}/exhibitor.s3.properties owner={{ zookeeper_user }} mode=0440
+  template: src=exhibitor.s3.properties dest={{ exhibitor_opts_s3credentials }} owner={{ servlet_container_user }} mode=0440
   when: exhibitor_s3key != '' and exhibitor_s3secret != ''
 
 - name: Install Exhibitor logging properties.
-  template: src=log4j.properties dest={{ exhibitor_install_dir }}/log4j.properties owner=root group=root mode=0644
+  template: src=log4j.properties dest={{ exhibitor_log4j_props }} owner=root group=root mode=0644
 
 - name: Install local zookeeper check script.
-  template: src=check-local-zk.py dest={{ exhibitor_check_script }} owner={{ zookeeper_user }} mode=0744
-
-- name: Install Exhibitor upstart script.
-  template: src=exhibitor.upstart.conf dest=/etc/init/exhibitor.conf owner=root group=root mode=0644
+  template: src=check-local-zk.py dest={{ exhibitor_check_script }} owner={{ servlet_container_user }} mode=0744
 
 - name: Install Exhibitor default property file.
-  template: src=exhibitor.properties dest={{ exhibitor_install_dir }}/exhibitor.properties owner={{ zookeeper_user }} mode=0644
+  template: src=exhibitor.properties dest={{ exhibitor_opts_defaultconfig }} owner={{ servlet_container_user }} mode=0644
 
-#- name: Enable Exhibitor on boot.
-#  service: name=exhibitor enabled=yes
+- name: Copy jetty app context xml file
+  copy: src=exhibitor.xml dest={{ webapps_root }}/exhibitor.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  notify: restart webapps container
+  when: servlet_container == "jetty9"
 
 - name: Add ephemeral mkdir spec for exhibitor role
-  copy: src=ephemeral-dirs dest=/etc owner=root mode=0644
+  template: src=ephemeral-dirs dest=/etc owner=root mode=0644
 
 
 

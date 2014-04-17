@@ -1,0 +1,4 @@
+/mnt/zookeeper,{{ servlet_container_user }},{{ servlet_container_group }},0755
+/mnt/zookeeper/snapshot,{{ servlet_container_user }},{{ servlet_container_group }},0755
+/mnt/zookeeper/transactions,{{ servlet_container_user }},{{ servlet_container_group }},0755
+/mnt/zookeeper/log_indexes,{{ servlet_container_user }},{{ servlet_container_group }},0755

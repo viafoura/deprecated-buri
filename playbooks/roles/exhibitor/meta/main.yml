@@ -1,3 +1,3 @@
 ---
 dependencies:
-  - { role: base, when: not image_build }
+  - { role: jetty9, jetty_port: '{{ exhibitor_opts_port }}' }
