@@ -12,9 +12,12 @@ detected.
 ===================================================================== -->
 
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
-  <Set name="contextPath">/exhibitor</Set>
-  <Set name="war"><Property name="jetty.webapps" default="."/>/exhibitor</Set>
-  <Set name="defaultsDescriptor"><Property name="jetty.base" default="."/>/etc/webdefault.xml</Set>
+  <Set name="contextPath">/</Set>
+  <Set name="war"><Property name="jetty.webapps" default="."/>/root</Set>
+  <!--
+    Exhibitor seems to have it's own resource handlers
+    <Set name="defaultsDescriptor"><Property name="jetty.base" default="."/>/etc/webdefault.xml</Set>
+  -->
 
   <Set name="extractWAR">false</Set>
   <Set name="copyWebDir">false</Set>

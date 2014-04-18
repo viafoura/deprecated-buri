@@ -12,22 +12,17 @@
 - name: Set ownership of installed release archive
   file: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }} state=directory recurse=yes owner={{ servlet_container_user }} group={{ servlet_container_group }}
 
-
-- name: Remove default root webapp
-  file: path={{ webapps_root }}/ROOT state=absent
-  notify: restart webapps container
-
 - name: Download Exhibitor release WAR
   get_url: url={{ exhibitor_mirror }} dest=/tmp/exhibitor.war sha256sum={{ exhibitor_checksum }} owner=root mode=0644
   
 - name: Remove any old version
-  file: path={{ webapps_root }}/exhibitor state=absent
+  file: path={{ webapps_root }}/root state=absent
   
 - name: Create Exhibitor deployment directory
-  file: path={{ webapps_root }}/exhibitor state=directory
+  file: path={{ webapps_root }}/root state=directory
 
 - name: Decompress Exhibitor WAR file
-  command: chdir={{ webapps_root }}/exhibitor unzip /tmp/exhibitor.war
+  command: chdir={{ webapps_root }}/root unzip /tmp/exhibitor.war
   notify: restart webapps container
   
 - name: Remove source WAR file
@@ -47,7 +42,7 @@
   template: src=exhibitor.properties dest={{ exhibitor_opts_defaultconfig }} owner={{ servlet_container_user }} mode=0644
 
 - name: Copy jetty app context xml file
-  copy: src=exhibitor.xml dest={{ webapps_root }}/exhibitor.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=exhibitor.xml dest={{ webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
