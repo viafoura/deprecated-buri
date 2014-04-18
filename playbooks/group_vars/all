@@ -1,2 +1,5 @@
 ---
+# Don't generally change anything here, use local site.xml instead
 image_build: False
+jvm_xmx: 1024m
+
