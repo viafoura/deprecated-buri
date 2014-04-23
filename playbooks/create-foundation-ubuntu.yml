@@ -10,6 +10,7 @@
     - vars/install/Ubuntu.yml
     - [ "local/site.yml", "vars/site.defaults.yml" ]
   tasks:
+    - include: tasks/set_build_info.yml
     - include: tasks/ec2_get_facts.yml
     - include: tasks/ec2_get_iam_info.yml
     - include: tasks/ec2_ami_find_aki_ubuntu.yml
