@@ -1,0 +1,4 @@
+
+A fairly detailed setup script for the netflix-rss app:
+  http://mattcallanan.blogspot.ca/2013/12/how-to-build-netflix-rss-reader-example.html
+
