@@ -3,3 +3,10 @@
 image_build: False
 jvm_xmx: 1024m
 
+# should be part of a group for base? Or should we group on distro?
+# These 4 lines are former contents of vars/system/Ubuntu.yml
+ntp_service_name: ntp
+ssh_service_name: ssh
+mongodb_service_name: mongodb
+tomcat_user: tomcat7
+
