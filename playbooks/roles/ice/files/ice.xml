@@ -24,6 +24,17 @@ detected.
     <Arg>org.eclipse.jetty.websocket.jsr356</Arg>
     <Arg type="Boolean">true</Arg>
   </Call>
+
+  <Get name="securityHandler">
+    <Set name="loginService">
+      <New class="org.eclipse.jetty.security.HashLoginService">
+            <Set name="name">Asgard</Set>
+            <Set name="config"><SystemProperty name="jetty.base" default="."/>/etc/realm.properties</Set>
+            <Set name="refreshInterval">60</Set>
+            <Call name="start"></Call>
+      </New>
+    </Set>
+  </Get>
   
   <!-- Enable symlinks 
   <Call name="addAliasCheck">
@@ -51,30 +62,6 @@ detected.
      </Get>
   </Get>
   -->
-<!--
-  <Get name="securityHandler">
-    <Set name="loginService">
-      <New class="org.eclipse.jetty.security.HashLoginService">
-        <Set name="name">Test Realm</Set>
-        <Set name="config"><SystemProperty name="jetty.base" default="."/>/etc/realm.properties</Set>
--->
-            <!-- To enable reload of realm when properties change, uncomment the following lines -->
-            <!-- changing refreshInterval (in seconds) as desired                                -->
-            <!--
-            <Set name="refreshInterval">5</Set>
-            <Call name="start"></Call>
-            -->
-<!--
-      </New>
-    </Set>
-    <Set name="authenticator">
-      <New class="org.eclipse.jetty.security.authentication.FormAuthenticator">
-        <Set name="alwaysSaveUri">true</Set>
-      </New>
-    </Set>
-    <Set name="checkWelcomeFiles">true</Set>
-  </Get>
--->
 
   <!-- Non standard error page mapping -->
   <!--

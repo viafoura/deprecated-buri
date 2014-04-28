@@ -10,6 +10,10 @@
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
+- name: Copy jetty realm.properties file
+  template: src=realm.properties dest={{ jetty_app_root}}/etc/ owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  notify: restart webapps container
+  when: servlet_container == "jetty9"
 
 - name: Remove default root webapp
   file: path={{ webapps_root }}/ROOT state=absent
@@ -45,6 +49,11 @@
   lineinfile: dest=/etc/default/jetty regexp="ICE_HOME" line="ICE_HOME={{ webapps_root }}/ice/WEB-INF/classes/"
   when: ansible_distribution == 'Ubuntu' and servlet_container == "jetty9"
   notify: restart webapps container
+
+- name: Add BASIC auth requirements to web.xml
+  lineinfile: dest={{ webapps_root }}/ice/WEB-INF/web.xml regexp="security-constraint" line="<security-constraint><web-resource-collection><web-resource-name></web-resource-name><url-pattern>/*</url-pattern></web-resource-collection><auth-constraint><role-name>ice</role-name></auth-constraint></security-constraint><login-config><auth-method>BASIC</auth-method><realm-name>ice</realm-name></login-config>" insertbefore="</web-app>"
+  notify: restart webapps container
+
 
 - name: Adding ephemeral_dirs spec for ice
   template: src=ephemeral-dirs dest=/etc/ephemeral-dirs owner=root group=root mode=0644
