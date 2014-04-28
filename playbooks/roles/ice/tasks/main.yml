@@ -51,7 +51,7 @@
   notify: restart webapps container
 
 - name: Add BASIC auth requirements to web.xml
-  lineinfile: dest={{ webapps_root }}/ROOT/WEB-INF/web.xml regexp="security-constraint" line="<security-constraint><web-resource-collection><web-resource-name></web-resource-name><url-pattern>/*</url-pattern></web-resource-collection><auth-constraint><role-name>ice</role-name></auth-constraint></security-constraint><login-config><auth-method>BASIC</auth-method><realm-name>ice</realm-name></login-config>" insertbefore="</web-app>"
+  lineinfile: dest={{ webapps_root }}/ice/WEB-INF/web.xml regexp="security-constraint" line="<security-constraint><web-resource-collection><web-resource-name></web-resource-name><url-pattern>/*</url-pattern></web-resource-collection><auth-constraint><role-name>ice</role-name></auth-constraint></security-constraint><login-config><auth-method>BASIC</auth-method><realm-name>ice</realm-name></login-config>" insertbefore="</web-app>"
   notify: restart webapps container
 
 
