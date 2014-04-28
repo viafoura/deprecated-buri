@@ -15,3 +15,5 @@ ice_work_s3_bucket_name: example-ice-work
 # Your AWS Account ID
 ice_account1_aws_id: 123456789011
 
+ice_admin_password: "blah"
+
