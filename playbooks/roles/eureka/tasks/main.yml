@@ -13,30 +13,24 @@
 
 - name: Download snapshot build of Eureka from Cloudbees
   get_url: url={{ eureka_build_url }} dest={{ webapps_root }}/eureka.war
-  tags: deploy
   
 - name: Remove any old version
   file: path={{ webapps_root }}/eureka state=absent
   notify: restart webapps container
-  tags: deploy
   
 - name: Create eureka deployment directory
   file: path={{ webapps_root }}/eureka state=directory
-  tags: deploy
 
 - name: Decompress eureka WAR file
   command: chdir={{ webapps_root }}/eureka unzip ../eureka.war
   notify: restart webapps container
-  tags: deploy
   
 - name: Remove source WAR file
   file: path={{ webapps_root }}/eureka.war state=absent
-  tags: deploy
 
 - name: Remove test/prod client property files
   file: path={{ item }} state=absent
   notify: restart webapps container
-  tags: deploy
   with_items:
     - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-client-test.properties'
     - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-client-prod.properties'

@@ -2,7 +2,6 @@
   hosts: localhost
   connection: local
   sudo: True
-  tags: resnap
   vars:
     #ami_role: destroy_ebs
   vars_files:
