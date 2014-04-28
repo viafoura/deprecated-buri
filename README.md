@@ -39,4 +39,8 @@ In the current state:
 ./resnap.sh <base-pvm-ami-ID> <role>
 ```
 
+Development
+===========
+
+We use the [git flow](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/) model for branching in this project, using the default settings.
 
