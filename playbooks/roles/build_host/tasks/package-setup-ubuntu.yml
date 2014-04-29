@@ -5,8 +5,6 @@
 - name: Ensure APT sources list includes multiverse
   copy: src={{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list dest=/etc/apt/sources.list owner=root group=root mode=0444
 
-- debug: var=ansible_distribution_version
-
 - name: Patch cloud-init APT sources template (old form)
   copy: src={{ ansible_distribution }}/{{ ansible_distribution_release }}/sources.list.tmpl dest=/etc/cloud/templates/sources.list.tmpl owner=root group=root mode=0444
   when: ansible_distribution_version|float < 14.04
@@ -44,6 +42,7 @@
     - make
     - qemu-utils
     - git-core
+    - openssl
     - ansible
 
 - name: Install boto Python library

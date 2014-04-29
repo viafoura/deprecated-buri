@@ -1,13 +1,28 @@
-# Most defaults actually in the roles. File exsists mostly to allow a local version
 # Don't edit this file, make a local/site.yml instead
+
+# Delete this line when making a local file:
 site_defaults: True
-#
+
 # Will try to capture values that may need overriding for a typical local/site.yml file here
-# 
+
+# AMI Generation related values:
+# For EBS root AMIs:
+ami_build_pvm_ebs: True
+ami_build_hvm_ebs: True
+# For Instance storage root AMIs:
+ami_bundle_account: 123456789012
+ami_bundle_bucket_path: 'my-amis/buri'
+ami_build_pvm_instance: False
+ami_build_hvm_instance: False
+
+# Exhibitor related values:
 #exhibitor_opts_s3config: 'prefix-exhibitor:config'
 #exhibitor_opts_s3region: 'us-east-1'
+
+# Eureka related values:
 #eureka_dns_txt_domain: eureka.mydomain.net
 
+# ICE related values:
 # S3 info for billing data from AWS
 #ice_billing_s3_bucket_names: example-billing
 #ice_billing_s3_bucket_prefix: 
@@ -17,4 +32,8 @@ site_defaults: True
 #ice_work_s3_bucket_name: example-ice-work
 # Your AWS Account ID
 #ice_account1_aws_id: 123456789011
+#ice_admin_password: "mypassword"
+
+# Asgard related value:
+#asgard_admin_password: "mypassword"
 
