@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/dash
 #
 # ephemeral-setup
 #
@@ -22,21 +22,30 @@
 
 service="Ephemeral directory setup service"
 
+create_dir()
+{
+  echo $1
+  OLDIFS=$IFS
+  IFS=","
+  set -- $1
+  IFS=$OLDIFS
+  echo "### $1"
+  mkdir -p $1
+  chown $2:$3 $1
+  chmod $4 $1
+}
+
 case "$1" in
   start)
-        MKDIRLIST="/etc/ephemeral-dirs"
 
+	MKDIRLIST="/etc/ephemeral-dirs"
 	if [ ! -e ${MKDIRLIST} ]; then
-          echo "No ephemeral directories defined, skipping"
+	  echo "No ephemeral directories defined, skipping"
+	  exit 0
 	fi
-
 	while read line
 	do
-	  parts=(${line//,/ })
-	  echo "### ${parts[0]}"
-	  mkdir -p ${parts[0]}
-	  chown ${parts[1]}:${parts[2]} ${parts[0]}
-	  chmod ${parts[3]} ${parts[0]}
+	  create_dir $line
 	done < ${MKDIRLIST}
 
         exit 0
