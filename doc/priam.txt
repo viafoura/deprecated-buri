@@ -1,0 +1,5 @@
+
+- runs in web container
+- minor edits needed to support IAM credentials
+- requires S3, SimpleDB, and Autoscale groups
+
