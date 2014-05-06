@@ -20,9 +20,10 @@ sudo -E apt-get install --no-install-recommends -y \
  make                     \
  qemu-utils               \
  git-core                 \
+ openssl                  \
  ansible
 
-pip install boto
-pip install awscli
+sudo pip install boto
+sudo pip install awscli
 
 

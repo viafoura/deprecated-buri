@@ -26,7 +26,6 @@
 
 - name: Download build of Asgard from Github
   get_url: url={{ asgard_build_url }} dest=/tmp/asgard.war
-  tags: deploy
   
 - name: Remove any old version
   file: path={{ webapps_root }}/ROOT state=absent

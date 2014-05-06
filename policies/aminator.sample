@@ -39,8 +39,8 @@
       ],
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:s3:::aminator-images/*",
-        "arn:aws:s3:::aminator-images"
+        "arn:aws:s3:::aminator-images/folder/*",
+        "arn:aws:s3:::aminator-images/folder"
       ]
     }
 

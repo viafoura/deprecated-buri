@@ -7,5 +7,5 @@
   vars_files:
     - [ "local/site.yml", "vars/site.defaults.yml" ]
   roles:
-    - build_host
+    - build-host
 

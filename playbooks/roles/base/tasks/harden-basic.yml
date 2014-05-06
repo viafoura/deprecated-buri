@@ -44,4 +44,3 @@
 # Shared memory
 - name: Secure tmpfs read only
   mount: name=/dev/shm src=tmpfs fstype=tmpfs opts=rw,nosuid,nodev,noexec state=present
-  tags: tmpfs
