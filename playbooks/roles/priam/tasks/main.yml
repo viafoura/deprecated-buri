@@ -1,0 +1,39 @@
+
+# cassandra performance optimizations, based on Datastax best practices:
+# http://www.datastax.com/documentation/cassandra/2.0/webhelp/index.html#cassandra/install/installRecommendSettings.html
+- name: Install cassandra security limits profile
+  template: src=cassandra-limits.conf dest=/etc/security/limits.d/cassandra.conf owner=root mode=0644
+- name: Install cassandra sysctl settings
+  copy: src=20-cassandra-vm.conf dest=/etc/sysctl.d/ owner=root mode=0644
+
+- name: Install libjna-java
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - libjna-java
+    - libcommons-daemon-java
+
+- name: Add Cassandra user
+  user: name={{ cassandra_user }} group={{ servlet_container_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
+
+- name: Add ephemeral mkdir spec for cassandra role
+  template: src=ephemeral-dirs dest=/etc owner=root mode=0644
+
+- name: Create cassandra install directory
+  file: path={{ cassandra_installdir }} state=directory owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
+
+- name: Download cassandra release archive
+  get_url: url={{ priam_cass_mirror }} dest=/tmp/cassandra.tar.gz sha256sum={{ priam_cass_checksum }} owner=root mode=0644
+
+- name: Extract cassandra release archive to install dir
+  command: chdir={{ cassandra_installdir }} tar --strip-components 1 --no-same-owner -xzf /tmp/cassandra.tar.gz
+
+- name: Set ownership of installed release archive
+  file: path={{ cassandra_installdir }} state=directory recurse=yes owner={{ cassandra_user }} group={{ servlet_container_group }}
+
+- name: Link cassandra home to install directory
+  file: path={{ cassandra_home }} src={{ cassandra_installdir }} owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
+
+- name: Link JNA into cassandra libs
+  file: path={{ cassandra_home }}/lib/jna.jar src=/usr/share/java/jna.jar owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
+
+
