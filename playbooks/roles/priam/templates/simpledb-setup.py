@@ -4,7 +4,7 @@ import boto
 import sys
 from pprint import pprint
 
-appId = "cassandra_sandbox_example"
+appId = "{{ priam_clustername }}"
 
 def put_record(domain, prop, val):
   print "Inserting into %s: %s -> %s" % domain,prop,val
