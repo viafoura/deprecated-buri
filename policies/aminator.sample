@@ -44,13 +44,11 @@
       ]
     },
     {
-      "Action": [
-        "sdb:*"
-      ],
+      "Action": "sdb:*",
       "Effect": "Allow",
       "Resource": [
-        "arn:aws:sdb:*::domain/PriamProperties",
-        "arn:aws:sdb:*::domain/InstanceIdentity"
+        "arn:aws:sdb:*:*:domain/PriamProperties",
+        "arn:aws:sdb:*:*:domain/InstanceIdentity"
       ]
     }
   ]
