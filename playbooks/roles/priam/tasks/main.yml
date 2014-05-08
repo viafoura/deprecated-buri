@@ -36,4 +36,10 @@
 - name: Link JNA into cassandra libs
   file: path={{ cassandra_home }}/lib/jna.jar src=/usr/share/java/jna.jar owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
 
+- name: Adding scripts for inspecting SimpleDB tables:
+  copy: src={{ item }} dest=/usr/local/bin owner=root group=root mode=0755
+  with_items:
+    - dump_sdb_InstanceIdentity.py
+    - dump_sdb_PriamProperties.py
+ 
 
