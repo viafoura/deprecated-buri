@@ -43,7 +43,6 @@ ami_build_hvm_instance: False
 # priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
 #priam_clustername: "priam"
 #priam_multiregion_enable: false
-#priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2Snitch"
 
 # This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
 # i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
