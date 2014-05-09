@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-import boto
-sdb = boto.connect_sdb()
+import boto.sdb
+sdb = boto.sdb.connect_to_region("us-east-1")
 
 ii = sdb.lookup("InstanceIdentity", validate=True)
 if ii is not None:

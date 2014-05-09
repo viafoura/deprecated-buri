@@ -1,18 +1,18 @@
 #!/usr/bin/python
 
-import boto
+import boto.sdb
 import sys
 from pprint import pprint
 
 appId = "{{ priam_clustername }}"
 
 def put_record(domain, prop, val):
-  print "Inserting into %s: %s -> %s" % domain,prop,val
-  itemname = "%s.%s" % appId, prop
-  sdb.put_attributes(domain, itemname, {"appId" => appId, "property" => prop, "value" => val})
+  print "Inserting into %s: %s -> %s" % (domain, prop, val)
+  itemname = "%s.%s" % (appId, prop)
+  sdb.put_attributes(domain, itemname, {"appId" : appId, "property" : prop, "value" : val})
   return
 
-sdb = boto.connect_sdb()
+sdb = boto.sdb.connect_to_region("us-east-1")
 
 ii = sdb.lookup("InstanceIdentity", validate=True)
 if ii is None:

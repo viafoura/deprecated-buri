@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-import boto
+import boto.sdb
 import sys
 from pprint import pprint
 
-sdb = boto.connect_sdb()
+sdb = boto.sdb.connect_to_region("us-east-1")
 result = sdb.select('InstanceIdentity', 'select * from InstanceIdentity')
 
 for l in result:
