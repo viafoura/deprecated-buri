@@ -17,7 +17,6 @@ cassandra_log_location: "/mnt/cassandra/logs"
 cassandra_data_location: "/mnt/cassandra/data"
 cassandra_cache_location: "/mnt/cassandra/saved_caches"
 cassandra_commitlog_location: "/mnt/cassandra/commitlog"
-
 priam_cass_startscript: "service cassandra start"
 priam_cass_stopscript: "service cassandra stop"
 priam_upload_throttle: "5"
