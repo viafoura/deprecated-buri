@@ -3,6 +3,7 @@
 # http://www.datastax.com/documentation/cassandra/2.0/webhelp/index.html#cassandra/install/installRecommendSettings.html
 - name: Install cassandra security limits profile
   template: src=cassandra-limits.conf dest=/etc/security/limits.d/cassandra.conf owner=root mode=0644
+
 - name: Install cassandra sysctl settings
   copy: src=20-cassandra-vm.conf dest=/etc/sysctl.d/ owner=root mode=0644
 
@@ -36,10 +37,44 @@
 - name: Link JNA into cassandra libs
   file: path={{ cassandra_home }}/lib/jna.jar src=/usr/share/java/jna.jar owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
 
+- name: Install cassandra default settings file.
+  template: src=cassandra-defaults dest=/etc/default/cassandra owner=root group=root mode=0644
+
+- name: Give jetty access to re-write cassandra config
+  file: src={{ cassandra_home }}/conf/cassandra.yaml owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755 state=touch
+
+- name: Download priam agent for cassandra
+  get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/ sha256sum={{ priam_ext_checksum }} owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0644
+
+- name: Install cassandra upstart script
+  template: src=cassandra-upstart.conf dest=/etc/init/cassandra.conf owner=root group=root mode=0644
+
 - name: Adding scripts for inspecting SimpleDB tables:
   copy: src={{ item }} dest=/usr/local/bin owner=root group=root mode=0755
   with_items:
     - dump_sdb_InstanceIdentity.py
     - dump_sdb_PriamProperties.py
  
+- name: Adding script for initializing SimpleDB tables:
+  template: src=simpledb-setup.py dest=/usr/local/bin owner=root group=root mode=0755
+
+- name: Add sudo profile to allow priam to start/stop cassandra
+  template: src=jetty-sudo dest=/etc/sudoers.d/tomcat owner=root group=root mode=0440
+
+- name: Download build of priam
+  get_url: url={{ eureka_build_url }} dest=/tmp/Priam.war
+  
+- name: Remove any old version
+  file: path={{ webapps_root }}/Priam state=absent
+  notify: restart webapps container
+  
+- name: Create Priam deployment directory
+  file: path={{ webapps_root }}/Priam state=directory
+
+- name: Decompress Priam WAR file
+  command: chdir={{ webapps_root }}/Priam unzip ../eureka.war
+  notify: restart webapps container
+  
+- name: Remove source WAR file
+  file: path=/tmp/Priam.war state=absent
 
