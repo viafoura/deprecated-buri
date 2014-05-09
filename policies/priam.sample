@@ -28,6 +28,16 @@
         "arn:aws:sdb:*:*:domain/PriamProperties",
         "arn:aws:sdb:*:*:domain/InstanceIdentity"
       ]
+    },
+    {
+      "Sid": "Stmt1328244795299",
+      "Action": [
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeAutoScalingInstances",
+        "autoscaling:UpdateAutoScalingGroup"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
     }
   ]
 }
