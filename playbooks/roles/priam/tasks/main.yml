@@ -31,6 +31,9 @@
 - name: Set ownership of installed release archive
   file: path={{ cassandra_installdir }} state=directory recurse=yes owner={{ cassandra_user }} group={{ servlet_container_group }}
 
+- name: Removing cassandra home directory to be replaced with link
+  file: path={{ cassandra_home }} state=absent owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
+
 - name: Link cassandra home to install directory
   file: path={{ cassandra_home }} src={{ cassandra_installdir }} owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
 
@@ -41,7 +44,7 @@
   template: src=cassandra-defaults dest=/etc/default/cassandra owner=root group=root mode=0644
 
 - name: Give jetty access to re-write cassandra config
-  file: src={{ cassandra_home }}/conf/cassandra.yaml owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755 state=touch
+  file: path={{ cassandra_home }}/conf/cassandra.yaml owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755 state=touch
 
 - name: Download priam agent for cassandra
   get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/ sha256sum={{ priam_ext_checksum }} owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0644
@@ -49,20 +52,20 @@
 - name: Install cassandra upstart script
   template: src=cassandra-upstart.conf dest=/etc/init/cassandra.conf owner=root group=root mode=0644
 
-- name: Adding scripts for inspecting SimpleDB tables:
+- name: Adding scripts for inspecting SimpleDB tables
   copy: src={{ item }} dest=/usr/local/bin owner=root group=root mode=0755
   with_items:
     - dump_sdb_InstanceIdentity.py
     - dump_sdb_PriamProperties.py
  
-- name: Adding script for initializing SimpleDB tables:
+- name: Adding script for initializing SimpleDB tables
   template: src=simpledb-setup.py dest=/usr/local/bin owner=root group=root mode=0755
 
 - name: Add sudo profile to allow priam to start/stop cassandra
   template: src=jetty-sudo dest=/etc/sudoers.d/tomcat owner=root group=root mode=0440
 
 - name: Download build of priam
-  get_url: url={{ eureka_build_url }} dest=/tmp/Priam.war
+  get_url: url={{ priam_mirror }} dest=/tmp/Priam.war sha256sum={{ priam_checksum }}
   
 - name: Remove any old version
   file: path={{ webapps_root }}/Priam state=absent
@@ -72,7 +75,7 @@
   file: path={{ webapps_root }}/Priam state=directory
 
 - name: Decompress Priam WAR file
-  command: chdir={{ webapps_root }}/Priam unzip ../eureka.war
+  command: chdir={{ webapps_root }}/Priam unzip /tmp/Priam.war
   notify: restart webapps container
   
 - name: Remove source WAR file
