@@ -25,6 +25,9 @@
 - name: Add ephemeral mkdir spec for cassandra role
   template: src=ephemeral-dirs dest=/etc owner=root mode=0644
 
+- name: Create cassandra log dir
+  file: path={{ cassandra_log_location }} state=directory owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
+
 - name: Create cassandra install directory
   file: path={{ cassandra_installdir }} state=directory owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
 
