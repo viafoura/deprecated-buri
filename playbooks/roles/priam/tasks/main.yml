@@ -7,10 +7,11 @@
 - name: Install cassandra sysctl settings
   copy: src=20-cassandra-vm.conf dest=/etc/sysctl.d/ owner=root mode=0644
 
-- name: Install libjna-java
+- name: Install libjna-javam and jsvc
   apt: pkg={{ item }} state=latest
   with_items:
     - libjna-java
+    - jsvc
     - libcommons-daemon-java
 
 - name: Add Cassandra user
@@ -49,8 +50,8 @@
 - name: Download priam agent for cassandra
   get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/ sha256sum={{ priam_ext_checksum }} owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0644
 
-- name: Install cassandra upstart script
-  template: src=cassandra-upstart.conf dest=/etc/init/cassandra.conf owner=root group=root mode=0644
+- name: Install cassandra init script
+  template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
 
 - name: Adding scripts for inspecting SimpleDB tables
   copy: src={{ item }} dest=/usr/local/bin owner=root group=root mode=0755
