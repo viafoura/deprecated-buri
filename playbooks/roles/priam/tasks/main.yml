@@ -14,6 +14,11 @@
     - jsvc
     - libcommons-daemon-java
 
+- name: Copy jetty app context xml file
+  copy: src=Priam.xml dest={{ webapps_root }}/Priam.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  notify: restart webapps container
+  when: servlet_container == "jetty9"
+
 - name: Add Cassandra user
   user: name={{ cassandra_user }} group={{ servlet_container_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
 

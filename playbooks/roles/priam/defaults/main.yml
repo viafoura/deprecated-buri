@@ -5,9 +5,9 @@ priam_cass_mirror: "http://downloads.datastax.com/community/{{ priam_cass_namepr
 priam_cass_checksum: "a43e1cedadb93f784c695b659b8db265ec8055afa128a96862758bf8f4cf38f2"
 priam_version: "1.2.30"
 priam_mirror: "http://slash-etc.com/java/priam-web-{{ priam_version }}.war"
-priam_checksum: "730deace3fc80ee2c06c587ca6af3c46cc734f9fdfacf2b1eb5d47e7668553f3"
+priam_checksum: "829cbb67746364566de57fc31605992dcc230e545f28a47e910ccff24b9f4dca"
 priam_ext_mirror: "http://slash-etc.com/java/priam-cass-extensions-{{ priam_version }}.jar"
-priam_ext_checksum: "d35cace79ca676cb3a8b72175c414a0bdbfd58192a965e18a373f870825e54e6"
+priam_ext_checksum: "2c845fd10d957ef631e87a6944b9009174dea2d69b948552280267b754a3182d"
 
 cassandra_user: "cassandra"
 cassandra_home: "/opt/cassandra"
