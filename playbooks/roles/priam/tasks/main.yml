@@ -81,3 +81,6 @@
 - name: Remove source WAR file
   file: path=/tmp/Priam.war state=absent
 
+- name: Run Priam SimpleDB initializer
+  command: /usr/local/bin/simpledb-setup.py
+
