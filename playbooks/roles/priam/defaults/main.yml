@@ -36,7 +36,7 @@ priam_multiregion_enable: false
 priam_acl_groupname: ""
 # It is not advised to change this, even if not multi-region
 # See: https://github.com/Netflix/Priam/wiki/Properties#snitch-selection
-priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiregionSnitch"
+priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
 
 # This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
 # i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
