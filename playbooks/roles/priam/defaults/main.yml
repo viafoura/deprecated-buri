@@ -17,9 +17,10 @@ cassandra_log_location: "/mnt/cassandra/logs"
 cassandra_data_location: "/mnt/cassandra/data"
 cassandra_cache_location: "/mnt/cassandra/saved_caches"
 cassandra_commitlog_location: "/mnt/cassandra/commitlog"
-priam_cass_startscript: "service cassandra start"
-priam_cass_stopscript: "service cassandra stop"
+priam_cass_startscript: "/usr/sbin/service cassandra start"
+priam_cass_stopscript: "/usr/sbin/service cassandra stop"
 priam_upload_throttle: "5"
+priam_port: "8080"
 
 priam_backup_hour: "4"
 # The recommended Value is 16 to 32 times the rate of write throughput (in MB/s)

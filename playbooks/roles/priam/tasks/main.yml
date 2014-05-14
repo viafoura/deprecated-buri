@@ -62,7 +62,7 @@
   template: src=simpledb-setup.py dest=/usr/local/bin owner=root group=root mode=0755
 
 - name: Add sudo profile to allow priam to start/stop cassandra
-  template: src=jetty-sudo dest=/etc/sudoers.d/tomcat owner=root group=root mode=0440
+  template: src=jetty-sudo dest=/etc/sudoers.d/jetty owner=root group=root mode=0440
 
 - name: Download build of priam
   get_url: url={{ priam_mirror }} dest=/tmp/Priam.war sha256sum={{ priam_checksum }}
