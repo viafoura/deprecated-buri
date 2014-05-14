@@ -1,5 +1,9 @@
 #!/usr/bin/python
 
+# This is run by the BUILDER, never on the actual nodes.
+# It will test to see if the domains exist, and only if they do not,
+# Attempt to create and initialize.
+
 import boto.sdb
 import sys
 from pprint import pprint
@@ -43,42 +47,36 @@ if pp is None:
 {% if priam_acl_groupname != "" %}
   put_record("PriamProperties", "priam.acl.groupname", "{{ priam_acl_groupname }}")
 {% endif %}
-   put_record("PriamProperties", "priam.backup.hour", "{{ priam_backup_hour }}")
-   put_record("PriamProperties", "priam.compaction.throughput", "{{ priam_compaction_throughput }}")
-   put_record("PriamProperties", "priam.memory.compaction.limit", "{{ priam_compaction_limit }}")
-   # These are not tunable from Ansible, probably no reason to.
-   # i2.xlarge
-   put_record("PriamProperties", "priam.heap.size.i2.xlarge", "8G")
-   put_record("PriamProperties", "priam.heap.newgen.size.i2.xlarge", "2G")
-   put_record("PriamProperties", "priam.direct.memory.size.i2.xlarge", "20G")
-   # i2.2xlarge
-   put_record("PriamProperties", "priam.heap.size.i2.2xlarge", "8G")
-   put_record("PriamProperties", "priam.heap.newgen.size.i2.2xlarge", "2G")
-   put_record("PriamProperties", "priam.direct.memory.size.i2.2xlarge", "50G")
-   # i2.4xlarge
-   put_record("PriamProperties", "priam.heap.size.i2.4xlarge", "8G")
-   put_record("PriamProperties", "priam.heap.newgen.size.i2.4xlarge", "2G")
-   put_record("PriamProperties", "priam.direct.memory.size.i2.4xlarge", "112G")
-   # i2.8xlarge
-   put_record("PriamProperties", "priam.heap.size.i2.8xlarge", "8G")
-   put_record("PriamProperties", "priam.heap.newgen.size.i2.8xlarge", "2G")
-   put_record("PriamProperties", "priam.direct.memory.size.i2.8xlarge", "234G")
-   # m1.small
-   put_record("PriamProperties", "priam.heap.size.m1.small", "512M")
-   put_record("PriamProperties", "priam.heap.newgen.size.m1.small", "128M")
-   put_record("PriamProperties", "priam.direct.memory.size.m1.small", "1G")
-   # m1.large
-   put_record("PriamProperties", "priam.heap.size.m1.large", "2G")
-   put_record("PriamProperties", "priam.heap.newgen.size.m1.large", "512M")
-   put_record("PriamProperties", "priam.direct.memory.size.m1.large", "4G")
-   # m1.xlarge
-   put_record("PriamProperties", "priam.heap.size.m1.xlarge", "4G")
-   put_record("PriamProperties", "priam.heap.newgen.size.m1.xlarge", "1G")
-   put_record("PriamProperties", "priam.direct.memory.size.m1.xlarge", "10G")
-
-
-
-
-
-
+  put_record("PriamProperties", "priam.backup.hour", "{{ priam_backup_hour }}")
+  put_record("PriamProperties", "priam.compaction.throughput", "{{ priam_compaction_throughput }}")
+  put_record("PriamProperties", "priam.memory.compaction.limit", "{{ priam_compaction_limit }}")
+  # These are not tunable from Ansible, probably no reason to.
+  # i2.xlarge
+  put_record("PriamProperties", "priam.heap.size.i2.xlarge", "8G")
+  put_record("PriamProperties", "priam.heap.newgen.size.i2.xlarge", "2G")
+  put_record("PriamProperties", "priam.direct.memory.size.i2.xlarge", "20G")
+  # i2.2xlarge
+  put_record("PriamProperties", "priam.heap.size.i2.2xlarge", "8G")
+  put_record("PriamProperties", "priam.heap.newgen.size.i2.2xlarge", "2G")
+  put_record("PriamProperties", "priam.direct.memory.size.i2.2xlarge", "50G")
+  # i2.4xlarge
+  put_record("PriamProperties", "priam.heap.size.i2.4xlarge", "8G")
+  put_record("PriamProperties", "priam.heap.newgen.size.i2.4xlarge", "2G")
+  put_record("PriamProperties", "priam.direct.memory.size.i2.4xlarge", "112G")
+  # i2.8xlarge
+  put_record("PriamProperties", "priam.heap.size.i2.8xlarge", "8G")
+  put_record("PriamProperties", "priam.heap.newgen.size.i2.8xlarge", "2G")
+  put_record("PriamProperties", "priam.direct.memory.size.i2.8xlarge", "234G")
+  # m1.small
+  put_record("PriamProperties", "priam.heap.size.m1.small", "512M")
+  put_record("PriamProperties", "priam.heap.newgen.size.m1.small", "128M")
+  put_record("PriamProperties", "priam.direct.memory.size.m1.small", "1G")
+  # m1.large
+  put_record("PriamProperties", "priam.heap.size.m1.large", "2G")
+  put_record("PriamProperties", "priam.heap.newgen.size.m1.large", "512M")
+  put_record("PriamProperties", "priam.direct.memory.size.m1.large", "4G")
+  # m1.xlarge
+  put_record("PriamProperties", "priam.heap.size.m1.xlarge", "4G")
+  put_record("PriamProperties", "priam.heap.newgen.size.m1.xlarge", "1G")
+  put_record("PriamProperties", "priam.direct.memory.size.m1.xlarge", "10G")
 
