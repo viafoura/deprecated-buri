@@ -141,7 +141,7 @@ do_start()
         -home $JAVA_HOME \
         -pidfile $PIDFILE \
         -errfile "&1" \
-        -outfile /var/log/$NAME/output.log \
+        -outfile {{ cassandra_log_location }}/output.log \
         -cp `classpath` \
         -Dlog4j.configuration=log4j-server.properties \
         -Dlog4j.defaultInitOverride=true \
