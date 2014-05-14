@@ -82,6 +82,13 @@
 - name: Remove source WAR file
   file: path=/tmp/Priam.war state=absent
 
+- name: Create classes folder in WEB-INF
+  file: path={{ webapps_root }}/Priam/WEB-INF/classes state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
+
+- name: Copy replacement log4j.properties file
+  copy: src=log4j.properties dest={{ webapps_root }}/Priam/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  
 - name: Run Priam SimpleDB initializer
   command: /usr/local/bin/simpledb-setup.py
+
 
