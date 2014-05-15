@@ -3,3 +3,25 @@
 - minor edits needed to support IAM credentials
 - requires S3, SimpleDB, and Autoscale groups
 
+- ASG launch from CLI example, this disagrees with Priam documentation, which states there should be one ASG per zone (and vice versa)
+
+Single region:
+
+as-create-launch-config unique_cassandra_cluster_one-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique-cassandra-cluster-name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
+as-create-auto-scaling-group unique_cassandra_cluster_one-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1b,us-east-1c
+
+Multi region:
+
+ec2-create-group --region us-east-1 unique_cassandra_cluster_two -d unique_cassandra_cluster_two
+ec2-create-group --region us-west-1 unique_cassandra_cluster_two -d unique_cassandra_cluster_two
+as-create-launch-config unique_cassandra_cluster_two-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_two --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt 
+as-create-launch-config unique_cassandra_cluster_two-uswest1 --region us-west-1 --image-id ami-acf9cde9 --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_two --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
+as-create-auto-scaling-group unique_cassandra_cluster_two-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_two-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1b,us-east-1c
+as-create-auto-scaling-group unique_cassandra_cluster_two-uswest1 --region us-west-1 --launch-configuration unique_cassandra_cluster_two-uswest1 --max-size 4 --min-size 2 --availability-zones us-west-1a,us-west-1b,us-west-1c
+
+- MODIFIED SINGLE REGION:
+
+as-create-launch-config priam-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group priam --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
+as-create-auto-scaling-group priam-useast1a --region us-east-1 --launch-configuration priam-useast1 --max-size 2 --min-size 1 --availability-zones us-east-1a
+as-create-auto-scaling-group priam-useast1d --region us-east-1 --launch-configuration priam-useast1 --max-size 2 --min-size 1 --availability-zones us-east-1d
+as-create-auto-scaling-group priam-useast1e --region us-east-1 --launch-configuration priam-useast1 --max-size 2 --min-size 1 --availability-zones us-east-1e

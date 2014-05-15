@@ -1,0 +1,52 @@
+---
+priam_cass_nameprefix: "dsc-cassandra"
+priam_cass_version: "1.2.10"
+priam_cass_mirror: "http://downloads.datastax.com/community/{{ priam_cass_nameprefix }}-{{ priam_cass_version }}-bin.tar.gz"
+priam_cass_checksum: "c731c8e2bc84769f884f423fb839ab3205279972b842ab37fdace49ef511e544"
+priam_version: "1.2.30"
+priam_mirror: "http://slash-etc.com/java/priam-web-{{ priam_version }}.war"
+priam_checksum: "829cbb67746364566de57fc31605992dcc230e545f28a47e910ccff24b9f4dca"
+priam_ext_mirror: "http://slash-etc.com/java/priam-cass-extensions-{{ priam_version }}.jar"
+priam_ext_checksum: "2c845fd10d957ef631e87a6944b9009174dea2d69b948552280267b754a3182d"
+
+cassandra_user: "cassandra"
+cassandra_home: "/opt/cassandra"
+cassandra_installdir: "/opt/{{ priam_cass_nameprefix }}-{{ priam_cass_version }}"
+cassandra_base_location: "/mnt/cassandra"
+cassandra_log_location: "/var/log/cassandra"
+cassandra_data_location: "/mnt/cassandra/data"
+cassandra_cache_location: "/mnt/cassandra/saved_caches"
+cassandra_commitlog_location: "/mnt/cassandra/commitlog"
+priam_cass_startscript: "/etc/init.d/cassandra start"
+priam_cass_stopscript: "/etc/init.d/cassandra stop"
+priam_upload_throttle: "5"
+priam_port: "8080"
+
+priam_backup_hour: "4"
+# The recommended Value is 16 to 32 times the rate of write throughput (in MB/s)
+priam_compaction_throughput: 0
+# The recommended value is 5 to 10 percent of the available Java heap size
+priam_compaction_limit: 256
+
+# priam_clustername MUST match the autoscaling group name (before the dash) in order to be used 
+# i.e. project_stage_db-useast1 == cluster_name-ec2region
+# priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
+priam_clustername: "priam"
+priam_multiregion_enable: false
+priam_acl_groupname: ""
+# It is not advised to change this, even if not multi-region
+# See: https://github.com/Netflix/Priam/wiki/Properties#snitch-selection
+#priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
+priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2Snitch"
+
+# This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
+# i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
+# If not set it will not be applied
+priam_zones_available: ""
+
+# If you want backups, set this variable to the name of an s3 bucket you have created.
+priam_s3_bucket: "SET_ME_PLEASE"
+priam_s3_base_dir: "cassandra_backups"
+
+
+

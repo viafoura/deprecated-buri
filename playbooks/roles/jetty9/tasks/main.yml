@@ -3,10 +3,10 @@
   file: path={{ jetty_root }} state=directory owner=root group=root mode=0755
 
 - name: Add group jetty
-  group: name={{ jetty_group }}
+  group: name={{ jetty_group }} system=yes
 
 - name: Add user jetty
-  user: name={{ jetty_user }} group={{ jetty_group }} shell="/bin/false" home={{ jetty_temp }}
+  user: name={{ jetty_user }} group={{ jetty_group }} shell="/bin/false" home={{ jetty_temp }} system=yes
 
 - name: Create jetty root temp directory
   file: path={{ jetty_temp }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755

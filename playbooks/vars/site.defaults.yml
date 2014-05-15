@@ -37,3 +37,19 @@ ami_build_hvm_instance: False
 # Asgard related value:
 #asgard_admin_password: "mypassword"
 
+# Priam related values:
+# priam_clustername MUST match the autoscaling group name (before the dash) in order to be used 
+# i.e. project_stage_db-useast1 == cluster_name-ec2region
+# priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
+#priam_clustername: "priam"
+#priam_multiregion_enable: false
+
+# This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
+# i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
+# If not set it will not be applied
+#priam_zones_available: ""
+
+# If you want backups, set this variable to the name of an s3 bucket you have created.
+#priam_s3_bucket: "SET_ME_PLEASE"
+#priam_s3_base_dir: "cassandra_backups"
+

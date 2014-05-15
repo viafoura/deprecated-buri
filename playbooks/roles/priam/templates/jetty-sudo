@@ -1,0 +1,1 @@
+{{ servlet_container_user }} ALL=(ALL) NOPASSWD:SETENV: {{ priam_cass_startscript }}, {{ priam_cass_stopscript }}

@@ -1,0 +1,56 @@
+{
+  "Statement": [
+    {
+      "Sid": "Stmt1343455789729",
+      "Action": [
+        "s3:AbortMultipartUpload",
+        "s3:DeleteObject",
+        "s3:GetBucketAcl",
+        "s3:GetBucketPolicy",
+        "s3:GetLifecycleConfiguration",
+        "s3:GetObject",
+        "s3:GetObjectAcl",
+        "s3:ListBucket",
+        "s3:ListBucketMultipartUploads",
+        "s3:ListMultipartUploadParts",
+        "s3:PutObject",
+        "s3:PutObjectAcl"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::cassandra-archive/*",
+        "arn:aws:s3:::cassandra-archive"
+      ]
+    },
+    {
+      "Action": "sdb:*",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:sdb:*:*:domain/PriamProperties",
+        "arn:aws:sdb:*:*:domain/InstanceIdentity"
+      ]
+    },
+    {
+      "Sid": "Stmt1328244795299",
+      "Action": [
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeAutoScalingInstances",
+        "autoscaling:UpdateAutoScalingGroup"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeAvailabilityZones",
+        "ec2:DescribeInstanceAttribute",
+        "ec2:DescribeInstanceStatus",
+        "ec2:DescribeInstances"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
