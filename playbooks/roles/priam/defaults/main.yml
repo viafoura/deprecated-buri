@@ -1,8 +1,8 @@
 ---
 priam_cass_nameprefix: "dsc-cassandra"
-priam_cass_version: "1.2.16"
+priam_cass_version: "1.2.10"
 priam_cass_mirror: "http://downloads.datastax.com/community/{{ priam_cass_nameprefix }}-{{ priam_cass_version }}-bin.tar.gz"
-priam_cass_checksum: "a43e1cedadb93f784c695b659b8db265ec8055afa128a96862758bf8f4cf38f2"
+priam_cass_checksum: "c731c8e2bc84769f884f423fb839ab3205279972b842ab37fdace49ef511e544"
 priam_version: "1.2.30"
 priam_mirror: "http://slash-etc.com/java/priam-web-{{ priam_version }}.war"
 priam_checksum: "829cbb67746364566de57fc31605992dcc230e545f28a47e910ccff24b9f4dca"
@@ -36,7 +36,8 @@ priam_multiregion_enable: false
 priam_acl_groupname: ""
 # It is not advised to change this, even if not multi-region
 # See: https://github.com/Netflix/Priam/wiki/Properties#snitch-selection
-priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
+#priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
+priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2Snitch"
 
 # This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
 # i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"

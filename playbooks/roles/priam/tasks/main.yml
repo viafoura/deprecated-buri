@@ -61,6 +61,9 @@
 - name: Install cassandra init script
   template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
 
+- name: Bump up stack size in cassandra launch scripts
+  lineinfile: dest=/opt/cassandra/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
+
 - name: Adding scripts for inspecting SimpleDB tables
   copy: src={{ item }} dest=/usr/local/bin owner=root group=root mode=0755
   with_items:
