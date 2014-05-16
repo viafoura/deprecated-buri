@@ -42,7 +42,14 @@
         "arn:aws:s3:::aminator-images/folder/*",
         "arn:aws:s3:::aminator-images/folder"
       ]
+    },
+    {
+      "Action": "sdb:*",
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:sdb:*:*:domain/PriamProperties",
+        "arn:aws:sdb:*:*:domain/InstanceIdentity"
+      ]
     }
-
   ]
 }
