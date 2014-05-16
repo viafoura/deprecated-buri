@@ -28,10 +28,6 @@
 - name: Remove source WAR file
   file: path=/tmp/exhibitor.war state=absent
 
-- name: Install Exhibitor S3 access key information to property file.
-  template: src=exhibitor.s3.properties dest={{ exhibitor_opts_s3credentials }} owner={{ servlet_container_user }} mode=0440
-  when: exhibitor_s3key != '' and exhibitor_s3secret != ''
-
 - name: Install Exhibitor logging properties.
   template: src=log4j.properties dest={{ exhibitor_log4j_props }} owner=root group=root mode=0644
 
