@@ -20,7 +20,6 @@ exhibitor_s3key: ''
 exhibitor_s3secret: ''
 exhibitor_opts_port: '8080'
 exhibitor_opts_defaultconfig: '{{ webapps_root }}/root/WEB-INF/classes/exhibitor.properties'
-exhibitor_opts_s3credentials: '{{ webapps_root }}/root/WEB-INF/classes/exhibitor.s3.properties'
 exhibitor_opts_configtype: 's3'
 # For --contiftype file
 exhibitor_opts_fsconfigdir: '/tmp'

@@ -1,11 +1,6 @@
 ---
 # Eureka role
 
-- name: Copy tomcat server.xml file
-  copy: src=server.xml dest=/usr/local/tomcat/conf/server.xml owner=root group=root mode=0644
-  notify: restart webapps container
-  when: servlet_container == "tomcat"
-
 - name: Copy jetty app context xml file
   copy: src=eureka.xml dest={{ webapps_root }}/eureka.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
