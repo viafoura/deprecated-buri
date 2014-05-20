@@ -38,6 +38,7 @@ if pp is None:
   put_record("PriamProperties", "priam.cass.stopscript", "{{ priam_cass_stopscript }}")
   put_record("PriamProperties", "priam.endpoint_snitch", "{{ priam_endpoint_snitch }}")
   put_record("PriamProperties", "priam.upload.throttle", "{{ priam_upload_throttle }}")
+  put_record("PriamProperties", "priam.internodeEncryption", "{{ priam_internode_encryption }}")
 {% if priam_multiregion_enable %}
   put_record("PriamProperties", "priam.multiregion.enable", "{{ priam_multiregion_enable }}")
 {% endif %}

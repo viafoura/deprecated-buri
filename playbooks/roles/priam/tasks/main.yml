@@ -52,6 +52,12 @@
 - name: Install cassandra default settings file.
   template: src=cassandra-defaults dest=/etc/default/cassandra owner=root group=root mode=0644
 
+- name: Add keystore to Cassandra
+  copy: src=local/priam_keystore dest={{ cassandra_home }}/conf/.keystore owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0440
+
+- name: Add truststore to Cassandra
+  copy: src=local/priam_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0440
+
 - name: Give jetty access to re-write cassandra config
   file: path={{ cassandra_home }}/conf/cassandra.yaml owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755 state=touch
 

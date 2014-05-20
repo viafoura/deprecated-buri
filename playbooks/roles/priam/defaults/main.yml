@@ -34,6 +34,7 @@ priam_compaction_limit: 256
 priam_clustername: "priam"
 priam_multiregion_enable: false
 priam_acl_groupname: ""
+priam_internode_encryption: "none"
 # It is not advised to change this, even if not multi-region
 # See: https://github.com/Netflix/Priam/wiki/Properties#snitch-selection
 #priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
