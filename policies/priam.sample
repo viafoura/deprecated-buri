@@ -48,8 +48,8 @@
         "ec2:DescribeInstanceStatus",
         "ec2:DescribeInstances",
         "ec2:DescribeSecurityGroups",
-        "ec2:AuthorizeSecurityGroupEgress",
-        "ec2:AuthorizeSecurityGroupIngress"
+        "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:RevokeSecurityGroupIngress"
       ],
       "Resource": [
         "*"

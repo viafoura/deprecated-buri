@@ -58,6 +58,13 @@
 - name: Add truststore to Cassandra
   copy: src=local/priam_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0440
 
+# FIXME: path in regex should be from var, but needs escaping.
+- name: Fix reference to keystore in cassandra.yaml
+  command: 'sed -i -e "s/  keystore: conf/  keystore: \\/opt\\/cassandra\\/conf/g" {{ cassandra_home }}/conf/cassandra.yaml'
+
+- name: Fix reference to truststore in cassandra.yaml
+  command: 'sed -i -e "s/  truststore: conf/  truststore: \\/opt\\/cassandra\\/conf/g" {{ cassandra_home }}/conf/cassandra.yaml'
+
 - name: Give jetty access to re-write cassandra config
   file: path={{ cassandra_home }}/conf/cassandra.yaml owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755 state=touch
 
