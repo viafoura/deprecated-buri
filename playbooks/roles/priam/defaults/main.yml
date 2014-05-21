@@ -1,8 +1,8 @@
 ---
 priam_cass_nameprefix: "dsc-cassandra"
-priam_cass_version: "2.0.7"
+priam_cass_version: "1.2.16"
 priam_cass_mirror: "http://downloads.datastax.com/community/{{ priam_cass_nameprefix }}-{{ priam_cass_version }}-bin.tar.gz"
-priam_cass_checksum: "671ae08ce04a7c6117acc644646fabcb26b8062c4dd73f6e2dc570450f0cdc78"
+priam_cass_checksum: "a43e1cedadb93f784c695b659b8db265ec8055afa128a96862758bf8f4cf38f2"
 priam_version: "1.2.30"
 priam_mirror: "http://slash-etc.com/java/priam-web-{{ priam_version }}.war"
 priam_checksum: "829cbb67746364566de57fc31605992dcc230e545f28a47e910ccff24b9f4dca"
