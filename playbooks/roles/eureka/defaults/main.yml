@@ -1,5 +1,7 @@
 ---
-eureka_build_url: https://netflixoss.ci.cloudbees.com/job/eureka-master/lastSuccessfulBuild/artifact/eureka-server/build/libs/eureka-server-1.1.133-SNAPSHOT.war
+eureka_version: 1.1.131
+#eureka_build_url: https://netflixoss.ci.cloudbees.com/job/eureka-master/lastSuccessfulBuild/artifact/eureka-server/build/libs/eureka-server-1.1.133-SNAPSHOT.war
+eureka_build_url: http://slash-etc.com/java/eureka-server-{{ eureka_version }}.war
 eureka_dns_txt_domain: eureka.mydomain.net
 eureka_aws_region: us-east-1
 jvm_extra_opts: "-Darchaius.deployment.applicationId=eureka -Deureka.datacenter=cloud"
