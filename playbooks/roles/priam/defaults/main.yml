@@ -22,7 +22,6 @@ priam_cass_stopscript: "/etc/init.d/cassandra stop"
 priam_upload_throttle: "5"
 priam_port: "8080"
 
-ami_suffix: "{{ priam_clustername }}"
 
 priam_vpc: false
 priam_backup_hour: "4"
@@ -49,7 +48,8 @@ priam_zones_available: ""
 
 # If you want backups, set this variable to the name of an s3 bucket you have created.
 priam_s3_bucket: "SET_ME_PLEASE"
-priam_s3_base_dir: "cassandra_backups"
+priam_s3_base_dir: "{{ priam_clustername }}_backups"
 
-
+# We may have multiple AMIs for different clusters. Specify a suffix for image name
+ami_suffix: "{{ priam_clustername }}"
 
