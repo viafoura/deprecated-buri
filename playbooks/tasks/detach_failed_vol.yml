@@ -8,11 +8,13 @@
 
 - name: Unmount /proc filesystem from chroot
   command: 'chroot {{ item }} umount /proc'
+  ignore_errors: yes
   with_items: old_mount.stdout
   when: old_mount.stdout != ""
 
 - name: Unmount /dev filesystem from chroot
   command: 'umount {{ item }}/dev'
+  ignore_errors: yes
   with_items: old_mount.stdout
   when: old_mount.stdout != ""
 
