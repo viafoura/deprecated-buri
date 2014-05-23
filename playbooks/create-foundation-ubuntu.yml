@@ -7,7 +7,7 @@
   #vars:
   vars_files:
     - vars/ami.yml
-    - vars/install/Ubuntu.yml
+    - roles/{{ ami_role }}/defaults/main.yml
     - [ "local/site.yml", "vars/site.defaults.yml" ]
   tasks:
     - include: tasks/set_build_info.yml
