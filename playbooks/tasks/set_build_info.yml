@@ -4,7 +4,13 @@
   set_fact:
     ami_timestamp: "{{ ansible_date_time.date }}-{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"
 
-- name: Setting build name
+- name: Setting build name (No Suffix)
   set_fact:
     ami_name: "{{ ami_role }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ ami_timestamp }}"
+  when: ami_suffix == ""
+
+- name: Setting build name (With Suffix)
+  set_fact:
+    ami_name: "{{ ami_role }}-{{ ami_suffix }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ ami_timestamp }}"
+  when: ami_suffix != ""
 
