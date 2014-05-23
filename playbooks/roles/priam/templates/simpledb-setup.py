@@ -48,6 +48,9 @@ if pp is None:
 {% if priam_acl_groupname != "" %}
   put_record("PriamProperties", "priam.acl.groupname", "{{ priam_acl_groupname }}")
 {% endif %}
+{% if priam_vpc %}
+  put_record("PriamProperties", "priam.vpc", "{{ priam_vpc }}")
+{% endif %}
   put_record("PriamProperties", "priam.backup.hour", "{{ priam_backup_hour }}")
   put_record("PriamProperties", "priam.compaction.throughput", "{{ priam_compaction_throughput }}")
   put_record("PriamProperties", "priam.memory.compaction.limit", "{{ priam_compaction_limit }}")
