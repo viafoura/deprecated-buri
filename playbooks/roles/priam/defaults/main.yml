@@ -22,7 +22,7 @@ priam_cass_stopscript: "/etc/init.d/cassandra stop"
 priam_upload_throttle: "5"
 priam_port: "8080"
 
-ami_suffix: "{{ priam_clusername }}"
+ami_suffix: "{{ priam_clustername }}"
 
 priam_vpc: false
 priam_backup_hour: "4"
