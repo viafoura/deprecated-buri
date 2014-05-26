@@ -35,7 +35,7 @@ priam_compaction_limit: 256
 # priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
 priam_clustername: "priam"
 priam_multiregion_enable: true
-priam_acl_groupname: ""
+priam_acl_groupname: "priam-{{ priam_clustername }}"
 priam_internode_encryption: "dc"
 # It is not advised to change this, even if not multi-region
 # See: https://github.com/Netflix/Priam/wiki/Properties#snitch-selection
