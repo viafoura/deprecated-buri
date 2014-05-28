@@ -9,7 +9,7 @@
   with_items: iamcheck.stdout
 
 - name: Determine IAM Role AccessKeyID 
-  shell: "curl http://169.254.169.254/latest/meta-data/iam/security-credentials/Aminator | grep AccessKeyId | sed -E 's/^.* : \"([^\"]+)\".*$/\\1/'"
+  shell: "curl http://169.254.169.254/latest/meta-data/iam/security-credentials/{{ buri_iam_role }} | grep AccessKeyId | sed -E 's/^.* : \"([^\"]+)\".*$/\\1/'"
   register: iam_access
 
 - name: Saving IAM Role AccessKeyID as fact for later use
@@ -17,7 +17,7 @@
     iam_access_key: "{{ iam_access.stdout }}"
 
 - name: Determine IAM Role SecretAccessKey
-  shell: "curl http://169.254.169.254/latest/meta-data/iam/security-credentials/Aminator | grep SecretAccessKey | sed -E 's/^.* : \"([^\"]+)\".*$/\\1/'"
+  shell: "curl http://169.254.169.254/latest/meta-data/iam/security-credentials/{{ buri_iam_role }} | grep SecretAccessKey | sed -E 's/^.* : \"([^\"]+)\".*$/\\1/'"
   register: iam_secret
 
 - name: Saving IAM Role SecretAccessKey as fact for later use
@@ -25,7 +25,7 @@
     iam_secret_key: "{{ iam_secret.stdout }}"
 
 - name: Determine IAM Role Token
-  shell: "curl http://169.254.169.254/latest/meta-data/iam/security-credentials/Aminator | grep Token | sed -E 's/^.* : \"([^\"]+)\".*$/\\1/'"
+  shell: "curl http://169.254.169.254/latest/meta-data/iam/security-credentials/{{ buri_iam_role }} | grep Token | sed -E 's/^.* : \"([^\"]+)\".*$/\\1/'"
   register: iam_token_out
 
 - name: Saving IAM Role Token as fact for later use

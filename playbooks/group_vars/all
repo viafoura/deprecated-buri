@@ -2,6 +2,7 @@
 # Don't generally change anything here, use local site.xml instead
 image_build: False
 jvm_xmx: 1024m
+buri_iam_role: "Buri"
 
 # should be part of a group for base? Or should we group on distro?
 # These 4 lines are former contents of vars/system/Ubuntu.yml
