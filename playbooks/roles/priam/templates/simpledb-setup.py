@@ -84,4 +84,8 @@ put_record("PriamProperties", "priam.direct.memory.size.m1.large", "4G")
 put_record("PriamProperties", "priam.heap.size.m1.xlarge", "4G")
 put_record("PriamProperties", "priam.heap.newgen.size.m1.xlarge", "1G")
 put_record("PriamProperties", "priam.direct.memory.size.m1.xlarge", "10G")
+# m1.medium
+put_record("PriamProperties", "priam.heap.size.m1medium.", "1G")
+put_record("PriamProperties", "priam.heap.newgen.size.m1.medium", "256M")
+put_record("PriamProperties", "priam.direct.memory.size.m1.medium", "2G")
 
