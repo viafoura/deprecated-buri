@@ -61,27 +61,17 @@ ice.reader.localDir=/mnt/ice_reader
 # monthly data cache size for Ice reader.
 ice.monthlycachesize=12
 
-# change the follow account settings
-ice.account.account1={{ ice_account1_aws_id }}
-#ice.account.account2=123456789012
-#ice.account.account3=123456789013
-#ice.account.account4=123456789014
-#ice.account.account5=123456789015
-#ice.account.account6=123456789016
-
-# set reservation owner accounts. "ice.owneraccount.account2=account3,account4" means reservations in account2 can be shared by account3 and account4
-# if reservation capacity poller is enabled, the poller will try to poll reservation capacity through ec2 API (desribeReservedInstances) for each reservation owner account.
-ice.owneraccount.account1=
-#ice.owneraccount.account2=account3,account4
-#ice.owneraccount.account5=account6
-
-# if reservation capacity poller needs to use IAM role to access ec2 API, set the assumed role here for each reservation owner account
-ice.owneraccount.account1.role=Ice
-#ice.owneraccount.account2.role=ice
-#ice.owneraccount.account5.role=ice
-
-# if reservation capacity poller needs to use IAM role to access ec2 API and external id is used, set the external id here for each reservation owner account. otherwise you can leave it unset.
-ice.owneraccount.account1.externalId=
-#ice.owneraccount.account2.externalId=
-#ice.owneraccount.account5.externalId=
+# Render accounts info as properties
+{% for acct in ice_accounts %}
+ice.account.{{ acct }}={{ ice_accounts[acct].account_no }}
+{% if ice_accounts[acct].owner_accounts is defined %}
+ice.owneraccount.{{ acct }}={{ ice_accounts[acct].owner_accounts|join(',') }}
+{% endif %}
+{% if ice_accounts[acct].owner_role is defined %}
+ice.owneraccount.{{ acct }}.role={{ ice_accounts[acct].owner_role }}
+{% endif %}
+{% if ice_accounts[acct].owner_ext_id is defined %}
+ice.owneraccount.{{ acct }}.externalId={{ ice_accounts[acct].owner_ext_id }}
+{% endif %}
+{% endfor %}
 
