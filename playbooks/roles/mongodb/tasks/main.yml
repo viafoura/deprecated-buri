@@ -1,0 +1,14 @@
+---
+# MongoDB role
+- name: Install MongoDB (apt version)
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - mongodb
+
+- name: Starting MongoDB service
+  service: name=mongodb state=started
+  when: not image_build
+
+- name: Stopping MongoDB service
+  service: name=mongodb state=stopped
+  when: image_build
