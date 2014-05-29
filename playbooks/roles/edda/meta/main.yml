@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: jetty9 }
+  - { role: mongodb }
