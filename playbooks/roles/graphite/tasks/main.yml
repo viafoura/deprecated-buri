@@ -1,0 +1,23 @@
+
+- name: Install packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - python-dev
+    - python-ldap
+    - python-rrdtool
+    - python-memcache
+    - python-pysqlite2
+    - graphite-carbon
+    - graphite-web
+    - apache2-mpm-worker
+    - apache2-utils
+    - libapache2-mod-wsgi
+    - libapache2-mod-python
+    - sqlite3
+
+- name: Copy carbon configurations
+  copy: src={{ item }} dest=/opt/graphite/conf owner=root group=root mode=0644
+  with_items:
+    - carbon.conf
+    - storage-schemas.conf
+
