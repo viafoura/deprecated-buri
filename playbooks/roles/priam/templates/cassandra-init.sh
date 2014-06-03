@@ -137,7 +137,7 @@ do_start()
     cd /    # jsvc doesn't chdir() for us
 
     $JSVC \
-        -user cassandra \
+        -user {{ cassandra_user }} \
         -home $JAVA_HOME \
         -pidfile $PIDFILE \
         -errfile "&1" \

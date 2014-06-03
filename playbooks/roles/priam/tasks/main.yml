@@ -21,6 +21,7 @@
 
 - name: Add Cassandra user
   user: name={{ cassandra_user }} group={{ servlet_container_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
+  when: cassandra_user != servlet_container_user
 
 - name: Add ephemeral mkdir spec for cassandra role
   template: src=ephemeral-dirs dest=/etc owner=root mode=0644
