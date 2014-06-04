@@ -85,6 +85,7 @@
     - dump_sdb_PriamProperties.py
     - priam_set_property.py
     - priam_cluster_remove_identities.py
+    - priam_cluster_remove_props.py
  
 - name: Adding script for initializing SimpleDB tables
   template: src=simpledb-setup.py dest=/usr/local/bin owner=root group=root mode=0755

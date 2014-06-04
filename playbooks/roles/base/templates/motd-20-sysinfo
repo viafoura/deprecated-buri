@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo -e "============================================================"
+{% if image_build %}
+echo -e "AMI:\t\t\t$(ec2metadata --ami-id)" 
+echo -e "AV ZONE:\t\t$(ec2metadata --availability-zone)"
+echo -e "INSTANCE ID:\t\t$(ec2metadata --instance-id)"
+echo -e "TYPE:\t\t\t$(ec2metadata --instance-id)"
+echo -e "INTERNAL:\t\t$(ec2metadata --local-ipv4) \t($(ec2metadata --local-hostname))"
+echo -e "EXTERNAL:\t\t$(ec2metadata --public-ipv4) \t($(ec2metadata --public-hostname))"
+echo -e "SEC GROUPS:\t\t$(ec2metadata --security-groups)"
+#echo -e "MY NAME:\t\t$(instances -H ID,T:Name | grep -i $(instance_id) | awk '{for (i=2; i<=NF; i++) print $i}' | tr '\n' ' ' | sed -e 's/ $//')"
+#echo -e "ENVIRONMENT:\t\t$(environment)"
+{% endif %}
+echo -e "PROCESSORS:\t\t$(cat /proc/cpuinfo | grep ^$ | wc -l | tr -d '\n')"
+echo -e "PROC_TYPE:\t\t$(cat /proc/cpuinfo | grep 'model name' | uniq | awk -F: '{print $2}' | sed -e 's/^ //' | tr -d '\n')"
+echo -e "ARCHITECTURE:\t\t$([ "`uname -m | grep 64`" ] && echo -ne '64 BITS' || echo -ne '32 BITS')"
+echo -e "CPU SPEED (MHz):\t$(cat /proc/cpuinfo | grep 'MHz' | uniq | awk -F: '{print $2}' | sed -e 's/^ //' | tr -d '\n')"
+echo -e "============================================================"
+
