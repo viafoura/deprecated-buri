@@ -30,6 +30,7 @@ priam_backup_hour: "4"
 priam_compaction_throughput: 0
 # The recommended value is 5 to 10 percent of the available Java heap size
 priam_compaction_limit: 256
+priam_native_transport_enabled: true
 
 # priam_clustername MUST match the autoscaling group name (before the dash) in order to be used 
 # i.e. project_stage_db-useast1 == cluster_name-ec2region
