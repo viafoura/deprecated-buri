@@ -19,29 +19,29 @@ ice_admin_password: "blah"
 # rest is optional for more complex setups
 ice_accounts:
   # label used to reference account in UI and elsewhere
-  - production:
+  production:
     # account number in question
-    - account_no: 123456789
-    - owner_accounts:
+    account_no: 123456789
+    owner_accounts:
       - staging
       - test
     # if reservation capacity poller needs to use IAM role to access ec2 API, set the assumed role here for each reservation owner account
-    - owner_role: Ice
+    #owner_role: Ice
     # if reservation capacity poller needs to use IAM role to access ec2 API and external id is used, set the external id here for each reservation owner account. otherwise you can leave it unset.
-    #- owner_ext_id: 
+    #owner_ext_id: 
   # Repeat for all your accounts
-  - staging:
-    - account_no: 123456789
-    - owner_accounts:
+  staging:
+    account_no: 123456789
+    owner_accounts:
       - production
       - test
-    - owner_role: Ice
-    #- owner_ext_id: bar
-  - test:
-    - account_no: 123456789
-    - owner_accounts:
+    owner_role: Ice
+    #owner_ext_id: bar
+  test:
+    account_no: 123456789
+    owner_accounts:
       - production
       - staging
-    - owner_role: foo
-    #- owner_ext_id: bar
+    owner_role: foo
+    #owner_ext_id: bar
 

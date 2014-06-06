@@ -40,6 +40,15 @@
 - name: Remove source WAR file
   file: path=/tmp/asgard.war state=absent
 
+- name: Set ASGARD_HOME in environment
+  lineinfile: dest=/etc/environment regexp="ASGARD_HOME=" line="ASGARD_HOME=\"/opt/asgard\"" insertafter="EOF"
+
+- name: Create Asgard config directory
+  file: path=/opt/asgard state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
+
+- name: Generate Config.groovy file for Asgard
+  template: src=Config.groovy dest=/opt/asgard/Config.groovy owner={{ servlet_container_user }} group={{ servlet_container_user }} mode=0644
+
 - name: Add BASIC auth requirements to web.xml
   lineinfile: dest={{ webapps_root }}/ROOT/WEB-INF/web.xml regexp="security-constraint" line="<security-constraint><web-resource-collection><web-resource-name></web-resource-name><url-pattern>/*</url-pattern></web-resource-collection><auth-constraint><role-name>asgard</role-name></auth-constraint></security-constraint><login-config><auth-method>BASIC</auth-method><realm-name>asgard</realm-name></login-config>" insertbefore="</web-app>"
   notify: restart webapps container
