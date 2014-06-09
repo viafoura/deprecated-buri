@@ -1,0 +1,12 @@
+---
+- name: Provisioning role against chroot
+  hosts: devvm
+  user: dev
+  sudo: True
+  vars:
+    image_build: false
+    cloud_target: vm
+  vars_files:
+    - [ "local/site.yml", "vars/site.defaults.yml" ]
+  roles:
+    - '{{ ami_role }}'
