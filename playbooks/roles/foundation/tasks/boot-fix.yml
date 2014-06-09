@@ -1,5 +1,5 @@
 
 - name: Fix menu.lst for pvgrub hd00 boot
   command: "perl -pi -e 's/\\(hd0\\)/(hd0,0)/g' /boot/grub/menu.lst"
-  when: ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Ubuntu" and cloud_target == "amazon"
 
