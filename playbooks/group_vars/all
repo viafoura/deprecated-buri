@@ -1,6 +1,8 @@
 ---
 # Don't generally change anything here, use local site.xml instead
 image_build: False
+cloud_target: amazon
+
 jvm_xmx: 1024m
 buri_iam_role: "Buri"
 

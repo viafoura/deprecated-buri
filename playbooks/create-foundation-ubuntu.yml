@@ -4,7 +4,8 @@
   hosts: localhost
   connection: local
   sudo: True
-  #vars:
+  vars:
+    ami_root_resize: True
   vars_files:
     - roles/{{ ami_role }}/defaults/main.yml
     - [ "local/site.yml", "vars/site.defaults.yml" ]
