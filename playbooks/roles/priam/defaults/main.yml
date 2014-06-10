@@ -5,17 +5,6 @@ priam_checksum: "829cbb67746364566de57fc31605992dcc230e545f28a47e910ccff24b9f4dc
 priam_ext_mirror: "http://slash-etc.com/java/priam-cass-extensions-{{ priam_version }}.jar"
 priam_ext_checksum: "2c845fd10d957ef631e87a6944b9009174dea2d69b948552280267b754a3182d"
 
-# Now runs under container user
-cassandra_user: "{{ servlet_container_user }}"
-cassandra_home: "/opt/cassandra"
-cassandra_installdir: "/opt/{{ priam_cass_nameprefix }}-{{ priam_cass_version }}"
-cassandra_base_location: "/mnt/cassandra"
-cassandra_log_location: "/var/log/cassandra"
-cassandra_data_location: "/mnt/cassandra/data"
-cassandra_cache_location: "/mnt/cassandra/saved_caches"
-cassandra_commitlog_location: "/mnt/cassandra/commitlog"
-
-
 priam_cass_startscript: "/etc/init.d/cassandra start"
 priam_cass_stopscript: "/etc/init.d/cassandra stop"
 priam_upload_throttle: "5242880"

@@ -1,7 +1,7 @@
 ---
 cassandra_nameprefix: "dsc-cassandra"
 cassandra_version: "1.2.16"
-cassandra_mirror: "http://downloads.datastax.com/community/{{ priam_cass_nameprefix }}-{{ priam_cass_version }}-bin.tar.gz"
+cassandra_mirror: "http://downloads.datastax.com/community/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
 cassandra_checksum: "a43e1cedadb93f784c695b659b8db265ec8055afa128a96862758bf8f4cf38f2"
 
 cassandra_user: "cassandra"
