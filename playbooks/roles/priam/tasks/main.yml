@@ -1,82 +1,14 @@
-
-# cassandra performance optimizations, based on Datastax best practices:
-# http://www.datastax.com/documentation/cassandra/2.0/webhelp/index.html#cassandra/install/installRecommendSettings.html
-- name: Install cassandra security limits profile
-  template: src=cassandra-limits.conf dest=/etc/security/limits.d/cassandra.conf owner=root mode=0644
-
-- name: Install cassandra sysctl settings
-  copy: src=20-cassandra-vm.conf dest=/etc/sysctl.d/ owner=root mode=0644
-
-- name: Install libjna-javam and jsvc
-  apt: pkg={{ item }} state=latest
-  with_items:
-    - libjna-java
-    - jsvc
-    - libcommons-daemon-java
-
+---
 - name: Copy jetty app context xml file
   copy: src=Priam.xml dest={{ webapps_root }}/Priam.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
-- name: Add Cassandra user
-  user: name={{ cassandra_user }} group={{ servlet_container_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
-  when: cassandra_user != servlet_container_user
-
-- name: Add ephemeral mkdir spec for cassandra role
-  template: src=ephemeral-dirs dest=/etc owner=root mode=0644
-
-- name: Create cassandra log dir
-  file: path={{ cassandra_log_location }} state=directory owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
-
-- name: Create cassandra install directory
-  file: path={{ cassandra_installdir }} state=directory owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
-
-- name: Download cassandra release archive
-  get_url: url={{ priam_cass_mirror }} dest=/tmp/cassandra.tar.gz sha256sum={{ priam_cass_checksum }} owner=root mode=0644
-
-- name: Extract cassandra release archive to install dir
-  command: chdir={{ cassandra_installdir }} tar --strip-components 1 --no-same-owner -xzf /tmp/cassandra.tar.gz
-
-- name: Set ownership of installed release archive
-  file: path={{ cassandra_installdir }} state=directory recurse=yes owner={{ cassandra_user }} group={{ servlet_container_group }}
-
-- name: Removing cassandra home directory to be replaced with link
-  file: path={{ cassandra_home }} state=absent owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
-
-- name: Link cassandra home to install directory
-  file: path={{ cassandra_home }} src={{ cassandra_installdir }} owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
-
-- name: Link JNA into cassandra libs
-  file: path={{ cassandra_home }}/lib/jna.jar src=/usr/share/java/jna.jar owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
-
-- name: Install cassandra default settings file.
-  template: src=cassandra-defaults dest=/etc/default/cassandra owner=root group=root mode=0644
-
-- name: Add keystore to Cassandra
-  copy: src=local/priam_keystore dest={{ cassandra_home }}/conf/.keystore owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0440
-
-- name: Add truststore to Cassandra
-  copy: src=local/priam_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0440
-
-# FIXME: path in regex should be from var, but needs escaping.
-- name: Fix reference to keystore in cassandra.yaml
-  command: 'sed -i -e "s/  keystore: conf/  keystore: \\/opt\\/cassandra\\/conf/g" {{ cassandra_home }}/conf/cassandra.yaml'
-
-- name: Fix reference to truststore in cassandra.yaml
-  command: 'sed -i -e "s/  truststore: conf/  truststore: \\/opt\\/cassandra\\/conf/g" {{ cassandra_home }}/conf/cassandra.yaml'
-
 - name: Give jetty access to re-write cassandra config
   file: path={{ cassandra_home }}/conf/cassandra.yaml owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755 state=touch
 
 - name: Download priam agent for cassandra
-  get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/ sha256sum={{ priam_ext_checksum }} owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0644
-
-- name: Install cassandra init script
-  template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
-
-- name: Bump up stack size in cassandra launch scripts
-  lineinfile: dest=/opt/cassandra/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
+  get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/ sha256sum={{ priam_ext_checksum }} owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
 
 - name: Adding scripts for inspecting SimpleDB tables
   copy: src={{ item }} dest=/usr/local/bin owner=root group=root mode=0755
