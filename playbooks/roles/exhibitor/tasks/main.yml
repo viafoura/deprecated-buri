@@ -12,6 +12,10 @@
 - name: Set ownership of installed release archive
   file: path={{ zookeeper_install_dir }}/{{ zookeeper_basename }} state=directory recurse=yes owner={{ servlet_container_user }} group={{ servlet_container_group }}
 
+- name: Add ephemeral mkdir spec for exhibitor role
+  template: src=ephemeral-dirs dest=/etc owner=root mode=0644
+  when: image_build
+
 - name: Create zookeeper runtime directories
   file: path={{ item }} state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
   with_items:
@@ -50,8 +54,5 @@
   copy: src=exhibitor.xml dest={{ webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
-
-- name: Add ephemeral mkdir spec for exhibitor role
-  template: src=ephemeral-dirs dest=/etc owner=root mode=0644
 
 
