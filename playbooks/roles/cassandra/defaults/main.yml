@@ -5,7 +5,7 @@ cassandra_mirror: "http://downloads.datastax.com/community/{{ cassandra_namepref
 cassandra_checksum: "a43e1cedadb93f784c695b659b8db265ec8055afa128a96862758bf8f4cf38f2"
 
 cassandra_user: "cassandra"
-cassandra_user: "cassandra"
+cassandra_group: "cassandra"
 cassandra_home: "/opt/cassandra"
 cassandra_installdir: "/opt/{{ cassandra_nameprefix }}-{{ cassandra_version }}"
 cassandra_base_location: "/mnt/cassandra"

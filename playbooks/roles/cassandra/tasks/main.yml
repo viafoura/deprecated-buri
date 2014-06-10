@@ -14,7 +14,11 @@
     - jsvc
     - libcommons-daemon-java
 
-# Only add user if someone's set an alternate user
+# Only add user/group if someone's set an alternate user
+- name: Add group cassandra
+  group: name={{ cassandra_group }} system=yes
+  when: cassandra_group == "cassandra"
+
 - name: Add Cassandra user
   user: name={{ cassandra_user }} group={{ cassandra_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
   when: cassandra_user == "cassandra"
@@ -66,12 +70,8 @@
 - name: Add truststore to Cassandra
   copy: src=local/cassandra_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
 
-# FIXME: path in regex should be from var, but needs escaping. Fixed, needs validation
-- name: Fix reference to keystore in cassandra.yaml
-  command: 'sed -i -e "s#  keystore: conf#  keystore: {{ cassandra_home }}/conf#g" {{ cassandra_home }}/conf/cassandra.yaml'
-
-- name: Fix reference to truststore in cassandra.yaml
-  command: 'sed -i -e "s#  truststore: conf#  truststore: {{ cassandra_home }}/conf#g" {{ cassandra_home }}/conf/cassandra.yaml'
+- name: Install initial cassandra.yaml
+  template: src=cassandra.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
 
 - name: Install cassandra init script
   template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
