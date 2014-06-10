@@ -59,5 +59,5 @@ exhibitor_defaultconfig_auto_manage_instances_settling_period_ms: '0'
 exhibitor_defaultconfig_auto_manage_instances: '1'
 exhibitor_defaultconfig_servers_spec: ''
 jvm_xmx: '1024m'
-jvm_extra_opts: '-Dexhibitor-hostname=$(ec2metadata --public-hostname)'
+jvm_extra_opts: '-Dexhibitor-hostname=$([[ -e /usr/bin/ec2metadata ]] && ec2metadata --public-hostname || hostname)'
 
