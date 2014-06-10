@@ -8,10 +8,10 @@
   vars_files:
     - [ "local/site.yml", "vars/site.defaults.yml" ]
   tasks:
-    - name: Register chroot target in ansible inventory
+    - name: Register host target in ansible inventory
       add_host: hostname={{ machine_target }} groups=anshost
 
-- name: Provisioning role against chroot
+- name: Provisioning role against host
   hosts: anshost
   user: dev
   sudo: True

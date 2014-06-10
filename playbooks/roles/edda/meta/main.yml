@@ -1,4 +1,5 @@
 ---
 dependencies:
+  - { role: cloud_amazon }
   - { role: jetty9 }
   - { role: mongodb }

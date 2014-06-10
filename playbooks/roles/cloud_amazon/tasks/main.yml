@@ -1,0 +1,6 @@
+---
+# Dummy role really, required by those items needing Amazon, so it can fail for non-ec2 builds
+- name: Checking sanity of play...
+  fail: msg="Role requires a cloud_target of amazon"
+  when: cloud_target != "amazon"
+
