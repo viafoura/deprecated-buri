@@ -1,5 +1,5 @@
 ---
-asgard_build_url: https://github.com/Netflix/asgard/releases/download/asgard-1.4.2/asgard.war
+asgard_build_url: https://github.com/Netflix/asgard/releases/download/asgard-1.5/asgard.war
 #asgard_build_url: https://netflixoss.ci.cloudbees.com/job/asgard-master/lastStableBuild/artifact/target/asgard.war 
 asgard_admin_password: "blah"
 
