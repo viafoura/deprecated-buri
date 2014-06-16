@@ -30,10 +30,13 @@
     - '{{ jetty_app_root }}/webapps'
 
 - name: Install jetty apps start.ini file.
-  template: src=start.ini dest={{ jetty_app_root }}/start.ini owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=start.ini dest={{ jetty_app_root }}/start.ini owner={{ jetty_user }} group={{ jetty_group }} mode=0644
 
 - name: Copy jetty webdefault.xml file
   copy: src=webdefault.xml dest={{ jetty_app_root}}/etc/webdefault.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+
+- name: Copy jetty-http.xml file
+  copy: src=jetty-http.xml dest={{ jetty_app_root}}/etc/jetty-http.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
 
 - name: Install jetty upstart script
   copy: src=jetty.conf dest=/etc/init/ owner=root group=root mode=0644
