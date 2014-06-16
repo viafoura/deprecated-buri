@@ -1,4 +1,0 @@
----
-jetty_app_root: '/opt/jetty_apps'
-jetty_port: '80'
-webapps_root: '{{ jetty_app_root }}/webapps'
