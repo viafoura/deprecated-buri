@@ -1,4 +1,5 @@
 ---
+jetty_instance_name: eureka
 eureka_version: 1.1.131
 #eureka_build_url: https://netflixoss.ci.cloudbees.com/job/eureka-master/lastSuccessfulBuild/artifact/eureka-server/build/libs/eureka-server-1.1.133-SNAPSHOT.war
 eureka_build_url: http://slash-etc.com/java/eureka-server-{{ eureka_version }}.war
