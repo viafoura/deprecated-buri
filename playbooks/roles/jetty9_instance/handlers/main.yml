@@ -1,5 +1,0 @@
----
-- name: restart webapps container
-  service: name=jetty state=restarted
-  when: not image_build
-

@@ -8,6 +8,9 @@
 - name: Add user jetty
   user: name={{ jetty_user }} group={{ jetty_group }} shell="/bin/false" home={{ jetty_temp }} system=yes
 
+- name: Create jetty apps root directory
+  file: path={{ jetty_apps }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
+
 - name: Create jetty root temp directory
   file: path={{ jetty_temp }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
 

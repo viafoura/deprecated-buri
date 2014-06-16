@@ -6,6 +6,7 @@ jetty_mirror: 'http://eclipse.org/downloads/download.php?file=/jetty/{{ jetty_ve
 jetty_checksum: '3fbce5530d8d9a66f43034782b0f249df3d98e3e97ef849e7f740eab612b963f'
 jetty_root: '/opt/jetty'
 jetty_temp: '{{ jetty_root }}/temp'
+jetty_apps: '{{ jetty_root }}/apps'
 jetty_install_dir: '{{ jetty_root }}/{{ jetty_basename }}'
 jetty_user: 'jetty'
 jetty_group: 'jetty'

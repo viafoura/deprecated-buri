@@ -1,5 +1,6 @@
 ---
-jetty_instance_root: '/opt/jetty_apps'
+jetty_instance_name: 'DEFAULT'
+jetty_instance_root: '{{ jetty_apps }}/{{ jetty_instance_name }}'
 jetty_instance_port: '80'
 # Again, a generic
 webapps_root: '{{ jetty_instance_root }}/webapps'
