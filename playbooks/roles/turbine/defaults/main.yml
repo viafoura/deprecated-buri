@@ -4,6 +4,7 @@ turbine_instance_name: turbine
 turbine_instance_port: 8003
 turbine_jvm_extra_opts: -Darchaius.deployment.applicationId=turbine
 turbine_webapps_root: "{{ jetty_apps }}/{{ turbine_instance_name }}/webapps"
+turbine_jvm_xmx: '1024m'
 
 turbine_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/turbine/turbine-web/0.4/turbine-web-0.4.war
 # Right now only config supported, eventually eureka will be added. Will probably ignore file-based
