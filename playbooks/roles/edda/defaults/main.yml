@@ -1,7 +1,9 @@
 ---
 # required for any jetty9_instance
-jetty_instance_name: edda
-jetty_instance_port: 80
+edda_instance_name: edda
+edda_instance_port: 80
+edda_jvm_extra_opts: -Darchaius.deployment.applicationId=edda
+edda_webapps_root: "{{ jetty_apps }}/{{ edda_instance_name }}/webapps"
 
 edda_build_url: https://netflixoss.ci.cloudbees.com/job/edda-master/lastSuccessfulBuild/artifact/build/libs/edda-2.1-SNAPSHOT.war
 # If not set, defaults to region AMI build is taking place in

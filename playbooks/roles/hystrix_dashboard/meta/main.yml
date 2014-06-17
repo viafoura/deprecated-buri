@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: jetty9_instance, jetty_instance_name: '{{ hystrix_dashboard_instance_name }}', jetty_instance_port: '{{ hystrix_dashboard_instance_port }}', jetty_jvm_extra_opts: '{{ hystrix_dashboard_jvm_extra_opts }}' }

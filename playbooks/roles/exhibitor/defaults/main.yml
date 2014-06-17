@@ -1,7 +1,10 @@
 ---
 # required for any jetty9_instance
-jetty_instance_name: exhibitor
-jetty_instance_port: 8080
+exhibitor_instance_name: exhibitor
+exhibitor_instance_port: 8080
+exhibitor_jvm_extra_opts: -Darchaius.deployment.applicationId=exhibitor -Dexhibitor-hostname=$([[ -e /usr/bin/ec2metadata ]] && ec2metadata --public-hostname || hostname)
+exhibitor_webapps_root: "{{ jetty_apps }}/{{ exhibitor_instance_name }}/webapps"
+exhibitor_jvm_xmx: '1024m'
 
 zookeeper_version: '3.4.5'
 zookeeper_basename: 'zookeeper-{{ zookeeper_version }}'
@@ -17,13 +20,13 @@ exhibitor_snapshot_dir: '/mnt/zookeeper/snapshot'
 exhibitor_transaction_dir: '/mnt/zookeeper/transactions'
 exhibitor_log_index_dir: '/mnt/zookeeper/log_indexes'
 exhibitor_check_script: '{{ exhibitor_script_dir }}/check-local-zk.py'
-exhibitor_log4j_props: '{{ webapps_root }}/root/WEB-INF/classes/log4j.properties'
+exhibitor_log4j_props: '{{ exhibitor_webapps_root }}/root/WEB-INF/classes/log4j.properties'
 exhibitor_loglevel: 'info'
 # For --configtype s3, backups
 exhibitor_s3key: ''
 exhibitor_s3secret: ''
 exhibitor_opts_port: '8080'
-exhibitor_opts_defaultconfig: '{{ webapps_root }}/root/WEB-INF/classes/exhibitor.properties'
+exhibitor_opts_defaultconfig: '{{ exhibitor_webapps_root }}/root/WEB-INF/classes/exhibitor.properties'
 exhibitor_opts_configtype: 's3'
 # For --contiftype file
 exhibitor_opts_fsconfigdir: '/tmp'
@@ -62,6 +65,4 @@ exhibitor_defaultconfig_zoo_cfg_extra: 'tickTime\=2000&initLimit\=10&syncLimit\=
 exhibitor_defaultconfig_auto_manage_instances_settling_period_ms: '0'
 exhibitor_defaultconfig_auto_manage_instances: '1'
 exhibitor_defaultconfig_servers_spec: ''
-jvm_xmx: '1024m'
-jvm_extra_opts: '-Dexhibitor-hostname=$([[ -e /usr/bin/ec2metadata ]] && ec2metadata --public-hostname || hostname)'
 

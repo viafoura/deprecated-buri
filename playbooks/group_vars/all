@@ -3,7 +3,6 @@
 image_build: False
 cloud_target: amazon
 
-jvm_xmx: 1024m
 buri_iam_role: "Buri"
 
 # should be part of a group for base? Or should we group on distro?

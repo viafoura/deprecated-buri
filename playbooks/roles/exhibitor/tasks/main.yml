@@ -29,13 +29,13 @@
   get_url: url={{ exhibitor_mirror }} dest=/tmp/exhibitor.war sha256sum={{ exhibitor_checksum }} owner=root mode=0644
   
 - name: Remove any old version
-  file: path={{ webapps_root }}/root state=absent
+  file: path={{ exhibitor_webapps_root }}/root state=absent
   
 - name: Create Exhibitor deployment directory
-  file: path={{ webapps_root }}/root state=directory
+  file: path={{ exhibitor_webapps_root }}/root state=directory
 
 - name: Decompress Exhibitor WAR file
-  command: chdir={{ webapps_root }}/root unzip /tmp/exhibitor.war
+  command: chdir={{ exhibitor_webapps_root }}/root unzip /tmp/exhibitor.war
   notify: restart webapps container
   
 - name: Remove source WAR file
@@ -51,7 +51,7 @@
   template: src=exhibitor.properties dest={{ exhibitor_opts_defaultconfig }} owner={{ servlet_container_user }} mode=0644
 
 - name: Copy jetty app context xml file
-  copy: src=exhibitor.xml dest={{ webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=exhibitor.xml dest={{ exhibitor_webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 

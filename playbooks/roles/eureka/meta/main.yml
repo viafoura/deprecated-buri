@@ -1,3 +1,4 @@
 ---
 dependencies:
-  - { role: jetty9_instance }
+  - { role: jetty9_instance, jetty_instance_name: '{{ eureka_instance_name }}', jetty_instance_port: '{{ eureka_instance_port }}', jetty_jvm_extra_opts: '{{ eureka_jvm_extra_opts }}' }
+

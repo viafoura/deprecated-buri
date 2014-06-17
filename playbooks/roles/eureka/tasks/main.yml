@@ -2,39 +2,39 @@
 # Eureka role
 
 - name: Copy jetty app context xml file
-  copy: src=eureka.xml dest={{ webapps_root }}/eureka.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=eureka.xml dest={{ eureka_webapps_root }}/eureka.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
 - name: Download snapshot build of Eureka from Cloudbees
-  get_url: url={{ eureka_build_url }} dest={{ webapps_root }}/eureka.war
+  get_url: url={{ eureka_build_url }} dest={{ eureka_webapps_root }}/eureka.war
   
 - name: Remove any old version
-  file: path={{ webapps_root }}/eureka state=absent
+  file: path={{ eureka_webapps_root }}/eureka state=absent
   notify: restart webapps container
   
 - name: Create eureka deployment directory
-  file: path={{ webapps_root }}/eureka state=directory
+  file: path={{ eureka_webapps_root }}/eureka state=directory
 
 - name: Decompress eureka WAR file
-  command: chdir={{ webapps_root }}/eureka unzip ../eureka.war
+  command: chdir={{ eureka_webapps_root }}/eureka unzip ../eureka.war
   notify: restart webapps container
   
 - name: Remove source WAR file
-  file: path={{ webapps_root }}/eureka.war state=absent
+  file: path={{ eureka_webapps_root }}/eureka.war state=absent
 
 - name: Remove test/prod client property files
   file: path={{ item }} state=absent
   notify: restart webapps container
   with_items:
-    - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-client-test.properties'
-    - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-client-prod.properties'
-    - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-server-test.properties'
-    - '{{ webapps_root }}/eureka/WEB-INF/classes/eureka-server-prod.properties'
+    - '{{ eureka_webapps_root }}/eureka/WEB-INF/classes/eureka-client-test.properties'
+    - '{{ eureka_webapps_root }}/eureka/WEB-INF/classes/eureka-client-prod.properties'
+    - '{{ eureka_webapps_root }}/eureka/WEB-INF/classes/eureka-server-test.properties'
+    - '{{ eureka_webapps_root }}/eureka/WEB-INF/classes/eureka-server-prod.properties'
 
 - name: Add Eureka Client config
-  template: src=eureka-client.properties dest={{ webapps_root }}/eureka/WEB-INF/classes/ owner=root mode=0644
+  template: src=eureka-client.properties dest={{ eureka_webapps_root }}/eureka/WEB-INF/classes/ owner=root mode=0644
 
 - name: Add Eureka Server config
-  template: src=eureka-server.properties dest={{ webapps_root }}/eureka/WEB-INF/classes/ owner=root mode=0644
+  template: src=eureka-server.properties dest={{ eureka_webapps_root }}/eureka/WEB-INF/classes/ owner=root mode=0644
 

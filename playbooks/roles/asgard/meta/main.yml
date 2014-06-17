@@ -1,4 +1,4 @@
 ---
 dependencies:
   - { role: cloud_amazon }
-  - { role: jetty9_instance }
+  - { role: jetty9_instance, jetty_instance_name: '{{ asgard_instance_name }}', jetty_instance_port: '{{ asgard_instance_port }}', jetty_jvm_extra_opts: '{{ asgard_jvm_extra_opts }}' }

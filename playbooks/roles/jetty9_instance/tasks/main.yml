@@ -2,17 +2,17 @@
 - name: Create jetty.base directory structure
   file: path={{ item }} state=directory owner={{ jetty_user }} group={{ jetty_group }} mode=0755
   with_items:
-    - '{{ jetty_instance_root }}'
-    - '{{ jetty_instance_root }}/etc'
-    - '{{ jetty_instance_root }}/logs'
-    - '{{ jetty_instance_root }}/resources'
-    - '{{ jetty_instance_root }}/webapps'
+    - '{{ jetty_apps }}/{{ jetty_instance_name }}'
+    - '{{ jetty_apps }}/{{ jetty_instance_name }}/etc'
+    - '{{ jetty_apps }}/{{ jetty_instance_name }}/logs'
+    - '{{ jetty_apps }}/{{ jetty_instance_name }}/resources'
+    - '{{ jetty_apps }}/{{ jetty_instance_name }}/webapps'
 
 - name: Install jetty apps start.ini file.
-  template: src=start.ini dest={{ jetty_instance_root }}/start.ini owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  template: src=start.ini dest={{ jetty_apps }}/{{ jetty_instance_name }}/start.ini owner={{ jetty_user }} group={{ jetty_group }} mode=0644
 
 - name: Copy jetty webdefault.xml file
-  copy: src=webdefault.xml dest={{ jetty_instance_root}}/etc/webdefault.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=webdefault.xml dest={{ jetty_apps }}/{{ jetty_instance_name}}/etc/webdefault.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
 
 - name: Install jetty default settings file.
   template: src=jetty-defaults dest=/etc/default/jetty-{{ jetty_instance_name }} owner=root group=root mode=0644

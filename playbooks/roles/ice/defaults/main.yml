@@ -1,7 +1,8 @@
 ---
 # required for any jetty9_instance
-jetty_instance_name: ice
-jetty_instance_port: 80
+ice_instance_name: ice
+ice_instance_port: 80
+ice_jvm_extra_opts: -Darchaius.deployment.applicationId=ice
 
 ice_build_url: https://netflixoss.ci.cloudbees.com/job/ice-master/lastSuccessfulBuild/artifact/target/ice.war
 
