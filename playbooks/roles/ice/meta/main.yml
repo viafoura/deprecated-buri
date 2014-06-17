@@ -1,4 +1,4 @@
 ---
 dependencies:
   - { role: cloud_amazon }
-  - { role: jetty9 }
+  - { role: jetty9_instance }

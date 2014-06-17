@@ -1,4 +1,8 @@
 ---
+# required for any jetty9_instance
+jetty_instance_name: turbine
+jetty_instance_port: 8003
+
 turbine_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/turbine/turbine-web/0.4/turbine-web-0.4.war
 # Right now only config supported, eventually eureka will be added. Will probably ignore file-based
 turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscovery

@@ -1,4 +1,8 @@
 ---
+# required for any jetty9_instance
+jetty_instance_name: priam
+jetty_instance_port: 8080
+
 priam_version: "1.2.30"
 priam_mirror: "http://slash-etc.com/java/priam-web-{{ priam_version }}.war"
 priam_checksum: "829cbb67746364566de57fc31605992dcc230e545f28a47e910ccff24b9f4dca"

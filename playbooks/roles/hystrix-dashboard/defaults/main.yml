@@ -1,3 +1,7 @@
 ---
+# required for any jetty9_instance
+jetty_instance_name: hystrix_dashboard
+jetty_instance_port: 8002
+
 hystrix_dashboard_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/hystrix/hystrix-dashboard/1.4.0-RC4/hystrix-dashboard-1.4.0-RC4.war
 

@@ -1,5 +1,5 @@
 ---
 dependencies:
   - { role: cloud_amazon }
-  - { role: jetty9 }
+  - { role: jetty9_instance }
   - { role: cassandra, cassandra_user: '{{ servlet_container_user }}', cassandra_group: '{{ servlet_container_group }}', cassandra_jvm_opts: '-javaagent:${CASSANDRA_HOME}/lib/priam-cass-extensions-{{ priam_version }}.jar' }

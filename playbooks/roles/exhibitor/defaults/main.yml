@@ -1,4 +1,8 @@
 ---
+# required for any jetty9_instance
+jetty_instance_name: exhibitor
+jetty_instance_port: 8080
+
 zookeeper_version: '3.4.5'
 zookeeper_basename: 'zookeeper-{{ zookeeper_version }}'
 zookeeper_mirror: 'http://mirrors.ibiblio.org/apache/zookeeper/{{ zookeeper_basename }}/{{ zookeeper_basename }}.tar.gz'
