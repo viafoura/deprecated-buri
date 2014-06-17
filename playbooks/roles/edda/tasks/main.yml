@@ -29,6 +29,6 @@
   template: src=edda.properties dest={{ edda_webapps_root }}/edda/WEB-INF/classes/edda.properties owner=root group=root mode=0644
 
 - name: Copy replacement log4j.properties file
-  copy: src=log4j.properties dest={{ edda_webapps_root }}/edda/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  template: src=log4j.properties dest={{ edda_webapps_root }}/edda/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
   notify: restart webapps container
 

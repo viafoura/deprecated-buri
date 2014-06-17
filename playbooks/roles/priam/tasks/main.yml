@@ -43,14 +43,14 @@
   file: path=/tmp/Priam.war state=absent
 
 - name: Move snappy libary to parent classpath (jetty fix)
-  command: mv /opt/jetty_apps/webapps/Priam/WEB-INF/lib/snappy-java-1.0.5.jar {{ jetty_install_dir }}/lib/ext/
+  command: mv {{ priam_webapps_root }}/Priam/WEB-INF/lib/snappy-java-1.0.5.jar {{ jetty_install_dir }}/lib/ext/
   when: servlet_container == "jetty9"
 
 - name: Create classes folder in WEB-INF
   file: path={{ priam_webapps_root }}/Priam/WEB-INF/classes state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
 
 - name: Copy replacement log4j.properties file
-  copy: src=log4j.properties dest={{ priam_webapps_root }}/Priam/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  template: src=log4j.properties dest={{ priam_webapps_root }}/Priam/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
   
 - name: Run Priam SimpleDB initializer
   command: /usr/local/bin/simpledb-setup.py
