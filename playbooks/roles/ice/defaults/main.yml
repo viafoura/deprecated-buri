@@ -2,6 +2,7 @@
 # required for any jetty9_instance
 ice_instance_name: ice
 ice_instance_port: 80
+ice_instance_jmx_port: 1099
 ice_jvm_extra_opts: -Darchaius.deployment.applicationId=ice
 ice_webapps_root: "{{ jetty_apps }}/{{ ice_instance_name }}/webapps"
 ice_jvm_xmx: '1024m'

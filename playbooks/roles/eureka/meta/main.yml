@@ -1,4 +1,4 @@
 ---
 dependencies:
-  - { role: jetty9_instance, jetty_instance_name: '{{ eureka_instance_name }}', jetty_instance_port: '{{ eureka_instance_port }}', jetty_jvm_extra_opts: '{{ eureka_jvm_extra_opts }}', jetty_jvm_xmx: '{{ eureka_jvm_xmx }}' }
+  - { role: jetty9_instance, jetty_instance_name: '{{ eureka_instance_name }}', jetty_instance_port: '{{ eureka_instance_port }}', jetty_jvm_extra_opts: '{{ eureka_jvm_extra_opts }}', jetty_jvm_xmx: '{{ eureka_jvm_xmx }}', jetty_instance_jmx_port: '{{ eureka_instance_jmx_port }}' }
 

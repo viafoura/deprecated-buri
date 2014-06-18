@@ -2,6 +2,7 @@
 # required for any jetty9_instance
 asgard_instance_name: asgard
 asgard_instance_port: 80
+asgard_instance_jmx_port: 1099
 asgard_jvm_extra_opts: -Darchaius.deployment.applicationId=asgard
 asgard_webapps_root: "{{ jetty_apps }}/{{ asgard_instance_name }}/webapps"
 asgard_jvm_xmx: '1024m'

@@ -1,7 +1,8 @@
 ---
 # required for any jetty9_instance
 exhibitor_instance_name: exhibitor
-exhibitor_instance_port: 8080
+exhibitor_instance_port: 8401
+exhibitor_instance_jmx_port: 7401
 exhibitor_jvm_extra_opts: -Darchaius.deployment.applicationId=exhibitor -Dexhibitor-hostname=$([[ -e /usr/bin/ec2metadata ]] && ec2metadata --public-hostname || hostname)
 exhibitor_webapps_root: "{{ jetty_apps }}/{{ exhibitor_instance_name }}/webapps"
 exhibitor_jvm_xmx: '1024m'

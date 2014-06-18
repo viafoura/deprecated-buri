@@ -1,5 +1,7 @@
 ---
+# The caller of this dependency role should override much of this
 jetty_instance_name: 'DEFAULT'
 jetty_instance_port: 80
+jetty_instance_jmx_port: 1099
 jetty_jvm_extra_opts: ''
 jetty_jvm_xmx: 1024m

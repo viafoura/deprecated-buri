@@ -2,6 +2,7 @@
 # required for any jetty9_instance
 edda_instance_name: edda
 edda_instance_port: 80
+edda_instance_jmx_port: 1099
 edda_jvm_extra_opts: -Darchaius.deployment.applicationId=edda
 edda_webapps_root: "{{ jetty_apps }}/{{ edda_instance_name }}/webapps"
 edda_jvm_xmx: '1024m'

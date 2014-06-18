@@ -1,7 +1,8 @@
 ---
 # required for any jetty9_instance
 eureka_instance_name: eureka
-eureka_instance_port: 7001
+eureka_instance_port: 8400
+eureka_instance_jmx_port: 7400
 eureka_jvm_extra_opts: -Darchaius.deployment.applicationId=eureka
 eureka_webapps_root: "{{ jetty_apps }}/{{ eureka_instance_name }}/webapps"
 eureka_jvm_xmx: '1024m'

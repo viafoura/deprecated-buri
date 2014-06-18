@@ -1,7 +1,8 @@
 ---
 # required for any jetty9_instance
 turbine_instance_name: turbine
-turbine_instance_port: 8003
+turbine_instance_port: 8402
+turbine_instance_jmx_port: 7402
 turbine_jvm_extra_opts: -Darchaius.deployment.applicationId=turbine
 turbine_webapps_root: "{{ jetty_apps }}/{{ turbine_instance_name }}/webapps"
 turbine_jvm_xmx: '1024m'
