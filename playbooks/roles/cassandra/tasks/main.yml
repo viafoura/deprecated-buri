@@ -79,4 +79,11 @@
 - name: Bump up stack size in cassandra launch scripts
   lineinfile: dest={{ cassandra_home }}/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
 
-
+- name: Disable/stop Cassanda service on init (Priam managed)
+  service: name=cassandra enabled=no state=stopped
+  when: image_build
+  
+- name: Enable Cassanda service
+  service: name=cassandra enabled=yes state=started
+  when: not image_build
+  

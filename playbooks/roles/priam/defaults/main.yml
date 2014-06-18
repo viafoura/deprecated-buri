@@ -1,4 +1,12 @@
 ---
+# required for any jetty9_instance
+priam_instance_name: priam
+priam_instance_port: 8088
+priam_instance_jmx_port: 1099
+priam_jvm_extra_opts: -Darchaius.deployment.applicationId=priam
+priam_webapps_root: "{{ jetty_apps }}/{{ priam_instance_name }}/webapps"
+priam_jvm_xmx: '1024m'
+
 priam_version: "1.2.30"
 priam_mirror: "http://slash-etc.com/java/priam-web-{{ priam_version }}.war"
 priam_checksum: "829cbb67746364566de57fc31605992dcc230e545f28a47e910ccff24b9f4dca"
@@ -8,8 +16,6 @@ priam_ext_checksum: "2c845fd10d957ef631e87a6944b9009174dea2d69b948552280267b754a
 priam_cass_startscript: "/etc/init.d/cassandra start"
 priam_cass_stopscript: "/etc/init.d/cassandra stop"
 priam_upload_throttle: "5242880"
-priam_port: "8080"
-
 
 priam_vpc: false
 priam_backup_hour: "4"

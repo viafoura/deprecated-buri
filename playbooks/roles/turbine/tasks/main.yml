@@ -1,6 +1,6 @@
 ---
 - name: Copy jetty app context xml file
-  copy: src=turbine.xml dest={{ webapps_root }}/turbine.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=turbine.xml dest={{ turbine_webapps_root }}/turbine.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
@@ -8,13 +8,13 @@
   get_url: url={{ turbine_build_url }} dest=/tmp/turbine.war
   
 - name: Remove any old version
-  file: path={{ webapps_root }}/turbine state=absent
+  file: path={{ turbine_webapps_root }}/turbine state=absent
   
 - name: Create turbine deployment directory
-  file: path={{ webapps_root }}/turbine state=directory
+  file: path={{ turbine_webapps_root }}/turbine state=directory
 
 - name: Decompress turbine WAR file
-  command: chdir={{ webapps_root }}/turbine unzip /tmp/turbine.war
+  command: chdir={{ turbine_webapps_root }}/turbine unzip /tmp/turbine.war
   notify: restart webapps container
   
 - name: Remove source WAR file
@@ -22,5 +22,5 @@
   notify: restart webapps container
 
 - name: Copy turbine.properties
-  template: src=config.properties dest={{ webapps_root }}/turbine/WEB-INF/classes/config.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  template: src=config.properties dest={{ turbine_webapps_root }}/turbine/WEB-INF/classes/config.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
 

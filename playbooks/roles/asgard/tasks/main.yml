@@ -15,7 +15,7 @@
   when: servlet_container == "tomcat"
 
 - name: Copy jetty app context xml file
-  copy: src=asgard.xml dest={{ webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=asgard.xml dest={{ asgard_webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
@@ -28,13 +28,13 @@
   get_url: url={{ asgard_build_url }} dest=/tmp/asgard.war
   
 - name: Remove any old version
-  file: path={{ webapps_root }}/ROOT state=absent
+  file: path={{ asgard_webapps_root }}/ROOT state=absent
   
 - name: Create Asgard deployment directory
-  file: path={{ webapps_root }}/ROOT state=directory
+  file: path={{ asgard_webapps_root }}/ROOT state=directory
 
 - name: Decompress Asgard WAR file
-  command: chdir={{ webapps_root }}/ROOT unzip /tmp/asgard.war
+  command: chdir={{ asgard_webapps_root }}/ROOT unzip /tmp/asgard.war
   notify: restart webapps container
   
 - name: Remove source WAR file
@@ -50,6 +50,6 @@
   template: src=Config.groovy dest=/opt/asgard/Config.groovy owner={{ servlet_container_user }} group={{ servlet_container_user }} mode=0644
 
 - name: Add BASIC auth requirements to web.xml
-  lineinfile: dest={{ webapps_root }}/ROOT/WEB-INF/web.xml regexp="security-constraint" line="<security-constraint><web-resource-collection><web-resource-name></web-resource-name><url-pattern>/*</url-pattern></web-resource-collection><auth-constraint><role-name>asgard</role-name></auth-constraint></security-constraint><login-config><auth-method>BASIC</auth-method><realm-name>asgard</realm-name></login-config>" insertbefore="</web-app>"
+  lineinfile: dest={{ asgard_webapps_root }}/ROOT/WEB-INF/web.xml regexp="security-constraint" line="<security-constraint><web-resource-collection><web-resource-name></web-resource-name><url-pattern>/*</url-pattern></web-resource-collection><auth-constraint><role-name>asgard</role-name></auth-constraint></security-constraint><login-config><auth-method>BASIC</auth-method><realm-name>asgard</realm-name></login-config>" insertbefore="</web-app>"
   notify: restart webapps container
    

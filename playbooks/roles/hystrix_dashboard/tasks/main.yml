@@ -1,6 +1,6 @@
 ---
 - name: Copy jetty app context xml file
-  copy: src=hystrix-dashboard.xml dest={{ webapps_root }}/hystrix-dashboard.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=hystrix-dashboard.xml dest={{ hystrix_dashboard_webapps_root }}/hystrix-dashboard.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
@@ -8,13 +8,13 @@
   get_url: url={{ hystrix_dashboard_build_url }} dest=/tmp/hystrix-dashboard.war
   
 - name: Remove any old version
-  file: path={{ webapps_root }}/hystrix-dashboard state=absent
+  file: path={{ hystrix_dashboard_webapps_root }}/hystrix-dashboard state=absent
   
 - name: Create hystrix-dashboard deployment directory
-  file: path={{ webapps_root }}/hystrix-dashboard state=directory
+  file: path={{ hystrix_dashboard_webapps_root }}/hystrix-dashboard state=directory
 
 - name: Decompress hystrix-dashboard WAR file
-  command: chdir={{ webapps_root }}/hystrix-dashboard unzip /tmp/hystrix-dashboard.war
+  command: chdir={{ hystrix_dashboard_webapps_root }}/hystrix-dashboard unzip /tmp/hystrix-dashboard.war
   notify: restart webapps container
   
 - name: Remove source WAR file

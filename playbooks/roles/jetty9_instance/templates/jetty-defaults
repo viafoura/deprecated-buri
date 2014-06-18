@@ -1,0 +1,4 @@
+JETTY_HOME={{ jetty_install_dir }}
+JETTY_BASE={{ jetty_apps }}/{{ jetty_instance_name }}
+TMPDIR={{ jetty_temp }}
+JAVA_OPTIONS="-Djava.awt.headless=true -XX:MaxPermSize=256M -Xmx{{ jetty_jvm_xmx|default('512m') }} -XX:+UseConcMarkSweepGC {{ jetty_jvm_extra_opts|default('') }}"

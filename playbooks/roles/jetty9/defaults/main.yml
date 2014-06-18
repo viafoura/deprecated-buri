@@ -6,14 +6,11 @@ jetty_mirror: 'http://eclipse.org/downloads/download.php?file=/jetty/{{ jetty_ve
 jetty_checksum: '3fbce5530d8d9a66f43034782b0f249df3d98e3e97ef849e7f740eab612b963f'
 jetty_root: '/opt/jetty'
 jetty_temp: '{{ jetty_root }}/temp'
-jetty_app_root: '/opt/jetty_apps'
+jetty_apps: '{{ jetty_root }}/apps'
 jetty_install_dir: '{{ jetty_root }}/{{ jetty_basename }}'
 jetty_user: 'jetty'
 jetty_group: 'jetty'
-jetty_port: '80'
-# These are used to abstract containers
-webapps_root: '{{ jetty_app_root }}/webapps'
+# Used as generics for container user elsewhere, and switching behavior based on containers
 servlet_container: 'jetty9'
 servlet_container_user: '{{ jetty_user }}'
 servlet_container_group: '{{ jetty_group }}'
-

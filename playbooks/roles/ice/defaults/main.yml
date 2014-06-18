@@ -1,4 +1,12 @@
 ---
+# required for any jetty9_instance
+ice_instance_name: ice
+ice_instance_port: 80
+ice_instance_jmx_port: 1099
+ice_jvm_extra_opts: -Darchaius.deployment.applicationId=ice
+ice_webapps_root: "{{ jetty_apps }}/{{ ice_instance_name }}/webapps"
+ice_jvm_xmx: '1024m'
+
 ice_build_url: https://netflixoss.ci.cloudbees.com/job/ice-master/lastSuccessfulBuild/artifact/target/ice.war
 
 # The S3 buckets and prefixes (comma separated) where your S3 programmatic

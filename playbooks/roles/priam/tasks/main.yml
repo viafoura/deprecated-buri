@@ -1,6 +1,6 @@
 ---
 - name: Copy jetty app context xml file
-  copy: src=Priam.xml dest={{ webapps_root }}/Priam.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=Priam.xml dest={{ priam_webapps_root }}/Priam.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
@@ -29,28 +29,28 @@
   get_url: url={{ priam_mirror }} dest=/tmp/Priam.war sha256sum={{ priam_checksum }}
   
 - name: Remove any old version
-  file: path={{ webapps_root }}/Priam state=absent
+  file: path={{ priam_webapps_root }}/Priam state=absent
   notify: restart webapps container
   
 - name: Create Priam deployment directory
-  file: path={{ webapps_root }}/Priam state=directory
+  file: path={{ priam_webapps_root }}/Priam state=directory
 
 - name: Decompress Priam WAR file
-  command: chdir={{ webapps_root }}/Priam unzip /tmp/Priam.war
+  command: chdir={{ priam_webapps_root }}/Priam unzip /tmp/Priam.war
   notify: restart webapps container
   
 - name: Remove source WAR file
   file: path=/tmp/Priam.war state=absent
 
 - name: Move snappy libary to parent classpath (jetty fix)
-  command: mv /opt/jetty_apps/webapps/Priam/WEB-INF/lib/snappy-java-1.0.5.jar {{ jetty_install_dir }}/lib/ext/
+  command: mv {{ priam_webapps_root }}/Priam/WEB-INF/lib/snappy-java-1.0.5.jar {{ jetty_install_dir }}/lib/ext/
   when: servlet_container == "jetty9"
 
 - name: Create classes folder in WEB-INF
-  file: path={{ webapps_root }}/Priam/WEB-INF/classes state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
+  file: path={{ priam_webapps_root }}/Priam/WEB-INF/classes state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
 
 - name: Copy replacement log4j.properties file
-  copy: src=log4j.properties dest={{ webapps_root }}/Priam/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  template: src=log4j.properties dest={{ priam_webapps_root }}/Priam/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
   
 - name: Run Priam SimpleDB initializer
   command: /usr/local/bin/simpledb-setup.py
