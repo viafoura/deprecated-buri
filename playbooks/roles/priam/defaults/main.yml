@@ -1,8 +1,8 @@
 ---
 # required for any jetty9_instance
 priam_instance_name: priam
-priam_instance_port: 8404
-priam_instance_port: 7404
+priam_instance_port: 8088
+priam_instance_jmx_port: 1099
 priam_jvm_extra_opts: -Darchaius.deployment.applicationId=priam
 priam_webapps_root: "{{ jetty_apps }}/{{ priam_instance_name }}/webapps"
 priam_jvm_xmx: '1024m'
