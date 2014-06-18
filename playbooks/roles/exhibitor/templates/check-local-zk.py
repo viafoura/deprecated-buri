@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 def get_stat():
     # FIXME: use boto
     myhostname = commands.getoutput("ec2metadata --public-hostname").rstrip()
-    url = 'http://localhost:{{ exhibitor_opts_port }}/exhibitor/v1/cluster/state/' + myhostname
+    url = 'http://localhost:{{ exhibitor_instance_port }}/exhibitor/v1/cluster/state/' + myhostname
 
     f = urllib2.urlopen(url, timeout=1)
 
