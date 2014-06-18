@@ -16,8 +16,6 @@ priam_ext_checksum: "2c845fd10d957ef631e87a6944b9009174dea2d69b948552280267b754a
 priam_cass_startscript: "/etc/init.d/cassandra start"
 priam_cass_stopscript: "/etc/init.d/cassandra stop"
 priam_upload_throttle: "5242880"
-priam_port: "8080"
-
 
 priam_vpc: false
 priam_backup_hour: "4"
