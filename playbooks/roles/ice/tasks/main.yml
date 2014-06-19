@@ -35,8 +35,9 @@
   template: src=ice.properties.j2 dest={{ ice_webapps_root }}/ice/WEB-INF/classes/ice.properties owner=root group=root mode=0644
   notify: restart webapps container
   
+# FIXME: is this even needed, and if so, can it be less ugly?
 - name: Add ICE_HOME to environment
-  lineinfile: dest=/etc/default/jetty regexp="ICE_HOME" line="ICE_HOME={{ ice_webapps_root }}/ice/WEB-INF/classes/"
+  lineinfile: dest=/etc/default/jetty-{{ ice_instance_name }} regexp="ICE_HOME" line="ICE_HOME={{ ice_webapps_root }}/ice/WEB-INF/classes/"
   when: ansible_distribution == 'Ubuntu' and servlet_container == "jetty9"
   notify: restart webapps container
 
