@@ -20,7 +20,7 @@
   when: servlet_container == "jetty9"
 
 - name: Copy jetty realm.properties file
-  template: src=realm.properties dest={{ jetty_app_root}}/etc/ owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  template: src=realm.properties dest={{ jetty_apps }}/{{ asgard_instance_name }}/etc/ owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
