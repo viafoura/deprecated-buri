@@ -13,7 +13,7 @@
     - libapache2-mod-wsgi
 
 - name: Copy carbon configurations
-  copy: src={{ item }} dest=/opt/graphite/conf owner=root group=root mode=0644
+  copy: src={{ item }} dest=/etc/carbon owner=root group=root mode=0644
   with_items:
     - storage-schemas.conf
     - storage-aggregation.conf
@@ -28,19 +28,26 @@
 - name: Run graphite-manage syncdb
   command: graphite-manage syncdb --noinput
 
+# FIXME: expose these hardcoded params as params
+- name: Run graphite-manage createsuperuser
+  shell: echo "from django.contrib.auth.models import User; User.objects.create_superuser('root', 'ops@example.com', 'graphite')" | graphite-manage shell
+
+- name: correct permissions of carbon database
+  command: chown _graphite:_graphite /var/lib/graphite/graphite.db
+
 - name: Enable and stop carbon cache service
   service: name=carbon-cache enabled=yes state=stopped
   when: image_build
   
 - name: Enable and start carbon cache service
-  service: name=carbon-cache enabled=yes state=started
+  service: name=carbon-cache enabled=yes state=restarted
   when: not image_build
 
 - name: Enable and stop apache2 service
-  service: name=carbon-cache enabled=yes state=stopped
+  service: name=apache2 enabled=yes state=stopped
   when: image_build
   
 - name: Enable and start apache2 service
-  service: name=carbon-cache enabled=yes state=started
+  service: name=apache2 enabled=yes state=restarted
   when: not image_build
 
