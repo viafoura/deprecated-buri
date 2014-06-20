@@ -20,6 +20,22 @@
         <Arg type="java.lang.String">/jndi/rmi://<Property name="jetty.jmxrmihost" default="localhost"/>:<Property name="jetty.jmxrmiport" default="1099"/>/jmxrmi</Arg>
       </New>
     </Arg>
+    <Arg>
+      <Map>
+        <Entry>
+          <Item>jmx.remote.x.password.file</Item>
+          <Item>
+            <New class="java.lang.String"><Arg><Property name="jetty.base" default="." />/resources/jmx.password</Arg></New>
+          </Item>
+        </Entry>
+        <Entry>
+          <Item>jmx.remote.x.access.file</Item>
+          <Item>
+            <New class="java.lang.String"><Arg><Property name="jetty.base" default="." />/resources/jmx.access</Arg></New>
+          </Item>
+        </Entry>
+      </Map>
+    </Arg>
     <Arg>org.eclipse.jetty.jmx:name=rmiconnectorserver</Arg>
     <Call name="start" />
   </New>

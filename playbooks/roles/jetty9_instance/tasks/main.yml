@@ -17,6 +17,12 @@
 - name: Patch jetty jetty-jmx-remote.xml file
   copy: src=jetty-jmx-remote.xml dest={{ jetty_apps }}/{{ jetty_instance_name}}/etc/jetty-jmx-remote.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
 
+- name: Add jmx.access file
+  copy: src=jmx.access dest={{ jetty_apps }}/{{ jetty_instance_name}}/resources/jmx.access owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+
+- name: Add jmx.password file
+  template: src=jmx.password dest={{ jetty_apps }}/{{ jetty_instance_name}}/resources/jmx.password owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+
 - name: Install jetty default settings file.
   template: src=jetty-defaults dest=/etc/default/jetty-{{ jetty_instance_name }} owner=root group=root mode=0644
 
