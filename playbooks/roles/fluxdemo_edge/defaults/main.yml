@@ -1,0 +1,16 @@
+---
+# required for any jetty9_instance
+fluxdemo_edge_instance_name: fluxdemo_edge
+fluxdemo_edge_instance_port: 8299
+fluxdemo_edge_instance_jmx_port: 7299
+fluxdemo_edge_instance_karyon_port: 9299
+fluxdemo_edge_jvm_extra_opts: ''
+#fluxdemo_edge_jvm_extra_opts: "-Darchaius.deployment.applicationId=hystrix-web"
+fluxdemo_edge_webapps_root: "{{ jetty_apps }}/{{ fluxdemo_edge_instance_name }}/webapps"
+fluxdemo_edge_jvm_xmx: '1024m'
+
+fluxdemo_edge_graphite_host: 'localhost'
+fluxdemo_edge_zk_host: 'localhost'
+
+fluxdemo_edge_build_url: http://slash-etc.com/java/flux-edge-0.1.0-SNAPSHOT.war
+

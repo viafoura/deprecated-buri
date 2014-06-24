@@ -1,0 +1,29 @@
+---
+- name: Copy jetty app context xml file
+  copy: src=fluxdemo_middle.xml dest={{ fluxdemo_middle_webapps_root }}/fluxdemo_middle.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  notify: restart webapps container
+  when: servlet_container == "jetty9"
+
+- name: Download build of fluxdemo_middle
+  get_url: url={{ fluxdemo_middle_build_url }} dest=/tmp/fluxdemo_middle.war
+  
+- name: Remove any old version
+  file: path={{ fluxdemo_middle_webapps_root }}/fluxdemo_middle state=absent
+  
+- name: Create fluxdemo_middle deployment directory
+  file: path={{ fluxdemo_middle_webapps_root }}/fluxdemo_middle state=directory
+
+- name: Decompress fluxdemo_middle WAR file
+  command: chdir={{ fluxdemo_middle_webapps_root }}/fluxdemo_middle unzip /tmp/fluxdemo_middle.war
+  notify: restart webapps container
+  
+- name: Remove source WAR file
+  file: path=/tmp/fluxdemo_middle.war state=absent
+  notify: restart webapps container
+
+- name: Copy middletier.properties
+  template: src=middletier.properties dest={{ fluxdemo_middle_webapps_root }}/fluxdemo_middle/WEB-INF/classes/middletier.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+
+- name: Copy log4j.properties
+  template: src=log4j.properties dest={{ fluxdemo_middle_webapps_root }}/fluxdemo_middle/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+

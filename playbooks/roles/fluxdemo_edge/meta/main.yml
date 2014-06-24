@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: jetty9_instance, jetty_instance_name: '{{ fluxdemo_edge_instance_name }}', jetty_instance_port: '{{ fluxdemo_edge_instance_port }}', jetty_jvm_extra_opts: '{{ fluxdemo_edge_jvm_extra_opts }}', jetty_jvm_xmx: '{{ fluxdemo_edge_jvm_xmx }}', jetty_instance_jmx_port: '{{ fluxdemo_edge_instance_jmx_port }}' }
+
