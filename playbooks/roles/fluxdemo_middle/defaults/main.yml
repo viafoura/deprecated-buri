@@ -4,6 +4,7 @@ fluxdemo_middle_instance_name: fluxdemo_middle
 fluxdemo_middle_instance_port: 8399
 fluxdemo_middle_instance_jmx_port: 7399
 fluxdemo_middle_instance_karyon_port: 9399
+fluxdemo_middle_instance_eureka_port: 8400
 fluxdemo_middle_jvm_extra_opts: ''
 #fluxdemo_middle_jvm_extra_opts: "-Darchaius.deployment.applicationId=hystrix-web"
 fluxdemo_middle_webapps_root: "{{ jetty_apps }}/{{ fluxdemo_middle_instance_name }}/webapps"

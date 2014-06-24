@@ -21,8 +21,8 @@
   file: path=/tmp/fluxdemo_edge.war state=absent
   notify: restart webapps container
 
-- name: Copy middletier.properties
-  template: src=middletier.properties dest={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge/WEB-INF/classes/middletier.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+- name: Copy edge.properties
+  template: src=edge.properties dest={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge/WEB-INF/classes/edge.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
 
 - name: Copy log4j.properties
   template: src=log4j.properties dest={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
