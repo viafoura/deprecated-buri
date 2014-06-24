@@ -26,3 +26,4 @@
     - eureka
     - hystrix_dashboard
     - turbine
+    - graphite
