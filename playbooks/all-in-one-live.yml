@@ -27,3 +27,5 @@
     - hystrix_dashboard
     - turbine
     - graphite
+    - fluxdemo_edge
+    - fluxdemo_middle
