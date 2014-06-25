@@ -12,8 +12,8 @@ detected.
 ===================================================================== -->
 
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
-  <Set name="contextPath">/fluxdemo_edge</Set>
-  <Set name="war"><Property name="jetty.webapps" default="."/>/fluxdemo_edge</Set>
+  <Set name="contextPath">/</Set>
+  <Set name="war"><Property name="jetty.webapps" default="."/>/root</Set>
   <Set name="defaultsDescriptor"><Property name="jetty.base" default="."/>/etc/webdefault.xml</Set>
 
   <Set name="extractWAR">false</Set>

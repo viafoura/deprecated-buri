@@ -1,6 +1,6 @@
 ---
 - name: Copy jetty app context xml file
-  copy: src=fluxdemo_edge.xml dest={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=fluxdemo_edge.xml dest={{ fluxdemo_edge_webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
@@ -8,13 +8,13 @@
   get_url: url={{ fluxdemo_edge_build_url }} dest=/tmp/fluxdemo_edge.war
   
 - name: Remove any old version
-  file: path={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge state=absent
+  file: path={{ fluxdemo_edge_webapps_root }}/root state=absent
   
 - name: Create fluxdemo_edge deployment directory
-  file: path={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge state=directory
+  file: path={{ fluxdemo_edge_webapps_root }}/root state=directory
 
 - name: Decompress fluxdemo_edge WAR file
-  command: chdir={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge unzip /tmp/fluxdemo_edge.war
+  command: chdir={{ fluxdemo_edge_webapps_root }}/root unzip /tmp/fluxdemo_edge.war
   notify: restart webapps container
   
 - name: Remove source WAR file
@@ -22,8 +22,8 @@
   notify: restart webapps container
 
 - name: Copy edge.properties
-  template: src=edge.properties dest={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge/WEB-INF/classes/edge.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  template: src=edge.properties dest={{ fluxdemo_edge_webapps_root }}/root/WEB-INF/classes/edge.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
 
 - name: Copy log4j.properties
-  template: src=log4j.properties dest={{ fluxdemo_edge_webapps_root }}/fluxdemo_edge/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  template: src=log4j.properties dest={{ fluxdemo_edge_webapps_root }}/root/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
 
