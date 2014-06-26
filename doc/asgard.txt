@@ -1,0 +1,28 @@
+
+ - Address this:
+   - https://github.com/Netflix/asgard/wiki/Asgard-Configuration
+     - AWS accounts to manage, give them names
+     - names/env type
+     - default key pair
+     - CI integration
+     - need to provide a static DNS name for it
+     - others from here?: https://github.com/Netflix/asgard/blob/master/grails-app/conf/Config.groovy
+
+
+
+ - needs addressing:
+   - https://github.com/Netflix/asgard/wiki/VPC-Configuration
+   - the convention split along two lines:
+     - is the VPC "internal" or "external"?
+     - is the VPC used for computer ("ec2") or traffic management ("elb")
+
+ - could be of use_
+   - https://github.com/Netflix/asgard/wiki/FAQ#what-options-are-there-for-securing-the-communication-between-asgard-and-eureka-assuming-https-is-already-in-place-are-there-options-for-authentication-the-scenario-i-have-is-that-running-asgard-from-my-desktop-for-asgard-to-communicate-with-eureka-its-communicating-over-an-open-public-address-do-you-set-up-a-security-group-entry-to-only-allow-certain-ip-addresses-through-if-i-am-sitting-behind-a-dynamic-ip-address-are-there-other-options
+
+
+ - Eventually these:
+   - https://github.com/Netflix/asgard/wiki/Customizing-User-Data
+   - https://github.com/Netflix/asgard/wiki/ASG-Event-Notifications
+   - https://github.com/Netflix/asgard/wiki/Troubleshooting#reduce-aws-regions
+
+

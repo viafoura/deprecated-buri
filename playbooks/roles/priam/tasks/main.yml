@@ -1,74 +1,23 @@
-
-# cassandra performance optimizations, based on Datastax best practices:
-# http://www.datastax.com/documentation/cassandra/2.0/webhelp/index.html#cassandra/install/installRecommendSettings.html
-- name: Install cassandra security limits profile
-  template: src=cassandra-limits.conf dest=/etc/security/limits.d/cassandra.conf owner=root mode=0644
-
-- name: Install cassandra sysctl settings
-  copy: src=20-cassandra-vm.conf dest=/etc/sysctl.d/ owner=root mode=0644
-
-- name: Install libjna-javam and jsvc
-  apt: pkg={{ item }} state=latest
-  with_items:
-    - libjna-java
-    - jsvc
-    - libcommons-daemon-java
-
+---
 - name: Copy jetty app context xml file
-  copy: src=Priam.xml dest={{ webapps_root }}/Priam.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=Priam.xml dest={{ priam_webapps_root }}/Priam.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container
   when: servlet_container == "jetty9"
-
-- name: Add Cassandra user
-  user: name={{ cassandra_user }} group={{ servlet_container_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
-
-- name: Add ephemeral mkdir spec for cassandra role
-  template: src=ephemeral-dirs dest=/etc owner=root mode=0644
-
-- name: Create cassandra log dir
-  file: path={{ cassandra_log_location }} state=directory owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
-
-- name: Create cassandra install directory
-  file: path={{ cassandra_installdir }} state=directory owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
-
-- name: Download cassandra release archive
-  get_url: url={{ priam_cass_mirror }} dest=/tmp/cassandra.tar.gz sha256sum={{ priam_cass_checksum }} owner=root mode=0644
-
-- name: Extract cassandra release archive to install dir
-  command: chdir={{ cassandra_installdir }} tar --strip-components 1 --no-same-owner -xzf /tmp/cassandra.tar.gz
-
-- name: Set ownership of installed release archive
-  file: path={{ cassandra_installdir }} state=directory recurse=yes owner={{ cassandra_user }} group={{ servlet_container_group }}
-
-- name: Removing cassandra home directory to be replaced with link
-  file: path={{ cassandra_home }} state=absent owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0755
-
-- name: Link cassandra home to install directory
-  file: path={{ cassandra_home }} src={{ cassandra_installdir }} owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
-
-- name: Link JNA into cassandra libs
-  file: path={{ cassandra_home }}/lib/jna.jar src=/usr/share/java/jna.jar owner={{ cassandra_user }} group={{ servlet_container_group }} state=link
-
-- name: Install cassandra default settings file.
-  template: src=cassandra-defaults dest=/etc/default/cassandra owner=root group=root mode=0644
 
 - name: Give jetty access to re-write cassandra config
   file: path={{ cassandra_home }}/conf/cassandra.yaml owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755 state=touch
 
 - name: Download priam agent for cassandra
-  get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/ sha256sum={{ priam_ext_checksum }} owner={{ cassandra_user }} group={{ servlet_container_group }} mode=0644
-
-- name: Install cassandra init script
-  template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
-
-- name: Bump up stack size in cassandra launch scripts
-  lineinfile: dest=/opt/cassandra/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
+  get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/ sha256sum={{ priam_ext_checksum }} owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
 
 - name: Adding scripts for inspecting SimpleDB tables
   copy: src={{ item }} dest=/usr/local/bin owner=root group=root mode=0755
   with_items:
     - dump_sdb_InstanceIdentity.py
     - dump_sdb_PriamProperties.py
+    - priam_set_property.py
+    - priam_cluster_remove_identities.py
+    - priam_cluster_remove_props.py
  
 - name: Adding script for initializing SimpleDB tables
   template: src=simpledb-setup.py dest=/usr/local/bin owner=root group=root mode=0755
@@ -80,24 +29,28 @@
   get_url: url={{ priam_mirror }} dest=/tmp/Priam.war sha256sum={{ priam_checksum }}
   
 - name: Remove any old version
-  file: path={{ webapps_root }}/Priam state=absent
+  file: path={{ priam_webapps_root }}/Priam state=absent
   notify: restart webapps container
   
 - name: Create Priam deployment directory
-  file: path={{ webapps_root }}/Priam state=directory
+  file: path={{ priam_webapps_root }}/Priam state=directory
 
 - name: Decompress Priam WAR file
-  command: chdir={{ webapps_root }}/Priam unzip /tmp/Priam.war
+  command: chdir={{ priam_webapps_root }}/Priam unzip /tmp/Priam.war
   notify: restart webapps container
   
 - name: Remove source WAR file
   file: path=/tmp/Priam.war state=absent
 
+- name: Move snappy libary to parent classpath (jetty fix)
+  command: mv {{ priam_webapps_root }}/Priam/WEB-INF/lib/snappy-java-1.0.5.jar {{ jetty_install_dir }}/lib/ext/
+  when: servlet_container == "jetty9"
+
 - name: Create classes folder in WEB-INF
-  file: path={{ webapps_root }}/Priam/WEB-INF/classes state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
+  file: path={{ priam_webapps_root }}/Priam/WEB-INF/classes state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755
 
 - name: Copy replacement log4j.properties file
-  copy: src=log4j.properties dest={{ webapps_root }}/Priam/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  template: src=log4j.properties dest={{ priam_webapps_root }}/Priam/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
   
 - name: Run Priam SimpleDB initializer
   command: /usr/local/bin/simpledb-setup.py

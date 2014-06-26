@@ -1,3 +1,5 @@
 ---
 dependencies:
-  - { role: jetty9, jetty_port: '{{ priam_port }}' }
+  - { role: cloud_amazon }
+  - { role: jetty9_instance, jetty_instance_name: '{{ priam_instance_name }}', jetty_instance_port: '{{ priam_instance_port }}', jetty_jvm_extra_opts: '{{ priam_jvm_extra_opts }}', jetty_jvm_xmx: '{{ priam_jvm_xmx }}', jetty_instance_jmx_port: '{{ priam_instance_jmx_port }}' }
+  - { role: cassandra, cassandra_user: '{{ servlet_container_user }}', cassandra_group: '{{ servlet_container_group }}', cassandra_jvm_opts: '-javaagent:${CASSANDRA_HOME}/lib/priam-cass-extensions-{{ priam_version }}.jar' }

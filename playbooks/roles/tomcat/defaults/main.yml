@@ -1,6 +1,0 @@
----
-webapps_root: '/usr/local/tomcat/webapps'
-servlet_container: 'tomcat'
-servlet_container_user: '{{ tomcat_user }}'
-servlet_container_group: '{{ tomcat_user }}'
-

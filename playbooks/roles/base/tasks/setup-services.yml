@@ -36,8 +36,13 @@
 # Ephemeral RAID
 - name: Add first-boot ephemeral raid setup script
   copy: src=ephemeral-raid.conf dest=/etc/init owner=root mode=0644
+  when: cloud_target == "amazon"
   
 # Ephemeral Directories 
 - name: Add ephemeral mkdir script
   copy: src=ephemeral-mkdirs.conf dest=/etc/init owner=root mode=0644
+  when: cloud_target == "amazon"
   
+- name: Add motd additions
+  template: src=motd-20-sysinfo dest=/etc/update-motd.d/20-sysinfo mode=0755 owner=root
+  when: cloud_target == "amazon"

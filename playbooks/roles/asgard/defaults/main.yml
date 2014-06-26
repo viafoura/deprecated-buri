@@ -1,4 +1,32 @@
 ---
-asgard_build_url: https://github.com/Netflix/asgard/releases/download/asgard-1.4.2/asgard.war
+# required for any jetty9_instance
+asgard_instance_name: asgard
+asgard_instance_port: 80
+asgard_instance_jmx_port: 1099
+asgard_jvm_extra_opts: -Darchaius.deployment.applicationId=asgard
+asgard_webapps_root: "{{ jetty_apps }}/{{ asgard_instance_name }}/webapps"
+asgard_jvm_xmx: '1024m'
+
+asgard_build_url: https://github.com/Netflix/asgard/releases/download/asgard-1.5/asgard.war
 #asgard_build_url: https://netflixoss.ci.cloudbees.com/job/asgard-master/lastStableBuild/artifact/target/asgard.war 
 asgard_admin_password: "blah"
+
+# accounts to work with, order is important here, as the first
+# will be deemed to be the account for the running instance
+asgard_accounts:
+  test:
+    account_no: 123456789012
+  staging:
+    account_no: 345678901234
+  production:
+    account_no: 567890123456
+
+# Should match first account listed above
+asgard_nickname: "test"
+# Options are test or prod, causes UI to be visually different for production
+asgard_envstyle: "test"
+
+# What SSH key to launch with by default
+asgard_default_key: "default"
+
+

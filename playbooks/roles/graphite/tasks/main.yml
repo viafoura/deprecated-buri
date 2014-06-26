@@ -1,0 +1,53 @@
+# Graphite only available in 14.04 it looks
+- name: Checking sanity of play...
+  fail: msg="Graphite role requires Ubuntu 14.04 or later"
+  when: ansible_distribution_version|float < 14.04
+
+- name: Install packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - graphite-carbon
+    - graphite-web
+    - apache2-mpm-worker
+    - apache2-utils
+    - libapache2-mod-wsgi
+
+- name: Copy carbon configurations
+  copy: src={{ item }} dest=/etc/carbon owner=root group=root mode=0644
+  with_items:
+    - storage-schemas.conf
+    - storage-aggregation.conf
+
+# FIXME: this is rude and crude, fine if graphite is the only thing being served, which should most often be the case
+- name: Setup apache to serve graphite UI
+  command: cp /usr/share/graphite-web/apache2-graphite.conf /etc/apache2/sites-available/000-default.conf
+
+- name: Enable startup of carbon cache
+  lineinfile: dest=/etc/default/graphite-carbon regexp="CARBON_CACHE_ENABLED" line="CARBON_CACHE_ENABLED=true"
+
+- name: Run graphite-manage syncdb
+  command: graphite-manage syncdb --noinput
+
+# FIXME: expose these hardcoded params as params
+- name: Run graphite-manage createsuperuser
+  shell: echo "from django.contrib.auth.models import User; User.objects.create_superuser('root', 'ops@example.com', 'graphite')" | graphite-manage shell
+
+- name: correct permissions of carbon database
+  command: chown _graphite:_graphite /var/lib/graphite/graphite.db
+
+- name: Enable and stop carbon cache service
+  service: name=carbon-cache enabled=yes state=stopped
+  when: image_build
+  
+- name: Enable and start carbon cache service
+  service: name=carbon-cache enabled=yes state=restarted
+  when: not image_build
+
+- name: Enable and stop apache2 service
+  service: name=apache2 enabled=yes state=stopped
+  when: image_build
+  
+- name: Enable and start apache2 service
+  service: name=apache2 enabled=yes state=restarted
+  when: not image_build
+

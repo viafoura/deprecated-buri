@@ -3,10 +3,13 @@
 
 - name: Install boto Python library
   pip: name=boto state=latest
+  when: cloud_target == "amazon"
 
 - name: Install AWS CLI
   pip: name=awscli state=latest
+  when: cloud_target == "amazon"
 
 - name: Install s3get to be used by user-data on boot
   copy: src=s3get dest=/usr/bin/s3get owner=root group=root mode=0755
+  when: cloud_target == "amazon"
 

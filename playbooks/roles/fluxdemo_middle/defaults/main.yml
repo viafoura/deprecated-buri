@@ -1,0 +1,18 @@
+---
+# required for any jetty9_instance
+fluxdemo_middle_instance_name: fluxdemo_middle
+fluxdemo_middle_instance_port: 8399
+fluxdemo_middle_instance_jmx_port: 7399
+fluxdemo_middle_instance_karyon_port: 9399
+fluxdemo_middle_instance_eureka_port: 8400
+fluxdemo_middle_jvm_extra_opts: '-Darchaius.deployment.applicationId=middletier -Darchaius.dynamicPropertyFactory.registerConfigWithJMX=true'
+#fluxdemo_middle_jvm_extra_opts: "-Darchaius.deployment.applicationId=hystrix-web"
+fluxdemo_middle_webapps_root: "{{ jetty_apps }}/{{ fluxdemo_middle_instance_name }}/webapps"
+fluxdemo_middle_jvm_xmx: '1024m'
+
+fluxdemo_middle_graphite_host: 'localhost'
+fluxdemo_middle_zk_host: 'localhost'
+fluxdemo_middle_cass_host: 'localhost'
+
+fluxdemo_middle_build_url: http://slash-etc.com/java/flux-middletier-0.1.0-SNAPSHOT.war
+

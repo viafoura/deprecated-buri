@@ -1,0 +1,89 @@
+---
+# cassandra performance optimizations, based on Datastax best practices:
+# http://www.datastax.com/documentation/cassandra/2.0/webhelp/index.html#cassandra/install/installRecommendSettings.html
+- name: Install cassandra security limits profile
+  template: src=cassandra-limits.conf dest=/etc/security/limits.d/cassandra.conf owner=root mode=0644
+
+- name: Install cassandra sysctl settings
+  copy: src=20-cassandra-vm.conf dest=/etc/sysctl.d/ owner=root mode=0644
+
+- name: Install libjna-javam and jsvc
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - libjna-java
+    - jsvc
+    - libcommons-daemon-java
+
+# Only add user/group if someone's set an alternate user
+- name: Add group cassandra
+  group: name={{ cassandra_group }} system=yes
+  when: cassandra_group == "cassandra"
+
+- name: Add Cassandra user
+  user: name={{ cassandra_user }} group={{ cassandra_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
+  when: cassandra_user == "cassandra"
+
+- name: Add ephemeral mkdir spec for cassandra role
+  template: src=ephemeral-dirs dest=/etc owner=root mode=0644
+  when: image_build
+
+- name: Create cassandra runtime directories
+  file: path={{ item }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+  with_items:
+    - "{{ cassandra_base_location }}"
+    - "{{ cassandra_data_location }}"
+    - "{{ cassandra_cache_location }}"
+    - "{{ cassandra_commitlog_location }}"
+  when: not image_build
+
+# FIXME: should this be a part of above directory creations?
+- name: Create cassandra log directory
+  file: path={{ cassandra_log_location }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+
+- name: Create cassandra install directory
+  file: path={{ cassandra_installdir }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+
+- name: Download cassandra release archive
+  get_url: url={{ cassandra_mirror }} dest=/tmp/cassandra.tar.gz sha256sum={{ cassandra_checksum }} owner=root mode=0644
+
+- name: Extract cassandra release archive to install dir
+  command: chdir={{ cassandra_installdir }} tar --strip-components 1 --no-same-owner -xzf /tmp/cassandra.tar.gz
+
+- name: Set ownership of installed release archive
+  file: path={{ cassandra_installdir }} state=directory recurse=yes owner={{ cassandra_user }} group={{ cassandra_group }}
+
+- name: Removing cassandra home directory to be replaced with link
+  file: path={{ cassandra_home }} state=absent
+
+- name: Link cassandra home to install directory
+  file: path={{ cassandra_home }} src={{ cassandra_installdir }} owner={{ cassandra_user }} group={{ cassandra_group }} state=link
+
+- name: Link JNA into cassandra libs
+  file: path={{ cassandra_home }}/lib/jna.jar src=/usr/share/java/jna.jar owner={{ cassandra_user }} group={{ cassandra_group }} state=link
+
+- name: Install cassandra default settings file.
+  template: src=cassandra-defaults dest=/etc/default/cassandra owner=root group=root mode=0644
+
+- name: Add keystore to Cassandra
+  copy: src=local/cassandra_keystore dest={{ cassandra_home }}/conf/.keystore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
+
+- name: Add truststore to Cassandra
+  copy: src=local/cassandra_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
+
+- name: Install initial cassandra.yaml
+  template: src=cassandra.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+
+- name: Install cassandra init script
+  template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
+
+- name: Bump up stack size in cassandra launch scripts
+  lineinfile: dest={{ cassandra_home }}/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
+
+- name: Disable/stop Cassanda service on init (Priam managed)
+  service: name=cassandra enabled=no state=stopped
+  when: image_build
+  
+- name: Enable Cassanda service
+  service: name=cassandra enabled=yes state=started
+  when: not image_build
+  

@@ -42,15 +42,10 @@ detected.
   </Call>
   -->
   
-  <!-- virtual hosts
+  <!-- virtual hosts 
   <Set name="virtualHosts">
     <Array type="String">
-      <Item>www.MyVirtualDomain.com</Item>
-      <Item>m.MyVirtualDomain.com</Item>
-      <Item>*.OtherVirtualDomain.com</Item>
-      <Item>@ConnectorName</Item>
-      <Item>localhost</Item>
-      <Item>127.0.0.1</Item>
+      <Item>@port80</Item>
     </Array>
   </Set>
   -->

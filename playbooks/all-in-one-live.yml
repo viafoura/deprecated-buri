@@ -1,0 +1,31 @@
+---
+- name: Adding host to inventory
+  hosts: localhost
+  connection: local
+  vars:
+    image_build: false
+    cloud_target: vm
+  vars_files:
+    - [ "local/site.yml", "vars/site.defaults.yml" ]
+  tasks:
+    - name: Register host target in ansible inventory
+      add_host: hostname={{ machine_target }} groups=anshost
+
+- name: Provisioning role against host
+  hosts: anshost
+  user: dev
+  sudo: True
+  vars:
+    image_build: false
+    cloud_target: vm
+  vars_files:
+    - [ "local/site.yml", "vars/site.defaults.yml" ]
+  roles:
+    - cassandra
+    - exhibitor
+    - eureka
+    - hystrix_dashboard
+    - turbine
+    - graphite
+    - fluxdemo_edge
+    - fluxdemo_middle

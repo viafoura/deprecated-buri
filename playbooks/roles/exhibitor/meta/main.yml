@@ -1,3 +1,3 @@
 ---
 dependencies:
-  - { role: jetty9, jetty_port: '{{ exhibitor_opts_port }}' }
+  - { role: jetty9_instance, jetty_instance_name: '{{ exhibitor_instance_name }}', jetty_instance_port: '{{ exhibitor_instance_port }}', jetty_jvm_extra_opts: '{{ exhibitor_jvm_extra_opts }}', jetty_jvm_xmx: '{{ exhibitor_jvm_xmx }}', jetty_instance_jmx_port: '{{ exhibitor_instance_jmx_port }}' }
