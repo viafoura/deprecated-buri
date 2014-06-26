@@ -1,5 +1,0 @@
----
-- name: Install Tomcat on Ubuntu
-  include: tomcat-ubuntu.yml
-  when: ansible_distribution == 'Ubuntu'
-

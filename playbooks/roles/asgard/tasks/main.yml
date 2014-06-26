@@ -1,19 +1,5 @@
 ---
 # Asgard role
-- name: Copy tomcat server.xml file
-  copy: src=server.xml dest=/usr/local/tomcat/conf/server.xml owner=root group=root mode=0644
-  notify: restart webapps container
-  when: servlet_container == "tomcat"
-
-- name: Copy over tomcat-users.xml file
-  template: src=tomcat-users.xml dest=/usr/local/tomcat/conf/tomcat-users.xml owner=root group=root mode=0644
-  notify: restart webapps container
-  when: servlet_container == "tomcat"
-
-- name: Create Asgard Home at /usr/share/tomcat7/.asgard
-  file: path=/usr/share/tomcat7/.asgard state=directory owner={{ tomcat_user }}  group={{ tomcat_user }}  mode=0755
-  when: servlet_container == "tomcat"
-
 - name: Copy jetty app context xml file
   copy: src=asgard.xml dest={{ asgard_webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart webapps container

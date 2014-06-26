@@ -9,7 +9,6 @@ buri_iam_role: "Buri"
 # These 4 lines are former contents of vars/system/Ubuntu.yml
 ntp_service_name: ntp
 ssh_service_name: ssh
-tomcat_user: tomcat7
 
 # Something must override this at commandline, do not set elsewhere.
 #ami_role: ""
