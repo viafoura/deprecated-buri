@@ -53,7 +53,7 @@ exhibitor_opts_configcheckms: 30000
 # Styling used for the JQuery-based UI. Currently available options: red, black, custom
 exhibitor_opts_jquerystyle: "red"
 # Extra text to display in UI header
-exhibitor_opts_headingtext: "Exhibitor"
+exhibitor_opts_headingtext: "Exhibitor - {{ exhibitor_cluster_name }}"
 exhibitor_defaultconfig_cleanup_period_ms: '300000'
 exhibitor_defaultconfig_zookeeper_install_directory: '{{ zookeeper_install_dir }}/*'
 exhibitor_defaultconfig_check_ms: '30000'
