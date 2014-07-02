@@ -2,7 +2,7 @@
 # Don't generally change anything here, use local site.xml instead
 image_build: True
 buri_environment: prod
-buri_iam_role: "Buri"
+buri_iam_role: "Aminator"
 
 # Something must override this at commandline, do not set elsewhere.
 #ami_role: ""
@@ -34,9 +34,7 @@ ami_build_hvm_ebs: True
 ami_build_pvm_instance: False
 ami_build_hvm_instance: False
 
-exhibitor_opts_s3config: 'bucket_name:exhibitor-config'
-exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
-eureka_dns_txt_domain: 'eureka.test.yourdomain.net'
+
 
 ami_bundle_account: 123456789012
 ami_bundle_bucket_path: 'bucketname/generated'
@@ -56,6 +54,12 @@ asgard_nickname: "test"
 asgard_envstyle: "test"
 # What SSH key to launch with by default
 asgard_default_key: "default"
+
+exhibitor_cluster_name: 'appname'
+exhibitor_opts_s3config: 'bucket_name:exhibitor-config'
+exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
+
+eureka_dns_txt_domain: 'eureka.test.yourdomain.net'
 
 # Priam related values:
 # priam_clustername MUST match the autoscaling group name (before the dash) in order to be used 
