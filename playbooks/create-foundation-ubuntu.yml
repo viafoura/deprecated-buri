@@ -4,8 +4,6 @@
   hosts: localhost
   connection: local
   sudo: True
-  vars:
-    ami_root_resize: True
   vars_files:
     - roles/{{ ami_role }}/defaults/main.yml
     - [ "{{ buri_environment }}/local/overrides.yml" ]
@@ -20,8 +18,7 @@
         image_url: '{{ distro_image_url }}'
         image_path: '{{ distro_image_path }}'
         image_device: '{{ ami_device }}'
-    - include: tasks/filesystem-grow.yml
-      when: ami_root_resize
+    - include: tasks/filesystem-grow.yml ami_root_resize=True
     - include: tasks/chroot_mount_and_setup.yml
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ ami_image_mount }} groups=chroots

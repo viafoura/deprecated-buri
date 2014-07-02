@@ -2,8 +2,6 @@
   hosts: localhost
   connection: local
   sudo: True
-  vars:
-    #ami_role: destroy_ebs
   vars_files:
     - [ "{{ buri_environment }}/local/overrides.yml" ]
   tasks:

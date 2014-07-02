@@ -3,7 +3,6 @@
   hosts: localhost
   connection: local
   sudo: True
-  #vars:
   vars_files:
     - roles/{{ ami_role }}/defaults/main.yml
     - [ "{{ buri_environment }}/local/overrides.yml" ]

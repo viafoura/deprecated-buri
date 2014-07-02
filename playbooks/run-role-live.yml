@@ -2,9 +2,6 @@
 - name: Adding host to inventory
   hosts: localhost
   connection: local
-  vars:
-    image_build: false
-    cloud_target: vm
   vars_files:
     - [ "{{ buri_environment }}/local/overrides.yml" ]
   tasks:
@@ -15,10 +12,7 @@
   hosts: anshost
   user: dev
   sudo: True
-  vars:
-    image_build: false
-    cloud_target: vm
   vars_files:
     - [ "local/site.yml", "vars/site.defaults.yml" ]
   roles:
-    - '{{ ami_role }}'
+    - '{{ ami_role }}' image_build=False
