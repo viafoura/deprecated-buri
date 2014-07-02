@@ -5,11 +5,6 @@ cloud_target: amazon
 
 buri_iam_role: "Buri"
 
-# should be part of a group for base? Or should we group on distro?
-# These 4 lines are former contents of vars/system/Ubuntu.yml
-ntp_service_name: ntp
-ssh_service_name: ssh
-
 # Something must override this at commandline, do not set elsewhere.
 #ami_role: ""
 # Maybe this one if you want a custom name
