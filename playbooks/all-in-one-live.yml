@@ -17,7 +17,7 @@
     image_build: false
     cloud_target: vm
   vars_files:
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
+    - [ "{{ buri_environment }}/local/overrides.yml" ]
   roles:
     - cassandra
     - exhibitor
