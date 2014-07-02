@@ -1,4 +1,15 @@
 #!/bin/bash
 
-ansible-playbook playbooks/run-role-live.yml -i inventory/local -e "machine_target=$1 ami_role=$2" -vvvv
+ENVIRO=$1
+if [ "x$ENVIRO" == "x" ]; then
+  echo "Must supply environment name"
+  exit 1
+fi
+BASE="playbooks/$ENVIRO/local"
+if [ ! -d "${BASE}" ]; then
+  echo "Invalid environment directory: $ENVIRO"
+  exit 1
+fi
+
+ansible-playbook playbooks/run-role-live.yml -i playbooks/${ENVIRO}/inventory -e "machine_target=$2 ami_role=$3" -vvvv
 
