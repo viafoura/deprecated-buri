@@ -37,15 +37,14 @@ ami_build_hvm_ebs: True
 ami_build_pvm_instance: False
 ami_build_hvm_instance: False
 
-
 turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscovery
 turbine_default_connect: :80/hystrix.stream
 turbine_default_instances: 127.0.0.1
 turbine_clusters:
-  rss-front:
-    connect: :80/rss-front/hystrix.stream
+  fluxdemo-edge:
+    connect: :8299/hystrix.stream
     instances: 127.0.0.1
-  rss-back:
-    connect: :80/rss-back/hystrix.stream
+  fluxdemo-middletier:
+    connect: :8399/hystrix.stream
     instances: 127.0.0.1
 
