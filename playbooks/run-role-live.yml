@@ -14,5 +14,7 @@
   sudo: True
   vars_files:
     - [ "local/site.yml", "vars/site.defaults.yml" ]
+  vars: 
+    image_build: False
   roles:
-    - '{{ ami_role }}' image_build=False
+    - '{{ ami_role }}'

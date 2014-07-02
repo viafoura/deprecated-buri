@@ -1,3 +1,4 @@
+---
 - name: Disconnect, snapshot, and register newly formed AMI
   hosts: localhost
   connection: local

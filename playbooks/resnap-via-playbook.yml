@@ -14,6 +14,7 @@
     - include: tasks/ec2_ami_lookup.yml
     - include: tasks/ec2_create_vol_and_attach.yml
     - include: tasks/filesystem-grow.yml
+      when: ami_root_resize == True
     - include: tasks/chroot_mount_and_setup.yml
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ ami_image_mount }} groupname=chroots

@@ -6,5 +6,7 @@
   sudo: True
   vars_files:
     - [ "{{ buri_environment }}/local/overrides.yml" ]
+  vars:
+    image_build: True
   roles:
-    - '{{ ami_role }}' image_build=True
+    - "{{ ami_role }}"

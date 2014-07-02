@@ -26,7 +26,7 @@ ami_bundle_bucket_path: 'yourbucket/basepath'
 # These are more likely to be set in a site config or on command line
 
 # In GB, a default. whole numbers only.
-ami_root_size: 5
+ami_root_size: 10
 # Grow the extfs partition to fill the volume fully
 # Mostly used for foundation/base
 ami_root_resize: False
