@@ -5,8 +5,6 @@
   vars:
     image_build: false
     cloud_target: vm
-  vars_files:
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
   tasks:
     - name: Register host target in ansible inventory
       add_host: hostname={{ machine_target }} groups=anshost
