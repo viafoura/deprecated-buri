@@ -5,7 +5,7 @@
   connection: local
   sudo: True
   vars_files:
-    - roles/{{ ami_role }}/defaults/main.yml
+    - [ "roles/{{ ami_role }}/defaults/main.yml" ]
     - [ "{{ buri_environment }}/local/overrides.yml" ]
   tasks:
     - include: tasks/set_build_info.yml
@@ -14,7 +14,7 @@
     - include: tasks/ec2_ami_lookup.yml
     - include: tasks/ec2_create_vol_and_attach.yml
     - include: tasks/filesystem-grow.yml
-      when: ami_root_resize == True
+      when: ami_root_resize
     - include: tasks/chroot_mount_and_setup.yml
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ ami_image_mount }} groupname=chroots
