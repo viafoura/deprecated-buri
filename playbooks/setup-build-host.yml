@@ -6,6 +6,8 @@
   sudo: True
   vars_files:
     - [ "{{ buri_environment }}/local/overrides.yml" ]
+  vars:
+    image_build: false
   roles:
     - build-host
 

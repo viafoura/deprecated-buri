@@ -1,6 +1,4 @@
 ---
-# Don't generally change anything here, use local site.xml instead
-image_build: True
 cloud_target: amazon
 buri_environment: prod
 buri_iam_role: "Aminator"

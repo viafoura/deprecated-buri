@@ -15,6 +15,6 @@
   vars_files:
     - [ "local/site.yml", "vars/site.defaults.yml" ]
   vars: 
-    image_build: False
+    image_build: false
   roles:
     - '{{ ami_role }}'

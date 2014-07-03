@@ -1,6 +1,4 @@
 ---
-# Don't generally change anything here, use local site.xml instead
-image_build: False
 #cloud_target: amazon
 cloud_target: vm
 buri_environment: dev_vm

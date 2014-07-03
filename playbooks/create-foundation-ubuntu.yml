@@ -9,6 +9,7 @@
     - "{{ buri_environment }}/local/overrides.yml"
   vars: 
     ami_root_resize: true
+    image_build: true
   tasks:
     - name: Dump all vars
       template: src=templates/debug.j2 dest=/tmp/ansible.all
