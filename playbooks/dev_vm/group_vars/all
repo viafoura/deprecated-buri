@@ -51,6 +51,10 @@ exhibitor_opts_s3backup: False
 #exhibitor_s3_bucket: 'exhibitor'
 #exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
 
+hystrix_dashboard_instance_port: 8403
+hystrix_dashboard_instance_jmx_port: 7403
+hystrix_dashboard_jvm_xmx: '512m'
+
 turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscovery
 turbine_default_connect: :80/hystrix.stream
 turbine_default_instances: 127.0.0.1

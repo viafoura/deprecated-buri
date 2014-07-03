@@ -77,6 +77,10 @@ eureka_instance_port: 8400
 eureka_instance_jmx_port: 7400
 eureka_jvm_xmx: '1024m'
 
+hystrix_dashboard_instance_port: 8403
+hystrix_dashboard_instance_jmx_port: 7403
+hystrix_dashboard_jvm_xmx: '512m'
+
 ice_instance_port: 80
 ice_instance_jmx_port: 1099
 ice_jvm_xmx: '1024m'
