@@ -77,6 +77,23 @@ eureka_instance_port: 8400
 eureka_instance_jmx_port: 7400
 eureka_jvm_xmx: '1024m'
 
+fluxdemo_edge_instance_port: 8299
+fluxdemo_edge_instance_jmx_port: 7299
+fluxdemo_edge_instance_karyon_port: 9299
+fluxdemo_edge_instance_eureka_port: 8400
+fluxdemo_edge_jvm_xmx: '1024m'
+fluxdemo_edge_graphite_host: 'graphite.flux.test.yourdomain.net'
+fluxdemo_edge_zk_host: 'zk.flux.test.yourdomain.net'
+
+fluxdemo_middle_instance_port: 8399
+fluxdemo_middle_instance_jmx_port: 7399
+fluxdemo_middle_instance_karyon_port: 9399
+fluxdemo_middle_instance_eureka_port: 8400
+fluxdemo_middle_jvm_xmx: '1024m'
+fluxdemo_middle_graphite_host: 'graphite.flux.test.yourdomain.net'
+fluxdemo_middle_zk_host: 'zk.flux.test.yourdomain.net'
+fluxdemo_middle_cass_host: 'cass.flux.test.yourdomain.net'
+
 hystrix_dashboard_instance_port: 8403
 hystrix_dashboard_instance_jmx_port: 7403
 hystrix_dashboard_jvm_xmx: '512m'
