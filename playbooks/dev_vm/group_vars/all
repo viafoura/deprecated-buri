@@ -27,9 +27,6 @@ ami_bundle_bucket_path: 'yourbucket/basepath'
 
 # In GB, a default. whole numbers only.
 ami_root_size: 10
-# Grow the extfs partition to fill the volume fully
-# Mostly used for foundation/base
-ami_root_resize: False
 # FIXME: this should be more dynamic than this
 ami_device: "/dev/xvdi"
 ami_build_pvm_ebs: True
