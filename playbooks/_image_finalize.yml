@@ -3,10 +3,11 @@
   hosts: localhost
   connection: local
   sudo: True
-  #vars:
   vars_files:
     - roles/{{ ami_role }}/defaults/main.yml
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
+    - [ "{{ buri_environment }}/local/overrides.yml" ]
+  vars:
+    image_build: true
   tasks:
     - include: tasks/ec2_get_facts.yml
     - include: tasks/chroot_clean_and_unmount.yml

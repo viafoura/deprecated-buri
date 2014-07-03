@@ -1,4 +1,4 @@
-
+---
 # FIXME: use ansible native
 # FIXME: parameterize what to generate
 - name: Add locale to chroot

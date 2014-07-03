@@ -4,9 +4,9 @@
   connection: chroot
   user: root
   sudo: True
-  vars:
-    image_build: True
   vars_files:
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
+    - [ "{{ buri_environment }}/local/overrides.yml" ]
+  vars:
+    image_build: true
   roles:
-    - '{{ ami_role }}'
+    - "{{ ami_role }}"
