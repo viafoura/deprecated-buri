@@ -55,9 +55,19 @@ hystrix_dashboard_instance_port: 8403
 hystrix_dashboard_instance_jmx_port: 7403
 hystrix_dashboard_jvm_xmx: '512m'
 
+
+turbine_instance_port: 8402
+turbine_instance_jmx_port: 7402
+turbine_jvm_xmx: '1024m'
+# Right now only config supported, eventually eureka will be added. Will probably ignore file-based
 turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscovery
+#turbine_discovery_impl: com.netflix.turbine.discovery.FileBasedInstanceDiscovery
+#turbine_discovery_impl: com.netflix.turbine.discovery.EurekaInstanceDiscovery
+# Use if the cluster list below does not specify a path
 turbine_default_connect: :80/hystrix.stream
+# Only used when using ConfigPropertyBasedDiscovery
 turbine_default_instances: 127.0.0.1
+# This section only applies for ConfigPropertyBasedDiscovery
 turbine_clusters:
   fluxdemo-edge:
     connect: :8299/hystrix.stream

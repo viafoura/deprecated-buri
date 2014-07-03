@@ -150,18 +150,30 @@ priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
 # This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
 # i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
 # If not set it will not be applied
-priam_zones_available: ""
+priam_zones_available: "us-east-1a,us-east-1d"
 # If you want backups, set this variable to the name of an s3 bucket you have created.
 priam_s3_bucket: "SET_ME_PLEASE"
 # This is in BYTES per second, and is the rate at which backups to S3 will limit network use
 priam_upload_throttle: "5242880"
 
-
-# This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
-# i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
-# If not set it will not be applied
-priam_zones_available: "us-east-1a,us-east-1d"
-
-# If you want backups, set this variable to the name of an s3 bucket you have created.
-priam_s3_bucket: "bucket_name"
+turbine_instance_port: 8402
+turbine_instance_jmx_port: 7402
+turbine_jvm_xmx: '1024m' 
+#turbine_discovery_impl: com.netflix.turbine.discovery.EurekaInstanceDiscovery
+# Use if the cluster list below does not specify a path
+#turbine_default_connect: :80/hystrix.stream
+# Only used when using ConfigPropertyBasedDiscovery
+#turbine_default_instances: 127.0.0.1
+# This section only applies for ConfigPropertyBasedDiscovery
+#turbine_clusters:
+#  fluxdemo-edge:
+#    connect: :8299/hystrix.stream
+#    instances: 127.0.0.1
+#  fluxdemo-middletier:
+#    connect: :8399/hystrix.stream
+#    instances: 127.0.0.1
+# This section only applies for EurekaInstanceDiscovery
+turbine_app_config:
+  - EDGE
+  - MIDDLETIER
 
