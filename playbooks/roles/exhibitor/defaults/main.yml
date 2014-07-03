@@ -1,14 +1,23 @@
 ---
-# required for any jetty9_instance
-exhibitor_instance_name: exhibitor
 exhibitor_instance_port: 8401
 exhibitor_instance_jmx_port: 7401
-exhibitor_jvm_extra_opts: -Darchaius.deployment.applicationId=exhibitor -Dexhibitor-hostname=$([ -e /usr/bin/ec2metadata ] && ec2metadata --public-hostname || hostname)
-exhibitor_webapps_root: "{{ jetty_apps }}/{{ exhibitor_instance_name }}/webapps"
 exhibitor_jvm_xmx: '512m'
-
 exhibitor_cluster_name: 'default'
 exhibitor_s3_bucket: 'exhibitor'
+exhibitor_opts_configtype: 's3'
+exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
+# If true, the Explorer UI will allow nodes to be modified (use with caution).
+exhibitor_opts_nodemodification: "false" # true/false
+# If true, enables AWS S3 backup of ZooKeeper log files (s3credentials may be provided as well).
+exhibitor_opts_s3backup: True
+# From here and above, environmental aspects, see envronment configs for better examples
+# Below, internal role attributes
+
+# required for any jetty9_instance
+exhibitor_instance_name: exhibitor
+exhibitor_jvm_extra_opts: -Darchaius.deployment.applicationId=exhibitor -Dexhibitor-hostname=$([ -e /usr/bin/ec2metadata ] && ec2metadata --public-hostname || hostname)
+exhibitor_webapps_root: "{{ jetty_apps }}/{{ exhibitor_instance_name }}/webapps"
+
 
 zookeeper_version: '3.4.5'
 zookeeper_basename: 'zookeeper-{{ zookeeper_version }}'
@@ -31,18 +40,12 @@ exhibitor_loglevel: 'info'
 exhibitor_s3key: ''
 exhibitor_s3secret: ''
 exhibitor_opts_defaultconfig: '{{ exhibitor_webapps_root }}/root/WEB-INF/classes/exhibitor.properties'
-exhibitor_opts_configtype: 's3'
 # For --contigtype file
 exhibitor_opts_fsconfigdir: '/tmp'
 # For --configtype s3, set:
 exhibitor_opts_s3config: '{{ exhibitor_s3_bucket }}:{{ exhibitor_cluster_name }}-config'
-exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
-# If true, enables AWS S3 backup of ZooKeeper log files (s3credentials may be provided as well).
-exhibitor_opts_s3backup: True
 # Max lines of logging to keep in memory for display.
 exhibitor_opts_loglines: "1000"
-# If true, the Explorer UI will allow nodes to be modified (use with caution).
-exhibitor_opts_nodemodification: "false" # true/false
 # If enabled, ZooKeeper will be queried once a minute for its state via the 'mntr' four letter word
 # (this requires ZooKeeper 3.4.x+). Servo will be used to publish this data via JMX.
 exhibitor_opts_servo: "true"
@@ -70,5 +73,5 @@ exhibitor_defaultconfig_auto_manage_instances_settling_period_ms: '0'
 exhibitor_defaultconfig_auto_manage_instances: '1'
 exhibitor_defaultconfig_servers_spec: ''
 
-# For multiple clusters
+# For multiple clusters, apply cluster name
 ami_suffix: "{{ exhibitor_cluster_name }}"
