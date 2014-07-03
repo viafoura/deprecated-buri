@@ -32,10 +32,68 @@ ami_build_hvm_instance: False
 ami_bundle_account: 123456789012
 ami_bundle_bucket_path: 'bucketname/generated'
 
-exhibitor_opts_s3config: 'bucket_name:exhibitor-config'
+
+exhibitor_instance_port: 8401
+exhibitor_instance_jmx_port: 7401
+exhibitor_jvm_xmx: '512m'
+exhibitor_cluster_name: 'default'
+exhibitor_s3_bucket: 'exhibitor'
+exhibitor_opts_configtype: 's3'
 exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
+# If true, the Explorer UI will allow nodes to be modified (use with caution).
+exhibitor_opts_nodemodification: "false" # true/false
+# If true, enables AWS S3 backup of ZooKeeper log files (s3credentials may be provided as well).
+exhibitor_opts_s3backup: True
 
 eureka_dns_txt_domain: 'eureka.test.yourdomain.net'
+eureka_aws_region: us-east-1
+eureka_instance_port: 8400
+eureka_instance_jmx_port: 7400
+eureka_jvm_xmx: '1024m'
+
+ice_instance_port: 80
+ice_instance_jmx_port: 1099
+ice_jvm_xmx: '1024m'
+# The S3 buckets and prefixes (comma separated) where your S3 programmatic
+# billing files are stored
+ice_billing_s3_bucket_names: example-billing
+ice_billing_s3_bucket_prefix:
+# Your company's name
+ice_company_name: Your Company Name
+# The S3 bucket Ice can use as it's workspace (needs read and write access)
+ice_work_s3_bucket_name: example-ice-work
+ice_admin_password: "password"
+# change the follow account settings in your site.yml w/ an override
+# At least one account with it's account_no set is required. The
+# rest is optional for more complex setups
+ice_accounts:
+  # label used to reference account in UI and elsewhere
+  production:
+    # account number in question
+    account_no: 123456789
+    owner_accounts:
+      - staging
+      - test
+    # if reservation capacity poller needs to use IAM role to access ec2 API, set the assumed role here for each reservation owner account
+    #owner_role: Ice
+    # if reservation capacity poller needs to use IAM role to access ec2 API and external id is used, set the external id here for each reservation owner account. otherwise you can leave it unset.
+    #owner_ext_id: 
+  # Repeat for all your accounts
+  staging:
+    account_no: 123456789
+    owner_accounts:
+      - production
+      - test
+    owner_role: Ice
+    #owner_ext_id: bar
+  test:
+    account_no: 123456789
+    owner_accounts:
+      - production
+      - staging
+    owner_role: foo
+    #owner_ext_id: bar
+
 
 asgard_admin_password: "secretpass"
 asgard_accounts:

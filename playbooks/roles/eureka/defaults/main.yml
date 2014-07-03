@@ -1,15 +1,16 @@
 ---
-# required for any jetty9_instance
-eureka_instance_name: eureka
+eureka_dns_txt_domain: eureka.mydomain.net
+eureka_aws_region: us-east-1
 eureka_instance_port: 8400
 eureka_instance_jmx_port: 7400
+eureka_jvm_xmx: '1024m'
+# From here and above, environmental aspects, see envronment configs for better examples
+# Below, internal role attributes
+
+eureka_instance_name: eureka
 eureka_jvm_extra_opts: -Darchaius.deployment.applicationId=eureka
 eureka_webapps_root: "{{ jetty_apps }}/{{ eureka_instance_name }}/webapps"
-eureka_jvm_xmx: '1024m'
-
 eureka_version: 1.1.131
 #eureka_build_url: https://netflixoss.ci.cloudbees.com/job/eureka-master/lastSuccessfulBuild/artifact/eureka-server/build/libs/eureka-server-1.1.133-SNAPSHOT.war
 eureka_build_url: http://slash-etc.com/java/eureka-server-{{ eureka_version }}.war
-# For EC2 cloud_target
-eureka_dns_txt_domain: eureka.mydomain.net
-eureka_aws_region: us-east-1
+

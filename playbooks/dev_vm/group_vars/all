@@ -32,6 +32,25 @@ ami_build_hvm_ebs: True
 ami_build_pvm_instance: False
 ami_build_hvm_instance: False
 
+eureka_instance_port: 8400
+eureka_instance_jmx_port: 7400
+eureka_jvm_xmx: '1024m'
+# Do not apply to this environment
+#eureka_dns_txt_domain: eureka.mydomain.net
+#eureka_aws_region: us-east-1
+
+exhibitor_instance_port: 8401
+exhibitor_instance_jmx_port: 7401
+exhibitor_jvm_xmx: '512m'
+exhibitor_cluster_name: 'devvm'
+exhibitor_opts_configtype: 'file'
+# If true, the Explorer UI will allow nodes to be modified (use with caution).
+exhibitor_opts_nodemodification: "true" # true/false
+# If true, enables AWS S3 backup of ZooKeeper log files (s3credentials may be provided as well).
+exhibitor_opts_s3backup: False
+#exhibitor_s3_bucket: 'exhibitor'
+#exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
+
 turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscovery
 turbine_default_connect: :80/hystrix.stream
 turbine_default_instances: 127.0.0.1
