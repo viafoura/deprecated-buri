@@ -69,7 +69,7 @@ To setup the above configuration:
    ```
    # Stuff a message onto the numbered log
    curl -D- http://<IP-of-your-VM>:8299/service/edge/v1/log/1234?log=blahblah
-   # Get tge messages logged against the numbered log
+   # Get the messages logged against the numbered log
    curl -D- http://<IP-of-your-VM>:8299/service/edge/v1/logs/1234
    ```
 
@@ -82,11 +82,11 @@ To setup the above configuration:
 6. Poke around the Karyon consoles, Eureka tab should match with step #1, and looking @ the Archaius tab is educational on what that provides:
 
    ```
-     Edge: http://<IP-of-your-VM>:9299
+   Edge  : http://<IP-of-your-VM>:9299
    Middle: http://<IP-of-your-VM>:9399
    ```
 
 ### Status
 
-Buri is around a late alpha kind of state. Things are starting to not move around as much, we have most of the mechanisms we need, and a fairly complete set of role templates for provisioning a good base of the NetflixOSS component stack, both to a VM and EC2. The core is not expected to change much unless needed from this point, and we should mostly be focusing on component integration and implementations as roles.
+Buri is around a late alpha kind of state. Things are starting to not move around as much, we have most of the mechanisms we need, and a fairly complete set of role templates for provisioning a good base of the NetflixOSS component stack, both to a VM and EC2. The core is not expected to change much unless needed from this point, and we should mostly be focusing on component integration and implementations as roles going forward.
 
