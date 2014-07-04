@@ -1,0 +1,19 @@
+---
+- name: Provisioning role against host
+  hosts: all
+  #user: dev
+  #sudo: True
+  vars_files:
+    - [ "{{ buri_environment }}/local/overrides.yml" ]
+  vars:
+    image_build: false
+  roles:
+    - cassandra
+    - exhibitor
+    - eureka
+    - hystrix_dashboard
+    - turbine
+    - graphite
+    - fluxdemo_schema
+    - fluxdemo_edge
+    - fluxdemo_middle
