@@ -34,7 +34,7 @@ ami_build_hvm_instance: False
 
 eureka_instance_port: 8400
 eureka_instance_jmx_port: 7400
-eureka_jvm_xmx: '1024m'
+eureka_jvm_xmx: '512m'
 # Do not apply to this environment
 #eureka_dns_txt_domain: eureka.mydomain.net
 #eureka_aws_region: us-east-1
@@ -55,7 +55,7 @@ fluxdemo_edge_instance_port: 8299
 fluxdemo_edge_instance_jmx_port: 7299
 fluxdemo_edge_instance_karyon_port: 9299
 fluxdemo_edge_instance_eureka_port: 8400
-fluxdemo_edge_jvm_xmx: '1024m'
+fluxdemo_edge_jvm_xmx: '512m'
 fluxdemo_edge_graphite_host: 'localhost'
 fluxdemo_edge_zk_host: 'localhost'
 
@@ -63,7 +63,7 @@ fluxdemo_middle_instance_port: 8399
 fluxdemo_middle_instance_jmx_port: 7399
 fluxdemo_middle_instance_karyon_port: 9399
 fluxdemo_middle_instance_eureka_port: 8400
-fluxdemo_middle_jvm_xmx: '1024m'
+fluxdemo_middle_jvm_xmx: '512m'
 fluxdemo_middle_graphite_host: 'localhost'
 fluxdemo_middle_zk_host: 'localhost'
 fluxdemo_middle_cass_host: 'localhost'
@@ -75,7 +75,7 @@ hystrix_dashboard_jvm_xmx: '512m'
 
 turbine_instance_port: 8402
 turbine_instance_jmx_port: 7402
-turbine_jvm_xmx: '1024m'
+turbine_jvm_xmx: '512m'
 # Right now only config supported, eventually eureka will be added. Will probably ignore file-based
 turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscovery
 #turbine_discovery_impl: com.netflix.turbine.discovery.FileBasedInstanceDiscovery
