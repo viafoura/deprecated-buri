@@ -1,11 +1,41 @@
 ---
-# required for any jetty9_instance
-priam_instance_name: priam
 priam_instance_port: 8080
 priam_instance_jmx_port: 1099
+priam_jvm_xmx: '1024m'
+priam_backup_hour: "4"
+# The recommended Value is 16 to 32 times the rate of write throughput (in MB/s)
+# This is a throttle, 0 means do not throttle
+priam_compaction_throughput: 0
+# The recommended value is 5 to 10 percent of the available Java heap size
+priam_compaction_limit: 256
+# Disable if you like, not used in classic NetflixOSS setups
+priam_native_transport_enabled: true
+# Name of cluster instance (for supporting multiple clusters)
+priam_clustername: "priam"
+# Set this true unless in a VPC in a single region
+priam_multiregion_enable: true
+# How Priam reports cluster member to eachother changes in a VPC, this is the signal to do so
+priam_vpc: false
+priam_internode_encryption: "dc"
+# It is not advised to change this, even if not multi-region
+# See: https://github.com/Netflix/Priam/wiki/Properties#snitch-selection
+# However, if in a VPC, single region, set to Ec2Snitch
+priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
+# This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
+# i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
+# If not set it will not be applied
+priam_zones_available: ""
+# If you want backups, set this variable to the name of an s3 bucket you have created.
+priam_s3_bucket: "SET_ME_PLEASE"
+# This is in BYTES per second, and is the rate at which backups to S3 will limit network use
+priam_upload_throttle: "5242880"
+# From here and above, environmental aspects, see envronment configs for better examples
+# Below, internal role attributes
+
+# required for any jetty9_instance
+priam_instance_name: priam
 priam_jvm_extra_opts: -Darchaius.deployment.applicationId=priam
 priam_webapps_root: "{{ jetty_apps }}/{{ priam_instance_name }}/webapps"
-priam_jvm_xmx: '1024m'
 
 priam_version: "1.2.30"
 priam_mirror: "http://slash-etc.com/java/priam-web-{{ priam_version }}.war"
@@ -15,36 +45,13 @@ priam_ext_checksum: "2c845fd10d957ef631e87a6944b9009174dea2d69b948552280267b754a
 
 priam_cass_startscript: "/etc/init.d/cassandra start"
 priam_cass_stopscript: "/etc/init.d/cassandra stop"
-priam_upload_throttle: "5242880"
 
-priam_vpc: false
-priam_backup_hour: "4"
-# The recommended Value is 16 to 32 times the rate of write throughput (in MB/s)
-priam_compaction_throughput: 0
-# The recommended value is 5 to 10 percent of the available Java heap size
-priam_compaction_limit: 256
-priam_native_transport_enabled: true
-
+# You *can* override these, but better to use a convention here
 # priam_clustername MUST match the autoscaling group name (before the dash) in order to be used 
 # i.e. project_stage_db-useast1 == cluster_name-ec2region
 # priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
-priam_clustername: "priam"
-priam_multiregion_enable: true
 priam_acl_groupname: "priam-{{ priam_clustername }}"
-priam_internode_encryption: "dc"
-# It is not advised to change this, even if not multi-region
-# See: https://github.com/Netflix/Priam/wiki/Properties#snitch-selection
-priam_endpoint_snitch: "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
-
-# This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
-# i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
-# If not set it will not be applied
-priam_zones_available: ""
-
-# If you want backups, set this variable to the name of an s3 bucket you have created.
-priam_s3_bucket: "SET_ME_PLEASE"
 priam_s3_base_dir: "{{ priam_clustername }}_backups"
-
 # We may have multiple AMIs for different clusters. Specify a suffix for image name
 ami_suffix: "{{ priam_clustername }}"
 

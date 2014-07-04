@@ -1,3 +1,4 @@
+---
 # Graphite only available in 14.04 it looks
 - name: Checking sanity of play...
   fail: msg="Graphite role requires Ubuntu 14.04 or later"

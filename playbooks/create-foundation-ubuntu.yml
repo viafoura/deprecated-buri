@@ -4,12 +4,15 @@
   hosts: localhost
   connection: local
   sudo: True
-  vars:
-    ami_root_resize: True
   vars_files:
-    - roles/{{ ami_role }}/defaults/main.yml
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
+    - "roles/{{ ami_role }}/defaults/main.yml"
+    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
+  vars: 
+    ami_root_resize: true
+    image_build: true
   tasks:
+    - name: Dump all vars
+      template: src=templates/debug.j2 dest=/tmp/ansible.all
     - include: tasks/set_build_info.yml
     - include: tasks/ec2_get_facts.yml
     - include: tasks/ec2_get_iam_info.yml
@@ -20,7 +23,9 @@
         image_url: '{{ distro_image_url }}'
         image_path: '{{ distro_image_path }}'
         image_device: '{{ ami_device }}'
-    - include: tasks/filesystem-grow.yml
+    - name: Dump all vars
+      template: src=templates/debug.j2 dest=/tmp/ansible.all2
+    - include: tasks/filesystem-grow.yml 
       when: ami_root_resize
     - include: tasks/chroot_mount_and_setup.yml
     - name: Register chroot target in ansible inventory

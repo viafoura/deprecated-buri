@@ -2,11 +2,6 @@
 - name: Adding host to inventory
   hosts: localhost
   connection: local
-  vars:
-    image_build: false
-    cloud_target: vm
-  vars_files:
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
   tasks:
     - name: Register host target in ansible inventory
       add_host: hostname={{ machine_target }} groups=anshost
@@ -15,11 +10,10 @@
   hosts: anshost
   user: dev
   sudo: True
+  vars_files:
+    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: false
-    cloud_target: vm
-  vars_files:
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
   roles:
     - cassandra
     - exhibitor
@@ -27,5 +21,6 @@
     - hystrix_dashboard
     - turbine
     - graphite
+    - fluxdemo_schema
     - fluxdemo_edge
     - fluxdemo_middle

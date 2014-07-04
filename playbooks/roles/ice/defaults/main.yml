@@ -1,27 +1,16 @@
 ---
-# required for any jetty9_instance
-ice_instance_name: ice
 ice_instance_port: 80
 ice_instance_jmx_port: 1099
-ice_jvm_extra_opts: -Darchaius.deployment.applicationId=ice
-ice_webapps_root: "{{ jetty_apps }}/{{ ice_instance_name }}/webapps"
 ice_jvm_xmx: '1024m'
-
-ice_build_url: https://netflixoss.ci.cloudbees.com/job/ice-master/lastSuccessfulBuild/artifact/target/ice.war
-
 # The S3 buckets and prefixes (comma separated) where your S3 programmatic
 # billing files are stored
 ice_billing_s3_bucket_names: example-billing
 ice_billing_s3_bucket_prefix: 
-
 # Your company's name
 ice_company_name: Your Company Name
-
 # The S3 bucket Ice can use as it's workspace (needs read and write access)
 ice_work_s3_bucket_name: example-ice-work
-
-ice_admin_password: "blah"
-
+ice_admin_password: "password"
 # change the follow account settings in your site.yml w/ an override
 # At least one account with it's account_no set is required. The
 # rest is optional for more complex setups
@@ -52,4 +41,18 @@ ice_accounts:
       - staging
     owner_role: foo
     #owner_ext_id: bar
+
+# From here and above, environmental aspects, see envronment configs for better examples
+# Below, internal role attributes
+
+# required for any jetty9_instance
+ice_instance_name: ice
+ice_jvm_extra_opts: -Darchaius.deployment.applicationId=ice
+ice_webapps_root: "{{ jetty_apps }}/{{ ice_instance_name }}/webapps"
+
+ice_build_url: https://netflixoss.ci.cloudbees.com/job/ice-master/lastSuccessfulBuild/artifact/target/ice.war
+
+
+
+
 

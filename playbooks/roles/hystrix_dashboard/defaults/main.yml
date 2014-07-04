@@ -1,12 +1,14 @@
 ---
-# required for any jetty9_instance
-hystrix_dashboard_instance_name: hystrix_dashboard
 hystrix_dashboard_instance_port: 8403
 hystrix_dashboard_instance_jmx_port: 7403
+hystrix_dashboard_jvm_xmx: '512m'
+# From here and above, environmental aspects, see envronment configs for better examples
+# Below, internal role attributes
+
+# required for any jetty9_instance
+hystrix_dashboard_instance_name: hystrix_dashboard
 hystrix_dashboard_jvm_extra_opts: ''
 #hystrix_dashboard_jvm_extra_opts: "-Darchaius.deployment.applicationId=hystrix-web"
 hystrix_dashboard_webapps_root: "{{ jetty_apps }}/{{ hystrix_dashboard_instance_name }}/webapps"
-hystrix_dashboard_jvm_xmx: '512m'
-
 hystrix_dashboard_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/hystrix/hystrix-dashboard/1.4.0-RC4/hystrix-dashboard-1.4.0-RC4.war
 

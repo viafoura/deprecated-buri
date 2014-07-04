@@ -1,0 +1,7 @@
+---
+- name: Copy fluxdemo cassandra schema create script
+  copy: src=recreate_cassandra dest=/tmp/recreate_cassandra owner=root group=root mode=0644
+
+- name: Run fluxdemo cassandra schema create script
+  shell: /opt/cassandra/bin/cassandra-cli < /tmp/recreate_cassandra
+

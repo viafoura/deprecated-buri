@@ -1,12 +1,14 @@
 ---
-# required for any jetty9_instance
-edda_instance_name: edda
 edda_instance_port: 80
 edda_instance_jmx_port: 1099
+edda_jvm_xmx: '1024m'
+# If not set, defaults to region AMI build is taking place in
+edda_region: us-east-1
+# From here and above, environmental aspects, see envronment configs for better examples
+# Below, internal role attributes
+
+# required for any jetty9_instance
+edda_instance_name: edda
 edda_jvm_extra_opts: -Darchaius.deployment.applicationId=edda
 edda_webapps_root: "{{ jetty_apps }}/{{ edda_instance_name }}/webapps"
-edda_jvm_xmx: '1024m'
-
 edda_build_url: https://netflixoss.ci.cloudbees.com/job/edda-master/lastSuccessfulBuild/artifact/build/libs/edda-2.1-SNAPSHOT.war
-# If not set, defaults to region AMI build is taking place in
-#edda_region: us-east-1

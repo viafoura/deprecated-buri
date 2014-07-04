@@ -5,14 +5,14 @@
   when: ansible_distribution == 'Ubuntu'
   
 - name: Enable NTP service
-  service: name={{ ntp_service_name }} enabled=yes
+  service: name=ntp enabled=yes
 
 - name: Starting NTP
-  service: name={{ ntp_service_name }} state=started
+  service: name=ntp state=started
   when: not image_build
 
 - name: Stopping NTP
-  service: name={{ ntp_service_name }} state=stopped
+  service: name=ntp state=stopped
   when: image_build
   
 # SSH settings
@@ -23,14 +23,14 @@
   copy: src={{ ansible_distribution }}/sshd_config dest=/etc/ssh/sshd_config owner=root mode=0440
     
 - name: Enable SSH service
-  service: name={{ ssh_service_name }} enabled=yes
+  service: name=ssh enabled=yes
   
 - name: Starting SSH service
-  service: name={{ ssh_service_name }} state=started
+  service: name=ssh state=started
   when: not image_build
   
 - name: Stopping SSH service
-  service: name={{ ssh_service_name }} state=stopped
+  service: name=ssh state=stopped
   when: image_build
 
 # Ephemeral RAID

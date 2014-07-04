@@ -1,13 +1,7 @@
 ---
-# required for any jetty9_instance
-turbine_instance_name: turbine
 turbine_instance_port: 8402
 turbine_instance_jmx_port: 7402
-turbine_jvm_extra_opts: -Darchaius.deployment.applicationId=turbine
-turbine_webapps_root: "{{ jetty_apps }}/{{ turbine_instance_name }}/webapps"
 turbine_jvm_xmx: '1024m'
-
-turbine_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/turbine/turbine-web/0.4/turbine-web-0.4.war
 # Right now only config supported, eventually eureka will be added. Will probably ignore file-based
 turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscovery
 #turbine_discovery_impl: com.netflix.turbine.discovery.FileBasedInstanceDiscovery
@@ -16,8 +10,20 @@ turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscove
 turbine_default_connect: :80/hystrix.stream
 # Only used when using ConfigPropertyBasedDiscovery
 turbine_default_instances: 127.0.0.1
+# This section only applies for ConfigPropertyBasedDiscovery
 turbine_clusters:
   test1:
     # Only used for config mode, usually localhost for dev stack
     connect: :80/hystrix.stream
     instances: 127.0.0.1
+
+# From here and above, environmental aspects, see envronment configs for better examples
+# Below, internal role attributes
+
+# required for any jetty9_instance
+turbine_instance_name: turbine
+turbine_jvm_extra_opts: -Darchaius.deployment.applicationId=turbine
+turbine_webapps_root: "{{ jetty_apps }}/{{ turbine_instance_name }}/webapps"
+
+turbine_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/turbine/turbine-web/0.4/turbine-web-0.4.war
+

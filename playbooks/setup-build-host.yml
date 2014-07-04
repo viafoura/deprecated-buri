@@ -5,7 +5,9 @@
   connection: local
   sudo: True
   vars_files:
-    - [ "local/site.yml", "vars/site.defaults.yml" ]
+    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
+  vars:
+    image_build: false
   roles:
     - build-host
 
