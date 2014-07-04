@@ -1,5 +1,9 @@
 #!/bin/bash
 
+SCRIPT_PATH=$(readlink -f $0)
+BURI_BASE=$(dirname ${SCRIPT_PATH})
+
+
 # Update and install Ubuntu packages
 export DEBIAN_FRONTEND=noninteractive
 sudo perl -pi -e 's/^# *(deb .*multiverse)$/$1/' /etc/apt/sources.list
