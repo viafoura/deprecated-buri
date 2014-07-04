@@ -31,15 +31,15 @@ To setup the above configuration:
 
 2. Clone Buri from GitHub on your host:
 
-```
-git clone https://github.com/viafoura/buri.git
-```
+   ```
+   git clone https://github.com/viafoura/buri.git
+   ```
 
 3. Make sure you have ansible installed, and from the checkout, run:
 
-```
-./all-in-one-vm.sh <IP-of-your-VM>
-```
+   ```
+   ./all-in-one-vm.sh <IP-of-your-VM>
+   ```
 
 4. Go for a coffee. If all goes well, in 5-10 minutes, ansible should be done. It may take up to 5 minutes more, or on reboots of the VM, for everything to fully come up.
 
@@ -47,44 +47,44 @@ git clone https://github.com/viafoura/buri.git
 
 1. First check on Eureka with this URL, you should see an EDGE, EUREKA, and MIDDLETIER instance registered when fully booted. Don't worry about the eureka URL never moving from unavailable-replicas to available-replicas. There are no replicas in this configuration. It will block the requests coming in until it goes through an internal cluster discovery sequence, then decide to initialize a new one. That's what takes the most time for initializing on boot.
 
-```
-http://<IP-of-your-VM>:8400/eureka/jsp/status.jsp
-```
+   ```
+   http://<IP-of-your-VM>:8400/eureka/jsp/status.jsp
+   ```
 
 2. Have a look at Exhibitor/Zookeeper status here. When the status is green/serving, and the server id is a positive integer, zookeeper is fully running. A negative number means it's still initializing. Node editing is enabled in the all-in-one for dev tinkering.
 
-```
-http://<IP-of-your-VM>:8401
-```
+   ```
+   http://<IP-of-your-VM>:8401
+   ```
 
 3. Pull up the Hystrix dashboard and use the turbine URL following for the stream on it's page. Keep it visible as you run edge tests.
 
-```
-http://<IP-of-your-VM>:8403/hystrix-dashboard
-http://<IP-of-your-VM>:8402/turbine/turbine.stream?cluster=fluxdemo-edge
-```
+   ```
+   http://<IP-of-your-VM>:8403/hystrix-dashboard
+   http://<IP-of-your-VM>:8402/turbine/turbine.stream?cluster=fluxdemo-edge
+   ```
 
 4. Generate some edge requests, run a few of the first and then the second URL. You should see graphs in real time generated on the hystrix dashboard page with very little latentcy.
 
-```
-# Stuff a message onto the numbered log
-curl -D- http://<IP-of-your-VM>:8299/service/edge/v1/log/1234?log=blahblah
-# Get tge messages logged against the numbered log
-curl -D- http://<IP-of-your-VM>:8299/service/edge/v1/logs/1234
-```
+   ```
+   # Stuff a message onto the numbered log
+   curl -D- http://<IP-of-your-VM>:8299/service/edge/v1/log/1234?log=blahblah
+   # Get tge messages logged against the numbered log
+   curl -D- http://<IP-of-your-VM>:8299/service/edge/v1/logs/1234
+   ```
 
 5. Have a look at the graphite console, you should see on opening the Graphite folder, trees of metrics for both the flux-edge, and flux-middletier coming from Servo. These also come in very close to real-time:
 
-```
-http://<IP-of-your-VM>
-```
+   ```
+   http://<IP-of-your-VM>
+   ```
 
 6. Poke around the Karyon consoles, Eureka tab should match with step #1, and looking @ the Archaius tab is educational on what that provides:
 
-```
-  Edge: http://<IP-of-your-VM>:9299
-Middle: http://<IP-of-your-VM>:9399
-```
+   ```
+     Edge: http://<IP-of-your-VM>:9299
+   Middle: http://<IP-of-your-VM>:9399
+   ```
 
 ### Status
 
