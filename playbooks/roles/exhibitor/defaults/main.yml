@@ -29,6 +29,12 @@ exhibitor_version: '1.5.1'
 exhibitor_basename: 'exhibitor-{{ exhibitor_version }}'
 exhibitor_mirror: 'http://slash-etc.com/java/{{ exhibitor_basename }}.war'
 exhibitor_checksum: 'bf58be69f440cb3ab3bfb4ee0b622c87f55d0fe9f8f2f5bbb74d4a06db6d7893'
+
+# New git-based building controls
+exhibitor_build_source: False
+exhibitor_git_repo: https://github.com/Netflix/eureka.git
+exhibitor_git_ref: master
+
 exhibitor_script_dir: '/usr/local/bin/'
 exhibitor_snapshot_dir: '/mnt/zookeeper/snapshot'
 exhibitor_transaction_dir: '/mnt/zookeeper/transactions'

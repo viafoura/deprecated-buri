@@ -1,0 +1,34 @@
+---
+
+- name: Download snapshot build of Eureka from Cloudbees
+  get_url: url={{ eureka_build_url }} dest={{ eureka_webapps_root }}/eureka.war
+  when: not eureka_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/eureka_build state=directory owner=root group=root mode=0755
+#  when: eureka_build_source
+
+- name: Checkout code from Git
+  git: repo={{ eureka_git_repo }}
+       dest=/tmp/eureka_build
+       version={{ eureka_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: eureka_build_source
+
+- name: Run build
+  command: chdir=/tmp/eureka_build ./gradlew clean build
+  when: eureka_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/eureka_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: eureka_version_out
+  when: eureka_build_source
+
+- name: Copy Eureka war to expected location
+  command: cp /tmp/eureka_build/eureka-server/build/libs/eureka-server-{{ eureka_version_out.stdout }}.war {{ eureka_webapps_root }}/eureka.war
+  when: eureka_build_source
+
+#- name: Removing source build
+#  file: path=/tmp/eureka_build state=absent
+#  when: eureka_build_source

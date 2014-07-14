@@ -6,8 +6,7 @@
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
-- name: Download snapshot build of Eureka from Cloudbees
-  get_url: url={{ eureka_build_url }} dest={{ eureka_webapps_root }}/eureka.war
+- include: acquire_build.yml
   
 - name: Remove any old version
   file: path={{ eureka_webapps_root }}/eureka state=absent
