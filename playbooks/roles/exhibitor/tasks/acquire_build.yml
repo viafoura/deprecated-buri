@@ -1,7 +1,7 @@
 ---
 
-- name: Download snapshot build of Eureka from Cloudbees
-  get_url: url={{ exhibitor_build_url }} dest={{ exhibitor_webapps_root }}/exhibitor.war
+- name: Download snapshot build of Exhibitor from author
+  get_url: url={{ exhibitor_build_url }} dest=/tmp/exhibitor.war
   when: not exhibitor_build_source
 
 #- name: Setting up source build
@@ -16,6 +16,12 @@
   register: git_clone
   when: exhibitor_build_source
 
+- name: Install build dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - maven
+  when: exhibitor_build_source
+
 - name: Run build
   command: chdir=/tmp/exhibitor_build/exhibitor-standalone/src/main/resources/buildscripts/war/maven mvn clean compile war:war
   when: exhibitor_build_source and git_clone.changed
@@ -27,7 +33,7 @@
 
 - name: Copy Eureka war to expected location
   ## Does not acutally USE build version... always 1.0 for now
-  command: cp /tmp/exhibitor_build/exhibitor-standalone/src/main/resources/buildscripts/war/maven/target/exhibitor-war-1.0.war {{ exhibitor_webapps_root }}/exhibitor.war
+  command: cp /tmp/exhibitor_build/exhibitor-standalone/src/main/resources/buildscripts/war/maven/target/exhibitor-war-1.0.war /tmp/exhibitor.war
   when: exhibitor_build_source
 
 #- name: Removing source build

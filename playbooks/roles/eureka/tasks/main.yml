@@ -16,11 +16,11 @@
   file: path={{ eureka_webapps_root }}/eureka state=directory
 
 - name: Decompress eureka WAR file
-  command: chdir={{ eureka_webapps_root }}/eureka unzip ../eureka.war
+  command: chdir={{ eureka_webapps_root }}/eureka unzip /tmp/eureka.war
   notify: restart webapps container
   
 - name: Remove source WAR file
-  file: path={{ eureka_webapps_root }}/eureka.war state=absent
+  file: path=/tmp/eureka.war state=absent
 
 - name: Remove test/prod client property files
   file: path={{ item }} state=absent

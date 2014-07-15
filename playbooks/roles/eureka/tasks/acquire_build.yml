@@ -1,7 +1,7 @@
 ---
 
 - name: Download snapshot build of Eureka from Cloudbees
-  get_url: url={{ eureka_build_url }} dest={{ eureka_webapps_root }}/eureka.war
+  get_url: url={{ eureka_build_url }} dest=/tmp/eureka.war
   when: not eureka_build_source
 
 #- name: Setting up source build
@@ -26,7 +26,7 @@
   when: eureka_build_source
 
 - name: Copy Eureka war to expected location
-  command: cp /tmp/eureka_build/eureka-server/build/libs/eureka-server-{{ eureka_version_out.stdout }}.war {{ eureka_webapps_root }}/eureka.war
+  command: cp /tmp/eureka_build/eureka-server/build/libs/eureka-server-{{ eureka_version_out.stdout }}.war /tmp/eureka.war
   when: eureka_build_source
 
 #- name: Removing source build
