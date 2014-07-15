@@ -29,6 +29,10 @@
   command: cp /tmp/fluxdemo_middle_build/flux-middletier/build/libs/flux-middletier-{{ fluxdemo_middle_version_out.stdout }}.war /tmp/fluxdemo_middle.war
   when: fluxdemo_middle_build_source
 
+- name: Stop gradle daemon
+  command: chdir=/tmp/fluxdemo_middle_build ./gradlew --stop
+  when: fluxdemo_middle_build_source and git_clone.changed
+
 #- name: Removing source build
 #  file: path=/tmp/fluxdemo_middle_build state=absent
 #  when: fluxdemo_middle_build_source

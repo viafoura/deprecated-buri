@@ -29,6 +29,10 @@
   command: cp /tmp/eureka_build/eureka-server/build/libs/eureka-server-{{ eureka_version_out.stdout }}.war /tmp/eureka.war
   when: eureka_build_source
 
+- name: Stop gradle daemon
+  command: chdir=/tmp/eureka_build ./gradlew --stop
+  when: eureka_build_source and git_clone.changed
+
 #- name: Removing source build
 #  file: path=/tmp/eureka_build state=absent
 #  when: eureka_build_source

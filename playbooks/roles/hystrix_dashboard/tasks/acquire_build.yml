@@ -29,6 +29,10 @@
   command: cp /tmp/hystrix_dashboard_build/hystrix-dashboard/build/libs/hystrix-dashboard-{{ hystrix_dashboard_version_out.stdout }}.war /tmp/hystrix-dashboard.war
   when: hystrix_dashboard_build_source
 
+- name: Stop gradle daemon
+  command: chdir=/tmp/hystrix_dashboard_build/hystrix-dashboard ../gradlew --stop
+  when: hystrix_dashboard_build_source and git_clone.changed
+
 #- name: Removing source build
 #  file: path=/tmp/hystrix_dashboard_build state=absent
 #  when: hystrix_dashboard_build_source

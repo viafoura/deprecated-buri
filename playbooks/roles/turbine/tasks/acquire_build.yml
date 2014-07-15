@@ -29,6 +29,10 @@
   command: cp /tmp/turbine_build/turbine-web/build/libs/turbine-web-{{ turbine_version_out.stdout }}.war /tmp/turbine.war
   when: turbine_build_source
 
+- name: Stop gradle daemon
+  command: chdir=/tmp/turbine_build ./gradlew --stop
+  when: turbine_build_source and git_clone.changed
+
 #- name: Removing source build
 #  file: path=/tmp/turbine_build state=absent
 #  when: turbine_build_source

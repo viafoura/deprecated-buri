@@ -29,6 +29,10 @@
   command: cp /tmp/fluxdemo_edge_build/flux-edge/build/libs/flux-edge-{{ fluxdemo_edge_version_out.stdout }}.war /tmp/fluxdemo_edge.war
   when: fluxdemo_edge_build_source
 
+- name: Stop gradle daemon
+  command: chdir=/tmp/fluxdemo_edge_build ./gradlew --stop
+  when: fluxdemo_edge_build_source and git_clone.changed
+
 #- name: Removing source build
 #  file: path=/tmp/fluxdemo_edge_build state=absent
 #  when: fluxdemo_edge_build_source
