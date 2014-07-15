@@ -31,7 +31,7 @@ exhibitor_build_url: 'http://slash-etc.com/java/{{ exhibitor_basename }}.war'
 exhibitor_checksum: 'bf58be69f440cb3ab3bfb4ee0b622c87f55d0fe9f8f2f5bbb74d4a06db6d7893'
 
 # New git-based building controls
-exhibitor_build_source: False
+exhibitor_build_source: True
 exhibitor_git_repo: https://github.com/Netflix/exhibitor.git
 exhibitor_git_ref: master
 
