@@ -7,9 +7,6 @@
 - name: Give jetty access to re-write cassandra config
   file: path={{ cassandra_home }}/conf/cassandra.yaml owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755 state=touch
 
-- name: Download priam agent for cassandra
-  get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/ sha256sum={{ priam_ext_checksum }} owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
-
 - name: Adding scripts for inspecting SimpleDB tables
   copy: src={{ item }} dest=/usr/local/bin owner=root group=root mode=0755
   with_items:
@@ -24,9 +21,6 @@
 
 - name: Add sudo profile to allow priam to start/stop cassandra
   template: src=jetty-sudo dest=/etc/sudoers.d/jetty owner=root group=root mode=0440
-
-- name: Download build of priam
-  get_url: url={{ priam_mirror }} dest=/tmp/Priam.war sha256sum={{ priam_checksum }}
 
 - include: acquire_build.yml
 

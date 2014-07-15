@@ -8,7 +8,6 @@
   get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/priam-cass-extensions.jar sha256sum={{ priam_ext_checksum }} owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
   when: not priam_build_source
 
-
 #- name: Setting up source build
 #  file: path=/tmp/priam_build state=directory owner=root group=root mode=0755
 #  when: priam_build_source
@@ -20,6 +19,9 @@
        accept_hostkey=true
   register: git_clone
   when: priam_build_source
+
+- name: Patch priam for IAM role support
+  lineinfile: dest=/tmp/priam_build/priam/src/main/java/com/netflix/priam/defaultimpl/PriamGuiceModule.java regexp='^(.*)bind\(ICredential.class\).to\((\w+.class)\);(.*)$' line='\1bind(ICredential.class).to(IAMCredential.class);\3' backrefs=yes
 
 - name: Run build
   command: chdir=/tmp/priam_build ./gradlew clean assemble
