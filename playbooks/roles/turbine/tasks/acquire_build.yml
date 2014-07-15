@@ -17,7 +17,7 @@
   when: turbine_build_source
 
 - name: Run build
-  command: chdir=/tmp/turbine_build ./gradlew clean war
+  command: chdir=/tmp/turbine_build ./gradlew clean assemble
   when: turbine_build_source and git_clone.changed
 
 - name: Find build version
