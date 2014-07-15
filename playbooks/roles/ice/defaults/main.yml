@@ -52,7 +52,9 @@ ice_webapps_root: "{{ jetty_apps }}/{{ ice_instance_name }}/webapps"
 
 ice_build_url: https://netflixoss.ci.cloudbees.com/job/ice-master/lastSuccessfulBuild/artifact/target/ice.war
 
-
+ice_build_source: False
+ice_git_repo: https://github.com/Netflix/ice.git
+ice_git_ref: master
 
 
 

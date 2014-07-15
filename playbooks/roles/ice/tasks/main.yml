@@ -14,9 +14,8 @@
   file: path={{ ice_webapps_root }}/ROOT state=absent
   notify: restart webapps container
 
-- name: Download snapshot build of Ice from Cloudbees
-  get_url: url={{ ice_build_url }} dest=/tmp/ice.war
-  
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ ice_webapps_root }}/ice state=absent
   

@@ -1,0 +1,30 @@
+---
+
+- name: Download snapshot build of ice from Cloudbees
+  get_url: url={{ ice_build_url }} dest=/tmp/ice.war
+  when: not ice_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/ice_build state=directory owner=root group=root mode=0755
+#  when: ice_build_source
+
+- name: Checkout code from Git
+  git: repo={{ ice_git_repo }}
+       dest=/tmp/ice_build
+       version={{ ice_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: ice_build_source
+
+- name: Run build
+  shell: chdir=/tmp/ice_build JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:jre/bin/java::") ./grailsw war /tmp/ice.war
+  when: ice_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/ice_build cat application.properties | grep ^app.version= | sed 's/^app.version=//'
+  register: ice_version_out
+  when: ice_build_source
+
+#- name: Removing source build
+#  file: path=/tmp/ice_build state=absent
+#  when: ice_build_source
