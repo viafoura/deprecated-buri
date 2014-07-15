@@ -20,8 +20,16 @@
   register: git_clone
   when: priam_build_source
 
-- name: Patch priam for IAM role support
+# Per: https://github.com/Netflix/Priam/wiki/Setup
+- name: Patch priam for IAM role support (1/2)
+  lineinfile: dest=/tmp/priam_build/priam/src/main/java/com/netflix/priam/defaultimpl/PriamGuiceModule.java regexp='^import com.netflix.priam.aws.IAMCredential;' line='import com.netflix.priam.aws.IAMCredential;' insertAfter="^import com.netflix.priam.ICredential;"
+
+- name: Patch priam for IAM role support (2/2)
   lineinfile: dest=/tmp/priam_build/priam/src/main/java/com/netflix/priam/defaultimpl/PriamGuiceModule.java regexp='^(.*)bind\(ICredential.class\).to\((\w+.class)\);(.*)$' line='\1bind(ICredential.class).to(IAMCredential.class);\3' backrefs=yes
+
+# Bug: https://github.com/Netflix/Priam/pull/241
+- name: Patch priam to use jersey 1.9.1 multipart
+  lineinfile: dest=/tmp/priam_build/build.gradle regexp='^(.*)compile "com.sun.jersey.contribs:jersey-multipart:([0-9.]+)"(.*)$' line='\1compile "com.sun.jersey.contribs:jersey-multipart:1.9.1"\3' backrefs=yes
 
 - name: Run build
   command: chdir=/tmp/priam_build ./gradlew clean assemble
