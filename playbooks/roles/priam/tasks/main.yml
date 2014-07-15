@@ -27,7 +27,9 @@
 
 - name: Download build of priam
   get_url: url={{ priam_mirror }} dest=/tmp/Priam.war sha256sum={{ priam_checksum }}
-  
+
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ priam_webapps_root }}/Priam state=absent
   notify: restart webapps container
