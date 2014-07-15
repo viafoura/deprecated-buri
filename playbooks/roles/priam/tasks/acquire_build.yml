@@ -22,7 +22,7 @@
 
 # Per: https://github.com/Netflix/Priam/wiki/Setup
 - name: Patch priam for IAM role support (1/2)
-  lineinfile: dest=/tmp/priam_build/priam/src/main/java/com/netflix/priam/defaultimpl/PriamGuiceModule.java regexp='^import com.netflix.priam.aws.IAMCredential;' line='import com.netflix.priam.aws.IAMCredential;' insertAfter="^import com.netflix.priam.ICredential;"
+  lineinfile: dest=/tmp/priam_build/priam/src/main/java/com/netflix/priam/defaultimpl/PriamGuiceModule.java regexp='^import com.netflix.priam.aws.IAMCredential;' line='import com.netflix.priam.aws.IAMCredential;' insertafter="^import com.netflix.priam.ICredential;"
 
 - name: Patch priam for IAM role support (2/2)
   lineinfile: dest=/tmp/priam_build/priam/src/main/java/com/netflix/priam/defaultimpl/PriamGuiceModule.java regexp='^(.*)bind\(ICredential.class\).to\((\w+.class)\);(.*)$' line='\1bind(ICredential.class).to(IAMCredential.class);\3' backrefs=yes
