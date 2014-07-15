@@ -11,9 +11,6 @@ buri_iam_role: "Buri"
 ami_description: "{{ ami_role }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
 ami_image_mount: "/mnt/{{ ami_name }}"
 
-# Some roles may supply a suffix here.
-ami_suffix: ""
-
 # For S3 bundling:
 ami_bundle_pk: 'dev_vm/local/bundle_pk.pem'
 ami_bundle_cert: 'dev_vm/local/bundle_cert.pem'
