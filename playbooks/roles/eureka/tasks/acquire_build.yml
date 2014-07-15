@@ -17,7 +17,7 @@
   when: eureka_build_source
 
 - name: Run build
-  command: chdir=/tmp/eureka_build ./gradlew clean build
+  command: chdir=/tmp/eureka_build ./gradlew clean war
   when: eureka_build_source and git_clone.changed
 
 - name: Find build version
