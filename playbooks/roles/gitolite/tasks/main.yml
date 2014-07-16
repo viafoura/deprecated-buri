@@ -1,0 +1,31 @@
+---
+- name: Install packages my mysql_server role
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - git
+
+- name: Add git group
+  group: name={{ gitolite_group }} system=yes
+
+- name: Add git user
+  user: name={{ gitolite_user }} group={{ gitolite_group }} shell="/bin/sh" home={{ gitolite_home }} system=yes
+
+- name: Checkout code from Git
+  git: repo={{ gitolite_git_repo }}
+       dest={{ gitolite_home }}/gitolite
+       version={{ gitolite_git_ref }}
+       accept_hostkey=true
+  sudo: yes
+  sudo_user: {{ gitolite_user }}
+  register: git_clone
+  #when: gitolite_build_source
+
+- name: Add user bin folder for git user
+  file: path={{ gitolite_home }}/bin state=directory owner={{ gitolite_user }} group={{ gitolite_group }} mode=0755
+
+- name: Install gitolite binaries
+  command: chdir={{ gitolite_home }} {{ gitolite_home }}/gitolite/install -to {{ gitolite_home }}/bin
+  sudo: yes
+  sudo_user: {{ gitolite_user }}
+  when: git_clone.changed
+
