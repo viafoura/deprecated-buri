@@ -3,7 +3,7 @@
   hosts: localhost
   connection: local
   vars_files:
-    - [ "{{ buri_environment }}/local/overrides.yml" , "vars/dummy.yml" ]
+    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: false
   tasks:
@@ -15,7 +15,7 @@
   user: dev
   sudo: True
   vars_files:
-    - [ "{{ buri_environment }}/local/overrides.yml" , "vars/dummy.yml" ]
+    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   vars: 
     image_build: false
   roles:
