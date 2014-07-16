@@ -4,9 +4,8 @@
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
-- name: Download build of hystrix-dashboard
-  get_url: url={{ hystrix_dashboard_build_url }} dest=/tmp/hystrix-dashboard.war
-  
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ hystrix_dashboard_webapps_root }}/hystrix-dashboard state=absent
   

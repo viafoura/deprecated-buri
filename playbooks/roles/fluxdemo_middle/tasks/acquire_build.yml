@@ -1,0 +1,38 @@
+---
+
+- name: Download snapshot build of fluxdemo_middle from Cloudbees
+  get_url: url={{ fluxdemo_middle_build_url }} dest=/tmp/fluxdemo_middle.war
+  when: not fluxdemo_middle_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/fluxdemo_middle_build state=directory owner=root group=root mode=0755
+#  when: fluxdemo_middle_build_source
+
+- name: Checkout code from Git
+  git: repo={{ fluxdemo_middle_git_repo }}
+       dest=/tmp/fluxdemo_middle_build
+       version={{ fluxdemo_middle_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: fluxdemo_middle_build_source
+
+- name: Run build
+  command: chdir=/tmp/fluxdemo_middle_build ./gradlew clean assemble
+  when: fluxdemo_middle_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/fluxdemo_middle_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: fluxdemo_middle_version_out
+  when: fluxdemo_middle_build_source
+
+- name: Copy fluxdemo_middle war to expected location
+  command: cp /tmp/fluxdemo_middle_build/flux-middletier/build/libs/flux-middletier-{{ fluxdemo_middle_version_out.stdout }}.war /tmp/fluxdemo_middle.war
+  when: fluxdemo_middle_build_source
+
+- name: Stop gradle daemon
+  command: chdir=/tmp/fluxdemo_middle_build ./gradlew --stop
+  when: fluxdemo_middle_build_source and git_clone.changed
+
+#- name: Removing source build
+#  file: path=/tmp/fluxdemo_middle_build state=absent
+#  when: fluxdemo_middle_build_source

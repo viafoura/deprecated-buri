@@ -25,8 +25,7 @@
     - /mnt/zookeeper/log_indexes
   when: not image_build
 
-- name: Download Exhibitor release WAR
-  get_url: url={{ exhibitor_mirror }} dest=/tmp/exhibitor.war sha256sum={{ exhibitor_checksum }} owner=root mode=0644
+- include: acquire_build.yml
   
 - name: Remove any old version
   file: path={{ exhibitor_webapps_root }}/root state=absent

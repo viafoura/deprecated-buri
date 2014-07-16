@@ -8,9 +8,8 @@
   file: path={{ edda_webapps_root }}/ROOT state=absent
   notify: restart webapps container
 
-- name: Download snapshot build of Edda from Cloudbees
-  get_url: url={{ edda_build_url }} dest=/tmp/edda.war
-  
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ edda_webapps_root }}/edda state=absent
   

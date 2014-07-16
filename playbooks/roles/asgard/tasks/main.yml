@@ -10,9 +10,8 @@
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
-- name: Download build of Asgard from Github
-  get_url: url={{ asgard_build_url }} dest=/tmp/asgard.war
-  
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ asgard_webapps_root }}/ROOT state=absent
   

@@ -1,0 +1,30 @@
+---
+
+- name: Download build of Asgard
+  get_url: url={{ asgard_build_url }} dest=/tmp/asgard.war
+  when: not asgard_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/asgard_build state=directory owner=root group=root mode=0755
+#  when: asgard_build_source
+
+- name: Checkout code from Git
+  git: repo={{ asgard_git_repo }}
+       dest=/tmp/asgard_build
+       version={{ asgard_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: asgard_build_source
+
+- name: Run build
+  shell: chdir=/tmp/asgard_build JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:jre/bin/java::") ./grailsw war /tmp/asgard.war
+  when: asgard_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/asgard_build cat application.properties | grep ^app.version= | sed 's/^app.version=//'
+  register: asgard_version_out
+  when: asgard_build_source
+
+#- name: Removing source build
+#  file: path=/tmp/asgard_build state=absent
+#  when: asgard_build_source

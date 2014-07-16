@@ -12,3 +12,7 @@ hystrix_dashboard_jvm_extra_opts: ''
 hystrix_dashboard_webapps_root: "{{ jetty_apps }}/{{ hystrix_dashboard_instance_name }}/webapps"
 hystrix_dashboard_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/hystrix/hystrix-dashboard/1.4.0-RC4/hystrix-dashboard-1.4.0-RC4.war
 
+hystrix_dashboard_build_source: False
+hystrix_dashboard_git_repo: https://github.com/Netflix/Hystrix.git
+hystrix_dashboard_git_ref: master
+

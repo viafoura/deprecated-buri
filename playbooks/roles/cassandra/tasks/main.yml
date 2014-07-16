@@ -7,7 +7,7 @@
 - name: Install cassandra sysctl settings
   copy: src=20-cassandra-vm.conf dest=/etc/sysctl.d/ owner=root mode=0644
 
-- name: Install libjna-javam and jsvc
+- name: Install libjna-java jsvc and libcommons-daemon-java
   apt: pkg={{ item }} state=latest
   with_items:
     - libjna-java

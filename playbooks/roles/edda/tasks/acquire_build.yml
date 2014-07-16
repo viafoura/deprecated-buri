@@ -1,0 +1,38 @@
+---
+
+- name: Download snapshot build of edda from Cloudbees
+  get_url: url={{ edda_build_url }} dest=/tmp/edda.war
+  when: not edda_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/edda_build state=directory owner=root group=root mode=0755
+#  when: edda_build_source
+
+- name: Checkout code from Git
+  git: repo={{ edda_git_repo }}
+       dest=/tmp/edda_build
+       version={{ edda_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: edda_build_source
+
+- name: Run build
+  command: chdir=/tmp/edda_build ./gradlew clean assemble
+  when: edda_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/edda_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: edda_version_out
+  when: edda_build_source
+
+- name: Copy edda war to expected location
+  command: cp /tmp/edda_build/build/libs/edda-{{ edda_version_out.stdout }}.war /tmp/edda.war
+  when: edda_build_source
+
+- name: Stop gradle daemon
+  command: chdir=/tmp/edda_build ./gradlew --stop
+  when: edda_build_source and git_clone.changed
+
+#- name: Removing source build
+#  file: path=/tmp/edda_build state=absent
+#  when: edda_build_source

@@ -11,9 +11,6 @@ buri_iam_role: "Buri"
 ami_description: "{{ ami_role }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
 ami_image_mount: "/mnt/{{ ami_name }}"
 
-# Some roles may supply a suffix here.
-ami_suffix: ""
-
 # For S3 bundling:
 ami_bundle_pk: 'dev_vm/local/bundle_pk.pem'
 ami_bundle_cert: 'dev_vm/local/bundle_cert.pem'
@@ -32,6 +29,7 @@ ami_build_hvm_ebs: True
 ami_build_pvm_instance: False
 ami_build_hvm_instance: False
 
+eureka_build_source: True
 eureka_instance_port: 8400
 eureka_instance_jmx_port: 7400
 eureka_jvm_xmx: '512m'
@@ -39,6 +37,7 @@ eureka_jvm_xmx: '512m'
 #eureka_dns_txt_domain: eureka.mydomain.net
 #eureka_aws_region: us-east-1
 
+exhibitor_build_source: True
 exhibitor_instance_port: 8401
 exhibitor_instance_jmx_port: 7401
 exhibitor_jvm_xmx: '512m'
@@ -51,6 +50,7 @@ exhibitor_opts_s3backup: False
 #exhibitor_s3_bucket: 'exhibitor'
 #exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
 
+fluxdemo_edge_build_source: True
 fluxdemo_edge_instance_port: 8299
 fluxdemo_edge_instance_jmx_port: 7299
 fluxdemo_edge_instance_karyon_port: 9299
@@ -59,6 +59,7 @@ fluxdemo_edge_jvm_xmx: '512m'
 fluxdemo_edge_graphite_host: 'localhost'
 fluxdemo_edge_zk_host: 'localhost'
 
+fluxdemo_middle_build_source: True
 fluxdemo_middle_instance_port: 8399
 fluxdemo_middle_instance_jmx_port: 7399
 fluxdemo_middle_instance_karyon_port: 9399
@@ -68,11 +69,13 @@ fluxdemo_middle_graphite_host: 'localhost'
 fluxdemo_middle_zk_host: 'localhost'
 fluxdemo_middle_cass_host: 'localhost'
 
+hystrix_dashboard_build_source: True
 hystrix_dashboard_instance_port: 8403
 hystrix_dashboard_instance_jmx_port: 7403
 hystrix_dashboard_jvm_xmx: '512m'
 
 
+turbine_build_source: True
 turbine_instance_port: 8402
 turbine_instance_jmx_port: 7402
 turbine_jvm_xmx: '512m'
@@ -92,4 +95,5 @@ turbine_clusters:
   fluxdemo-middletier:
     connect: :8399/hystrix.stream
     instances: 127.0.0.1
+
 

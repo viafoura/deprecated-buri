@@ -4,9 +4,8 @@
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
-- name: Download build of fluxdemo_middle
-  get_url: url={{ fluxdemo_middle_build_url }} dest=/tmp/fluxdemo_middle.war
-  
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ fluxdemo_middle_webapps_root }}/root state=absent
   

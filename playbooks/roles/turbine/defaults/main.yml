@@ -27,3 +27,8 @@ turbine_webapps_root: "{{ jetty_apps }}/{{ turbine_instance_name }}/webapps"
 
 turbine_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/turbine/turbine-web/0.4/turbine-web-0.4.war
 
+# New git-based building controls
+turbine_build_source: False
+turbine_git_repo: https://github.com/Netflix/turbine.git
+turbine_git_ref: master
+

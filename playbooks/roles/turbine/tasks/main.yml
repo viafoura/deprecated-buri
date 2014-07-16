@@ -4,9 +4,8 @@
   notify: restart webapps container
   when: servlet_container == "jetty9"
 
-- name: Download build of turbine
-  get_url: url={{ turbine_build_url }} dest=/tmp/turbine.war
-  
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ turbine_webapps_root }}/turbine state=absent
   
