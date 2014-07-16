@@ -1,0 +1,106 @@
+digraph unix {
+	node [color=lightblue2, style=filled];
+	subgraph cluster_cloud {
+		color=lightgrey;
+		label="Cloud"
+		"Asgard";
+		"Edda";
+		"AWS SDK";
+	}
+	subgraph cluster_edge {
+		color=lightgrey;
+		label="Edge"
+		"Zuul";
+	}
+	subgraph cluster_middle {
+		color=lightgrey;
+		label="Middle"
+		"Suro";
+		"STAASH";
+	}
+	subgraph cluster_cache {
+		color=lightgrey;
+		label="cache"
+		"EVCache";
+		"Memcached";
+	}
+	subgraph cluster_persist {
+		color=lightgrey;
+		label="persist"
+		"Astyanax";
+		"Priam";
+		"Cassandra";
+	}
+        subgraph cluster_metrics {
+		color=lightgrey;
+		label="Metrics"
+		"Hystrix";
+		"Turbine";
+     	}
+	subgraph cluster_hadoop {
+		color=lightgrey;
+		label="Hadoop"
+		"Aegisthus";
+		"Genie";
+		"Hadoop";
+		"Pig";
+		"PigPen";
+		"Lipstick";
+	}
+	subgraph cluster_core {
+		color=lightgrey;
+		label="Core"
+		"Eureka";
+        	subgraph cluster_ZK {
+			color=lightgrey;
+			label="Zookeeper"
+			"Exhibitor";
+			"Zookeeper";
+		}
+
+	}
+	"Exhibitor" -> "Zookeeper";
+	"Exhibitor" -> "AWS SDK";
+	"Exhibitor" -> "Turbine";
+	"Eureka" -> "Zookeeper";
+	"Eureka" -> "Turbine";
+	"Eureka" -> "AWS SDK";
+	"Hystrix" -> "Turbine";
+	"Turbine" -> "Zookeeper";
+	"Turbine" -> "Eureka";
+	"Turbine" -> "AWS SDK";
+	"Edda" -> "Turbine";
+	"Edda" -> "Zookeeper";
+	"Edda" -> "AWS SDK";
+	"Zuul" -> "Turbine";
+	"Zuul" -> "Zookeeper";
+	"Zuul" -> "Astyanax";
+	"Asgard" -> "AWS SDK";
+	"Priam" -> "Astyanax";
+	"Priam" -> "Cassandra";
+	"Astyanax" -> "Eureka";
+	"Astyanax" -> "Zookeeper";
+	"Astyanax" -> "Cassandra";
+	"STAASH" -> "Zookeeper";
+	"STAASH" -> "Eureka";
+	"STAASH" -> "Astyanax";
+	"Suro" -> "Zookeeper";
+	"Suro" -> "Eureka";
+	"Suro" -> "Turbine";
+	"Suro" -> "Kafka";
+	"Suro" -> "Hadoop";
+	"EVCache" -> "Zookeeper";
+	"EVCache" -> "Eureka";
+	"EVCache" -> "Turbine";
+	"EVCache" -> "Memcached";
+	"Aegisthus" -> "Pig";
+	"Aegisthus" -> "Hadoop";
+	"Aegisthus" -> "Cassandra";
+	"Lipstick" -> "Pig";
+	"Genie" -> "Zookeeper";
+	"Genie" -> "Eureka";
+	"Genie" -> "Turbine";
+	"Genie" -> "Hadoop";
+	"Genie" -> "Pig";
+}
+

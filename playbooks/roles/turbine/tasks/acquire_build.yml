@@ -1,0 +1,38 @@
+---
+
+- name: Download snapshot build of turbine from Cloudbees
+  get_url: url={{ turbine_build_url }} dest=/tmp/turbine.war
+  when: not turbine_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/turbine_build state=directory owner=root group=root mode=0755
+#  when: turbine_build_source
+
+- name: Checkout code from Git
+  git: repo={{ turbine_git_repo }}
+       dest=/tmp/turbine_build
+       version={{ turbine_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: turbine_build_source
+
+- name: Run build
+  command: chdir=/tmp/turbine_build ./gradlew clean assemble
+  when: turbine_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/turbine_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: turbine_version_out
+  when: turbine_build_source
+
+- name: Copy turbine war to expected location
+  command: cp /tmp/turbine_build/turbine-web/build/libs/turbine-web-{{ turbine_version_out.stdout }}.war /tmp/turbine.war
+  when: turbine_build_source
+
+- name: Stop gradle daemon
+  command: chdir=/tmp/turbine_build ./gradlew --stop
+  when: turbine_build_source and git_clone.changed
+
+#- name: Removing source build
+#  file: path=/tmp/turbine_build state=absent
+#  when: turbine_build_source

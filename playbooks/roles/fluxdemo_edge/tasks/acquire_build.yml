@@ -1,0 +1,38 @@
+---
+
+- name: Download snapshot build of fluxdemo_edge from Cloudbees
+  get_url: url={{ fluxdemo_edge_build_url }} dest=/tmp/fluxdemo_edge.war
+  when: not fluxdemo_edge_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/fluxdemo_edge_build state=directory owner=root group=root mode=0755
+#  when: fluxdemo_edge_build_source
+
+- name: Checkout code from Git
+  git: repo={{ fluxdemo_edge_git_repo }}
+       dest=/tmp/fluxdemo_edge_build
+       version={{ fluxdemo_edge_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: fluxdemo_edge_build_source
+
+- name: Run build
+  command: chdir=/tmp/fluxdemo_edge_build ./gradlew clean assemble
+  when: fluxdemo_edge_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/fluxdemo_edge_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: fluxdemo_edge_version_out
+  when: fluxdemo_edge_build_source
+
+- name: Copy fluxdemo_edge war to expected location
+  command: cp /tmp/fluxdemo_edge_build/flux-edge/build/libs/flux-edge-{{ fluxdemo_edge_version_out.stdout }}.war /tmp/fluxdemo_edge.war
+  when: fluxdemo_edge_build_source
+
+- name: Stop gradle daemon
+  command: chdir=/tmp/fluxdemo_edge_build ./gradlew --stop
+  when: fluxdemo_edge_build_source and git_clone.changed
+
+#- name: Removing source build
+#  file: path=/tmp/fluxdemo_edge_build state=absent
+#  when: fluxdemo_edge_build_source

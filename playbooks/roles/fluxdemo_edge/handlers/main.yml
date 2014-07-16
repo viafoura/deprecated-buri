@@ -1,0 +1,5 @@
+---
+- name: restart fluxdemo edge
+  shell: ( status jetty-instance INAME={{ fluxdemo_edge_instance_name }} && stop jetty-instance INAME={{ fluxdemo_edge_instance_name }} ) ; start jetty-instance INAME={{ fluxdemo_edge_instance_name }}
+  when: not image_build
+

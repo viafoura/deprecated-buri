@@ -1,12 +1,11 @@
 ---
 - name: Copy jetty app context xml file
   copy: src=turbine.xml dest={{ turbine_webapps_root }}/turbine.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
-  notify: restart webapps container
+  notify: restart turbine
   when: servlet_container == "jetty9"
 
-- name: Download build of turbine
-  get_url: url={{ turbine_build_url }} dest=/tmp/turbine.war
-  
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ turbine_webapps_root }}/turbine state=absent
   
@@ -15,12 +14,13 @@
 
 - name: Decompress turbine WAR file
   command: chdir={{ turbine_webapps_root }}/turbine unzip /tmp/turbine.war
-  notify: restart webapps container
+  notify: restart turbine
   
 - name: Remove source WAR file
   file: path=/tmp/turbine.war state=absent
-  notify: restart webapps container
+  notify: restart turbine
 
 - name: Copy turbine.properties
   template: src=config.properties dest={{ turbine_webapps_root }}/turbine/WEB-INF/classes/config.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  notify: restart turbine
 

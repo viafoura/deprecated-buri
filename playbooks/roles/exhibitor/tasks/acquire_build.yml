@@ -1,0 +1,41 @@
+---
+
+- name: Download snapshot build of Exhibitor from author
+  get_url: url={{ exhibitor_build_url }} dest=/tmp/exhibitor.war
+  when: not exhibitor_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/exhibitor_build state=directory owner=root group=root mode=0755
+#  when: exhibitor_build_source
+
+- name: Checkout code from Git
+  git: repo={{ exhibitor_git_repo }}
+       dest=/tmp/exhibitor_build
+       version={{ exhibitor_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: exhibitor_build_source
+
+- name: Install build dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - maven
+  when: exhibitor_build_source
+
+- name: Run build
+  command: chdir=/tmp/exhibitor_build/exhibitor-standalone/src/main/resources/buildscripts/war/maven mvn clean compile war:war
+  when: exhibitor_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/exhibitor_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: exhibitor_version_out
+  when: exhibitor_build_source
+
+- name: Copy Eureka war to expected location
+  ## Does not acutally USE build version... always 1.0 for now
+  command: cp /tmp/exhibitor_build/exhibitor-standalone/src/main/resources/buildscripts/war/maven/target/exhibitor-war-1.0.war /tmp/exhibitor.war
+  when: exhibitor_build_source
+
+#- name: Removing source build
+#  file: path=/tmp/exhibitor_build state=absent
+#  when: exhibitor_build_source

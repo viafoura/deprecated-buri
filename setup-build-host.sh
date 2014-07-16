@@ -15,5 +15,5 @@ if [ ! -d "${BASE}" ]; then
   exit 1
 fi
 
-ansible-playbook ${BURI_BASE}/playbooks/setup-build-host.yml -i ${BURI_BASE}/playbooks/${ENVIRO}/inventory -vvvv
+ansible-playbook ${BURI_BASE}/playbooks/setup-build-host.yml -i ${BURI_BASE}/playbooks/${ENVIRO}/inventory -e "machine_target=$2" -vvvv
 

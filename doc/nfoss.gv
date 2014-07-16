@@ -1,0 +1,186 @@
+digraph unix {
+	node [color=lightblue2, style=filled];
+	"AWS SDK";
+	subgraph cluster_services {
+		color=lightgrey;
+		label="Services"
+		"Archaius";
+		"Blitz4J";
+		"Commons";
+		"Eureka";
+		"Karyon";
+		"Pytheas";
+		"Governator";
+		"Servo";
+		subgraph cluster_edge {
+			color=lightgrey;
+			label="Edge"
+			"Zuul";
+		}
+		subgraph cluster_middle {
+			color=lightgrey;
+			label="Middle"
+			"Ribbon";
+			"Suro";
+		}
+		subgraph cluster_data {
+			color=lightgrey;
+			label="Data"
+			"STAASH";
+			subgraph cluster_cache {
+				color=lightgrey;
+				label="cache"
+				"EVCache";
+				"Memcached";
+			}
+			subgraph cluster_persist {
+				color=lightgrey;
+				label="persist"
+				"Astyanax";
+				"Priam";
+				"Cassandra";
+			}
+			subgraph cluster_mine {
+				color=lightgrey;
+				label="mine"
+				"Aegisthus";
+				"Genie";
+				"Hadoop";
+				"Pig";
+				"PigPen";
+				"Lipstick";
+			}
+		}
+	        subgraph cluster_metrics {
+			color=lightgrey;
+			label="Metrics"
+			"Hystrix";
+			"Turbine";
+       		}
+	}
+	subgraph cluster_core {
+		color=lightgrey;
+		label="Core"
+		subgraph cluster_infrastructure {
+			color=lightgrey;
+			label="Infrastructure"
+        		subgraph cluster_cloud {
+				color=lightgrey;
+				label="Cloud"
+				"Denominator";
+				"Animator";
+				"Asgard";
+				"Edda";
+				"Frigga";
+				"Ice";
+			}
+        		subgraph cluster_ZK {
+				color=lightgrey;
+				label="Zookeeper"
+				"Curator";
+				"Exhibitor";
+				"Zookeeper";
+			}
+
+		}
+		subgraph cluster_libraries {
+			color=lightgrey;
+			label="Libraries"
+			"Feign";
+       		}
+		subgraph cluster_language {
+			color=lightgrey;
+			label="Language Extension"
+			"RxJava";
+        	}
+	}
+	"Curator" -> "Zookeeper";
+	"Exhibitor" -> "Curator";
+	"Exhibitor" -> "Zookeeper";
+	"Exhibitor" -> "AWS SDK";
+	"Exhibitor" -> "Servo";
+	"Archaius" -> "Curator";
+	"Archaius" -> "AWS SDK";
+	"Archaius" -> "Zookeeper";
+	"Servo" -> "AWS SDK";
+	"Eureka" -> "Archaius";
+	"Eureka" -> "Ribbon";
+	"Eureka" -> "Servo";
+	"Eureka" -> "Blitz4J";
+	"Eureka" -> "AWS SDK";
+	"Blitz4J" -> "Archaius";
+	"Blitz4J" -> "Servo";
+	"Governator" -> "Archaius";
+	"Hystrix" -> "Servo";
+	//"Hystrix" -> "RxJava";
+	"Turbine" -> "Archaius";
+	"Turbine" -> "Eureka";
+	"Turbine" -> "Servo";
+	"Turbine" -> "Curator";
+	"Turbine" -> "AWS SDK";
+	"Karyon" -> "Archaius";
+	"Karyon" -> "Eureka";
+	"Karyon" -> "Governator";
+	"Karyon" -> "Pytheas";
+	"Pytheas" -> "Archaius";
+	"Pytheas" -> "Eureka";
+	"Pytheas" -> "Governator";
+	"Pytheas" -> "Karyon";
+	"Denominator" -> "Feign";
+	"Feign" -> "Ribbon";
+	"Commons" -> "Archaius";
+	"Commons" -> "Servo";
+	"Edda" -> "Servo";
+	"Edda" -> "Archaius";
+	"Edda" -> "AWS SDK";
+	"Ice" -> "AWS SDK";
+	"Zuul" -> "Servo";
+	"Zuul" -> "Archaius";
+	"Zuul" -> "Commons";
+	"Zuul" -> "Karyon";
+	"Zuul" -> "Blitz4J";
+	"Zuul" -> "Astyanax";
+	"Zuul" -> "Hystrix";
+	"Zuul" -> "Ribbon";
+	"Zuul" -> "Turbine";
+	"Asgard" -> "Frigga";
+	"Asgard" -> "AWS SDK";
+	"Priam" -> "Astyanax";
+	"Priam" -> "Cassandra";
+	"Astyanax" -> "Eureka";
+	"Astyanax" -> "Archaius";
+	"Astyanax" -> "Cassandra";
+	"STAASH" -> "Archaius";
+	"STAASH" -> "Governator";
+	"STAASH" -> "Eureka";
+	"STAASH" -> "Astyanax";
+	"Suro" -> "Archaius";
+	"Suro" -> "Governator";
+	"Suro" -> "Eureka";
+	"Suro" -> "Servo";
+	"Suro" -> "Ribbon";
+	"Suro" -> "Commons";
+	"Suro" -> "Kafka";
+	"Suro" -> "Hadoop";
+	"EVCache" -> "Archaius";
+	"EVCache" -> "Governator";
+	"EVCache" -> "Eureka";
+	"EVCache" -> "Servo";
+	"EVCache" -> "Memcached";
+	"Aegisthus" -> "Pig";
+	"Aegisthus" -> "Hadoop";
+	"Aegisthus" -> "Cassandra";
+	"PigPen" -> "Pig";
+	"PigPen" -> "Hadoop";
+	"PigPen" -> "Clojure";
+	//"PigPen" -> "RxJava";
+	"Lipstick";
+	"Genie" -> "Archaius";
+	"Genie" -> "Eureka";
+	"Genie" -> "Servo";
+	"Genie" -> "Karyon";
+	"Genie" -> "Ribbon";
+	"Genie" -> "Hadoop";
+	"Genie" -> "Pig";
+}
+

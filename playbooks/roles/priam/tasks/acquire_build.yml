@@ -1,0 +1,57 @@
+---
+
+- name: Download build of priam
+  get_url: url={{ priam_mirror }} dest=/tmp/Priam.war sha256sum={{ priam_checksum }}
+  when: not priam_build_source
+
+- name: Download priam agent for cassandra
+  get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/priam-cass-extensions.jar sha256sum={{ priam_ext_checksum }} owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
+  when: not priam_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/priam_build state=directory owner=root group=root mode=0755
+#  when: priam_build_source
+
+- name: Checkout code from Git
+  git: repo={{ priam_git_repo }}
+       dest=/tmp/priam_build
+       version={{ priam_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: priam_build_source
+
+# Per: https://github.com/Netflix/Priam/wiki/Setup
+- name: Patch priam for IAM role support (1/2)
+  lineinfile: dest=/tmp/priam_build/priam/src/main/java/com/netflix/priam/defaultimpl/PriamGuiceModule.java regexp='^import com.netflix.priam.aws.IAMCredential;' line='import com.netflix.priam.aws.IAMCredential;' insertafter="^import com.netflix.priam.ICredential;"
+
+- name: Patch priam for IAM role support (2/2)
+  lineinfile: dest=/tmp/priam_build/priam/src/main/java/com/netflix/priam/defaultimpl/PriamGuiceModule.java regexp='^(.*)bind\(ICredential.class\).to\((\w+.class)\);(.*)$' line='\1bind(ICredential.class).to(IAMCredential.class);\3' backrefs=yes
+
+# Bug: https://github.com/Netflix/Priam/pull/241
+- name: Patch priam to use jersey 1.9.1 multipart
+  lineinfile: dest=/tmp/priam_build/build.gradle regexp='^(.*)compile "com.sun.jersey.contribs:jersey-multipart:([0-9.]+)"(.*)$' line='\1compile "com.sun.jersey.contribs:jersey-multipart:1.9.1"\3' backrefs=yes
+
+- name: Run build
+  command: chdir=/tmp/priam_build ./gradlew clean assemble
+  when: priam_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/priam_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: priam_version_out
+  when: priam_build_source
+
+- name: Copy priam war to expected location
+  command: cp /tmp/priam_build/priam-web/build/libs/priam-web-{{ priam_version_out.stdout }}.war /tmp/Priam.war
+  when: priam_build_source
+
+- name: Install priam agent for cassandra
+  command: cp /tmp/priam_build/priam-cass-extensions/build/libs/priam-cass-extensions-{{ priam_version_out.stdout }}.jar {{ cassandra_home }}/lib/priam-cass-extensions.jar
+  when: priam_build_source
+
+- name: Stop gradle daemon
+  command: chdir=/tmp/priam_build ./gradlew --stop
+  when: priam_build_source and git_clone.changed
+
+#- name: Removing source build
+#  file: path=/tmp/priam_build state=absent
+#  when: priam_build_source

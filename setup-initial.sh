@@ -3,6 +3,7 @@
 SCRIPT_PATH=$(readlink -f $0)
 BURI_BASE=$(dirname ${SCRIPT_PATH})
 
+# FIXME: for consistency, this should install oracle java
 
 # Update and install Ubuntu packages
 export DEBIAN_FRONTEND=noninteractive
@@ -17,17 +18,17 @@ sudo -E apt-get install --no-install-recommends -y \
  ec2-api-tools            \
  python                   \
  python-support           \
+ python-dev               \
  python-pip               \
- python-crypto            \
  python-jinja2            \
  libapt-pkg4.12           \
  make                     \
  qemu-utils               \
  git-core                 \
- openssl                  \
- ansible
+ openssl                  
 
 sudo pip install boto
 sudo pip install awscli
+sudo pip install ansible
 
 

@@ -1,16 +1,15 @@
 ---
 - name: Copy jetty app context xml file
   copy: src=edda.xml dest={{ edda_webapps_root }}/edda.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
-  notify: restart webapps container
+  notify: restart edda
   when: servlet_container == "jetty9"
 
 - name: Remove default root webapp
   file: path={{ edda_webapps_root }}/ROOT state=absent
-  notify: restart webapps container
+  notify: restart edda
 
-- name: Download snapshot build of Edda from Cloudbees
-  get_url: url={{ edda_build_url }} dest=/tmp/edda.war
-  
+- include: acquire_build.yml
+
 - name: Remove any old version
   file: path={{ edda_webapps_root }}/edda state=absent
   
@@ -19,16 +18,16 @@
 
 - name: Decompress Edda WAR file
   command: chdir={{ edda_webapps_root }}/edda unzip /tmp/edda.war
-  notify: restart webapps container
+  notify: restart edda
   
 - name: Remove source WAR file
   file: path=/tmp/edda.war state=absent
-  notify: restart webapps container
 
 - name: Copy edda.properties
   template: src=edda.properties dest={{ edda_webapps_root }}/edda/WEB-INF/classes/edda.properties owner=root group=root mode=0644
+  notify: restart edda
 
 - name: Copy replacement log4j.properties file
   template: src=log4j.properties dest={{ edda_webapps_root }}/edda/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
-  notify: restart webapps container
+  notify: restart edda
 

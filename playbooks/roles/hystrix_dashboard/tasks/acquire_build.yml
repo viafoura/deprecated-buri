@@ -1,0 +1,38 @@
+---
+
+- name: Download snapshot build of hystrix_dashboard from Cloudbees
+  get_url: url={{ hystrix_dashboard_build_url }} dest=/tmp/hystrix-dashboard.war
+  when: not hystrix_dashboard_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/hystrix_dashboard_build state=directory owner=root group=root mode=0755
+#  when: hystrix_dashboard_build_source
+
+- name: Checkout code from Git
+  git: repo={{ hystrix_dashboard_git_repo }}
+       dest=/tmp/hystrix_dashboard_build
+       version={{ hystrix_dashboard_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: hystrix_dashboard_build_source
+
+- name: Run build
+  command: chdir=/tmp/hystrix_dashboard_build/hystrix-dashboard ../gradlew clean war
+  when: hystrix_dashboard_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/hystrix_dashboard_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: hystrix_dashboard_version_out
+  when: hystrix_dashboard_build_source
+
+- name: Copy hystrix_dashboard war to expected location
+  command: cp /tmp/hystrix_dashboard_build/hystrix-dashboard/build/libs/hystrix-dashboard-{{ hystrix_dashboard_version_out.stdout }}.war /tmp/hystrix-dashboard.war
+  when: hystrix_dashboard_build_source
+
+- name: Stop gradle daemon
+  command: chdir=/tmp/hystrix_dashboard_build/hystrix-dashboard ../gradlew --stop
+  when: hystrix_dashboard_build_source and git_clone.changed
+
+#- name: Removing source build
+#  file: path=/tmp/hystrix_dashboard_build state=absent
+#  when: hystrix_dashboard_build_source
