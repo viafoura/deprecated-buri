@@ -1,0 +1,5 @@
+---
+- name: restart hystrix dashboard
+  shell: ( status jetty-instance INAME={{ hystrix_dashboard_instance_name }} && stop jetty-instance INAME={{ hystrix_dashboard_instance_name }} ) ; start jetty-instance INAME={{ hystrix_dashboard_instance_name }}
+  when: not image_build
+

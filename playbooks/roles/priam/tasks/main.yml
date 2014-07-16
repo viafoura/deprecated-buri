@@ -1,7 +1,7 @@
 ---
 - name: Copy jetty app context xml file
   copy: src=Priam.xml dest={{ priam_webapps_root }}/Priam.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
-  notify: restart webapps container
+  notify: restart priam
   when: servlet_container == "jetty9"
 
 - name: Give jetty access to re-write cassandra config
@@ -26,14 +26,14 @@
 
 - name: Remove any old version
   file: path={{ priam_webapps_root }}/Priam state=absent
-  notify: restart webapps container
+  notify: restart priam
   
 - name: Create Priam deployment directory
   file: path={{ priam_webapps_root }}/Priam state=directory
 
 - name: Decompress Priam WAR file
   command: chdir={{ priam_webapps_root }}/Priam unzip /tmp/Priam.war
-  notify: restart webapps container
+  notify: restart priam
   
 - name: Remove source WAR file
   file: path=/tmp/Priam.war state=absent

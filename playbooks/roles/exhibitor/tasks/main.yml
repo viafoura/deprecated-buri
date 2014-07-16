@@ -35,7 +35,7 @@
 
 - name: Decompress Exhibitor WAR file
   command: chdir={{ exhibitor_webapps_root }}/root unzip /tmp/exhibitor.war
-  notify: restart webapps container
+  notify: restart exhibitor
   
 - name: Remove source WAR file
   file: path=/tmp/exhibitor.war state=absent
@@ -51,7 +51,7 @@
 
 - name: Copy jetty app context xml file
   copy: src=exhibitor.xml dest={{ exhibitor_webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
-  notify: restart webapps container
+  notify: restart exhibitor
   when: servlet_container == "jetty9"
 
 

@@ -1,0 +1,5 @@
+---
+- name: restart eureka
+  shell: ( status jetty-instance INAME={{ eureka_instance_name }} && stop jetty-instance INAME={{ eureka_instance_name }} ) ; start jetty-instance INAME={{ eureka_instance_name }}
+  when: not image_build
+
