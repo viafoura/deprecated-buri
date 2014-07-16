@@ -19,6 +19,8 @@ The all-in-one deploys a complete complement of the various components that Flux
 - [Hystrix Dashboard](https://github.com/Netflix/Hystrix/tree/master/hystrix-dashboard), for visualizing real time system performance information.
 - [Graphite](http://graphite.wikidot.com/), for longer term data collection, provided by Servo, providing hundreds of data points even for the simple demonstration application Flux Capacitor provides.
 
+All of the above, except for Cassandra and Graphite, will be build from sources by default on the all-in-one VM. This allows for easy development that follows the repositories you are working with, and allows continuous integration and delivery setups to be made.
+
 There are also modes to generate cloud-ready images for EC2 enabling the cloud features of the NetflixOSS components.  See the <a href="../../wiki/Getting-started">getting started guide</a> for information on getting started using Buri in that manner. It should be possible to use Buri in more traditional [Ansible](http://ansible.com) setups as well.
  
 See the <a href="../../wiki/Buri-overview">Buri overview</a> page on the <a href="../../wiki">wiki</a> for general info.
