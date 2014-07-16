@@ -36,19 +36,20 @@
     - python
     - python-support
     - python-pip
-    - python-crypto
     - python-jinja2
     - libapt-pkg4.12
     - make
     - qemu-utils
     - git-core
     - openssl
-    - ansible
 
-- name: Install boto Python library
+- name: Install boto Python library via pip
   pip: name=boto state=latest
 
-- name: Install AWS CLI
+- name: Install AWS CLI via pip
+  pip: name=awscli state=latest
+
+- name: Install Ansible via pip
   pip: name=awscli state=latest
 
 
