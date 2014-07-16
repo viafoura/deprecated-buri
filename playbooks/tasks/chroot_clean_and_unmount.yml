@@ -29,3 +29,8 @@
 - name: Unmount EBS volume for chroot
   command: 'umount {{ ami_image_mount }}'
 
+- name: Removing mount point for EBS volume
+  file:
+    path: '{{ ami_image_mount }}'
+    state: absent
+
