@@ -18,6 +18,7 @@ sudo -E apt-get install --no-install-recommends -y \
  ec2-api-tools            \
  python                   \
  python-support           \
+ python-dev               \
  python-pip               \
  python-jinja2            \
  libapt-pkg4.12           \
