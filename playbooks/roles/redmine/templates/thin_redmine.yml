@@ -1,0 +1,18 @@
+---
+chdir: {{ redmine_home }}/app/redmine
+user: {{ redmine_user }}
+group: {{ redmine_group }}
+pid: tmp/pids/redmine_thin.pid
+wait: 30
+timeout: 30
+log: log/redmine_thin.log
+max_conns: 256
+require: []
+environment: production
+max_persistent_conns: 128
+servers: 2
+daemonize: true
+socket: /tmp/redmine_thin.sock
+{% if redmine_http_subir is defined and redmine_http_subdir != "" %}
+prefix: /{{ redmine_http_subdir }}
+{% endif %}
