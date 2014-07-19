@@ -1,0 +1,5 @@
+---
+- name: Install packages my mysql_server role
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - thin
