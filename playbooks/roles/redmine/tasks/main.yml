@@ -1,0 +1,139 @@
+---
+- name: Install packages for supporting redmine
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - imagemagick
+    - libmagickwand-dev
+
+- name: Install gems needed for redmine
+  gem: name={{ item }} state=latest
+  with_items:
+   - lockfile
+   - inifile
+   - net-ssh
+   - mysql2
+   - rmagick
+   - rdoc
+
+- name: Install rails 3.2.x needed for redmine
+  gem: name=rails state=present version=3.2.19
+
+- name: Add redmine group
+  group: name={{ redmine_group }} system=yes
+
+- name: Add redmine user
+  user: name={{ redmine_user }} group={{ redmine_group }} shell="/bin/sh" home={{ redmine_home }} system=yes
+
+- name: Let redmine user sudo to gitolite user
+  lineinfile: dest=/etc/sudoers state=present regexp='^redmine\s+ALL=\(git\)\s+NOPASSWD:ALL' line='redmine  ALL=(git)      NOPASSWD:ALL' validate='visudo -cf %s'
+
+- name: Let git user sudo to redmine user
+  lineinfile: dest=/etc/sudoers state=present regexp='^git\s+ALL=\(redmine\)\s+NOPASSWD:ALL' line='git      ALL=(redmine)  NOPASSWD:ALL' validate='visudo -cf %s'
+
+- name: Ensure redmine .ssh exists
+  file: path={{ redmine_home }}/.ssh state=directory owner={{ redmine_user }} group={{ redmine_group }} mode=0700
+
+
+- name: Generate SSH-key
+  command: ssh-keygen -t rsa -N "" -f {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa creates={{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Give ssh pub file to gitolite 
+  command: cp {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa.pub {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub
+
+- name: Set permissions on gitolite authorized_keys file
+  file: path={{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub state=exists owner={{ gitolite_user }} group={{ gitolite_group }} mode=0600
+
+- name: Setup Gitolite for Redmine
+  command: {{ gitolite_home }}/bin/gitolite setup -pk {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub creates={{ gitolite_home }}/repositories
+  sudo: yes
+  sudo_user: {{ gitolite_user }}
+
+- include: acquire_build.yml
+
+- name: Ensure redmine app base exists
+  file: path={{ redmine_home }}/app state=directory owner={{ redmine_user }} group={{ redmine_group }} mode=0711
+
+# This is messy due to build differences
+
+- name: Ensure redmine app folder exists
+  file: path={{ redmine_home }}/app/redmine state=directory owner={{ redmine_user }} group={{ redmine_group }} mode=0711
+  when: redmine_source_build
+
+- name: Install redmine (from source)
+  command: tar zxvf /tmp/redmine.tgz -C {{ redmine_home }}/app/redmine
+  when: redmine_source_build
+
+- name: Extract build (from url build)
+  command: tar zxvf /tmp/redmine.tgz -C {{ redmine_home }}/app
+  when: not redmine_source_build
+
+- name: Rename build folder
+  command: mv {{ redmine_home }}/app/redmine-{{ redmine_version }} {{ redmine_home }}/app/redmine
+  when: not redmine_source_build
+
+- name: Create redmine database
+  mysql_db: name={{ redmine_db_name }} state=present
+  with_item:
+    - {{ redmine_db_name }}
+    - {{ redmine_db_name }}_dev
+    - {{ redmine_db_name }}_test
+
+- name: Setup redmine MySQL user
+  mysql_user: user={{ redmine_db_user }} password={{ redmine_db_password }} priv={{ redmine_db_name }}.*:ALL/{{ redmine_db_name }}_dev.*:ALL/{{ redmine_db_name }}_test.*:ALL host=localhost
+  
+- name: Setup redmine database configuration file 
+  template: src=database.yml dest={{ redmine_home }}/app/redmine/config/database.yml owner={{ redmine_user }} group={{ redmine_group }} mode=0400
+
+- name: Checkout Git repo plugin for redmine
+  git: repo={{ redmine_git_plugin_repo }}
+       dest={{ redmine_home}}/app/redmine/plugins/redmine_git_hostingg
+       version={{ redmine_git_plugin_ref }}
+       accept_hostkey=true
+  register: git_clone
+
+- name: Checkout Git repo plugin for redmine
+  git: repo={{ redmine_views_revisions_repo }}
+       dest={{ redmine_home}}/app/redmine/plugins/redmine_plugin_views_revisions
+       version={{ redmine_views_revisions_ref }}
+       accept_hostkey=true
+  register: git_clone
+
+# after db config, as it installs based on it
+- name: Run bundle install
+  command: chdir={{ redmine_home }}/app/redmine bundle install --without development test
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Run generate secret token
+  command: chdir={{ redmine_home }}/app/redmine rake generate_secret_token
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Run db migrate
+  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake db:migrate
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Run db import default data
+  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:load_default_data
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Run redmine plugins migrate
+  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:plugins:migrate
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Run redmine plugins version change process
+  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:plugins:process_version_change
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+
+
+# Add redmine git repo plugin
+# setup thin config
+# setup nginx site
+

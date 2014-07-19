@@ -1,0 +1,26 @@
+---
+
+- name: Download build of Redmine 
+  get_url: url={{ redmine_build_url }} dest=/tmp/redmine.tgz
+  when: not redmine_build_source
+
+- name: Checkout code from Git
+  git: repo={{ redmine_git_repo }}
+       dest=/tmp/redmine_build
+       version={{ redmine_git_ref }}
+       accept_hostkey=true
+  register: git_clone
+  when: redmine_build_source
+
+- name: Make archive
+  shell: chdir=/tmp/redmine_build git archive {{ redmine_git_ref }} | gzip -c > /tmp/redmine.tgz
+  register: redmine_version_out
+  when: redmine_build_source
+
+- name: Copy Redmine tar to expected location
+  command: cp /tmp/redmine_build/redmine-server/build/libs/redmine-server-{{ redmine_version_out.stdout }}.war /tmp/redmine.war
+  when: redmine_build_source
+
+#- name: Removing source build
+#  file: path=/tmp/redmine_build state=absent
+#  when: redmine_build_source

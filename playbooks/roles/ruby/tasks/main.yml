@@ -1,0 +1,15 @@
+---
+- name: Install packages for supporting ruby
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - ruby
+    - ruby-dev
+    - libruby
+    - rubygems
+
+- name: Install gems needed for ruby
+  gem: name={{ item }} state=latest
+  with_items:
+   - bundler
+   - rake
+
