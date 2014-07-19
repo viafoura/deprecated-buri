@@ -33,7 +33,6 @@
 - name: Ensure redmine .ssh exists
   file: path={{ redmine_home }}/.ssh state=directory owner={{ redmine_user }} group={{ redmine_group }} mode=0700
 
-
 - name: Generate SSH-key
   command: ssh-keygen -t rsa -N "" -f {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa creates={{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa
   sudo: yes
@@ -49,6 +48,10 @@
   command: {{ gitolite_home }}/bin/gitolite setup -pk {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub creates={{ gitolite_home }}/repositories
   sudo: yes
   sudo_user: {{ gitolite_user }}
+
+- name: Enable hooks in gitolite
+  lineinfile: dest={{ gitolite_home }}/.gitolite.rc state=present regexp='GIT_CONFIG_KEYS' line="GIT_CONFIG_KEYS => '.*',"
+
 
 - include: acquire_build.yml
 
@@ -128,6 +131,24 @@
 
 - name: Run redmine plugins version change process
   shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:plugins:process_version_change
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Setup redmine ssh config
+  template: src=ssh_config dest={{ redmine_home }}/.ssh/config owner={{ redmine_user }} group={{ redmine_group }} mode=0600
+
+- name: Set redmine git user name
+  command: git config --global user.name "{{ redmine_user_name }}"
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Set redmine git user email
+  command: git config --global user.name "{{ redmine_user_email }}"
+  sudo: yes
+  sudo_user: {{ redmine_user }}
+
+- name: Set redmine git confug push.default to simple
+  command: git config --global push.default simple
   sudo: yes
   sudo_user: {{ redmine_user }}
 

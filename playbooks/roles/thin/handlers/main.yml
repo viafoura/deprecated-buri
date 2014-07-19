@@ -1,0 +1,9 @@
+
+- name: restart thin
+  service: name=thin state=restarted
+  sudo: yes
+
+#- name: reload thin
+#  service: name=thin state=reloaded
+#  sudo: yes
+
