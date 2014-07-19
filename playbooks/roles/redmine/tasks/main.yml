@@ -50,8 +50,11 @@
   sudo_user: {{ gitolite_user }}
 
 - name: Enable hooks in gitolite
-  lineinfile: dest={{ gitolite_home }}/.gitolite.rc state=present regexp='GIT_CONFIG_KEYS' line="GIT_CONFIG_KEYS => '.*',"
-
+  lineinfile: 
+    dest: {{ gitolite_home }}/.gitolite.rc
+    state: present
+    regexp: GIT_CONFIG_KEYS
+    line: GIT_CONFIG_KEYS => '.*',
 
 - include: acquire_build.yml
 
@@ -91,7 +94,7 @@
 
 - name: Checkout Git repo plugin for redmine
   git: repo={{ redmine_git_plugin_repo }}
-       dest={{ redmine_home}}/app/redmine/plugins/redmine_git_hostingg
+       dest={{ redmine_home}}/app/redmine/plugins/redmine_git_hosting
        version={{ redmine_git_plugin_ref }}
        accept_hostkey=true
   register: git_clone
@@ -152,9 +155,18 @@
   sudo: yes
   sudo_user: {{ redmine_user }}
 
+- name: Setup redmine-git-hosting plugin config
+  template: src=init.rb dest={{ redmine_home }}/app/redmine/config/plugins/redmine-git-hosting/init.rb owner={{ redmine_user }} group={{ redmine_group }} mode=0600
+
+- name: Checkout Git repo for gitolite admin, initialize hostkey
+  git: repo=git@{{ redmine_ssh_domain }}:gitolite-admin
+       dest={{ redmine_home}}/gl_admin_co
+       accept_hostkey=true
+
+- name: Setup redmine thin config
+  template: src=thin_redmine.yml dest=/etc/thin/redmine.yml owner=root group={{ redmine_group }} mode=0640
+  notify: restart thin
 
 
-# Add redmine git repo plugin
-# setup thin config
 # setup nginx site
 
