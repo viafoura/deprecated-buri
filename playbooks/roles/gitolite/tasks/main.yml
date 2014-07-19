@@ -20,6 +20,9 @@
   register: git_clone
   #when: gitolite_build_source
 
+- name: Ensure gitolite .ssh exists
+  file: path={{ gitolite_home }}/.ssh state=directory owner={{ gitolite_user }} group={{ gitolite_group }} mode=0700
+
 - name: Add user bin folder for git user
   file: path={{ gitolite_home }}/bin state=directory owner={{ gitolite_user }} group={{ gitolite_group }} mode=0755
 
