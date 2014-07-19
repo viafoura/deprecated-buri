@@ -1,0 +1,16 @@
+---
+# No non-git build is supported, maybe one day
+#redmine_build_source: True
+redmine_version: 2.5.2
+redmine_build_url: http://www.redmine.org/releases/redmine-{{ redmine_version }}.tar.gz
+redmine_build_source: True
+redmine_git_repo: https://github.com/redmine/redmine.git
+redmine_git_ref: "{{ redmine_version }}}"
+
+redmine_git_plugin_repo: https://github.com/jbox-web/redmine_git_hosting.git
+redmine_views_revisions_repo: https://github.com/jbox-web/redmine_plugin_views_revisions.git
+
+redmine_user: redmine
+redmine_group: redmine
+redmine_home: /opt/redmine
+
