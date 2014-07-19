@@ -5,4 +5,37 @@
     - mysql-server
     - mysql-client
     - libmysqlclient-dev
+    - python-mysqldb
+
+- name: MySQL | Update the my.cnf
+  template: src=my.cnf dest=/etc/mysql/my.cnf owner=root group=root mode=0644
+  notify: restart mysql
+
+- name: MySQL | Set the root password.
+  mysql_user: user=root password={{ mysql_root_password }} host=localhost
+
+- name: MySQL | Configure MySql for easy access as root user
+  template: src=root_dot_my.cnf dest=/root/.my.cnf owner=root group=root mode=0600
+
+- name: MySQL | Remove anonymous MySQL server user for the hostname
+  mysql_user: user="" host="{{ hostname }}" state="absent"
+
+- name: MySQL | Delete the anonymous MySQL server user for localhost
+  mysql_user: user="" state="absent"
+
+- name: MySQL | Secure the MySQL root user for IPV6 localhost (::1)
+  mysql_user: user="root" password="{{ mysql_root_password }}" host="::1"
+
+- name: MySQL | Secure the MySQL root user for IPV4 localhost (127.0.0.1)
+  mysql_user: user="root" password="{{ mysql_root_password }}" host="127.0.0.1"
+
+- name: MySQL | Secure the MySQL root user for localhost domain (localhost)
+  mysql_user: user="root" password="{{ mysql_root_password }}" host="localhost"
+
+- name: MySQL | Secure the MySQL root user for the hostname domain
+  mysql_user: user="root" password="{{ mysql_root_password }}" host="{{ hostname }}"
+
+- name: MySQL | Remove the MySQL test database
+  mysql_db: db=test state=absent
+
 
