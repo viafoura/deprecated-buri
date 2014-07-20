@@ -1,0 +1,3 @@
+---
+nginx_logs: /var/log/nginx
+nginx_sites_root: /var/www-sites
