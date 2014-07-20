@@ -1,9 +1,10 @@
 ---
 # No non-git build is supported, maybe one day
 #gitolite_build_source: True
-gitolite_git_repo: https://github.com/Netflix/gitolite.git
+gitolite_git_repo: https://github.com/sitaramc/gitolite.git
 gitolite_git_ref: master
 
 gitolite_user: git
 gitolite_group: git
 gitolite_home: /opt/git
+
