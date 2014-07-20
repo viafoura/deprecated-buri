@@ -16,7 +16,7 @@
        version={{ gitolite_git_ref }}
        accept_hostkey=true
   sudo: yes
-  sudo_user: {{ gitolite_user }}
+  sudo_user: "{{ gitolite_user }}"
   register: git_clone
   #when: gitolite_build_source
 
@@ -29,7 +29,7 @@
 - name: Install gitolite binaries
   command: chdir={{ gitolite_home }} {{ gitolite_home }}/gitolite/install -to {{ gitolite_home }}/bin
   sudo: yes
-  sudo_user: {{ gitolite_user }}
+  sudo_user: "{{ gitolite_user }}"
   when: git_clone.changed
 
 - name: Setup git-daemon launcher

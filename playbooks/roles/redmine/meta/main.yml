@@ -3,3 +3,4 @@ dependencies:
   - { role: mysql_server }
   - { role: thin }
   - { role: nginx }
+  - { role: gitolite }

@@ -42,7 +42,7 @@
   command: cp {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa.pub {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub
 
 - name: Set permissions on gitolite authorized_keys file
-  file: path={{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub state=exists owner={{ gitolite_user }} group={{ gitolite_group }} mode=0600
+  file: path={{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub state=file owner={{ gitolite_user }} group={{ gitolite_group }} mode=0600
 
 - name: Setup Gitolite for Redmine
   command: "{{ gitolite_home }}/bin/gitolite setup -pk {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub creates={{ gitolite_home }}/repositories"
@@ -65,19 +65,19 @@
 
 - name: Ensure redmine app folder exists
   file: path={{ redmine_home }}/app/redmine state=directory owner={{ redmine_user }} group={{ redmine_group }} mode=0711
-  when: redmine_source_build
+  when: redmine_build_source
 
 - name: Install redmine (from source)
   command: tar zxvf /tmp/redmine.tgz -C {{ redmine_home }}/app/redmine
-  when: redmine_source_build
+  when: redmine_build_source
 
 - name: Extract build (from url build)
   command: tar zxvf /tmp/redmine.tgz -C {{ redmine_home }}/app
-  when: not redmine_source_build
+  when: not redmine_build_source
 
 - name: Rename build folder
   command: mv {{ redmine_home }}/app/redmine-{{ redmine_version }} {{ redmine_home }}/app/redmine
-  when: not redmine_source_build
+  when: not redmine_build_source
 
 - name: Create redmine database
   mysql_db: name={{ item }} state=present
@@ -99,10 +99,10 @@
        accept_hostkey=true
   register: git_clone
 
-- name: Checkout Git repo plugin for redmine
-  git: repo={{ redmine_views_revisions_repo }}
-       dest={{ redmine_home}}/app/redmine/plugins/redmine_plugin_views_revisions
-       version={{ redmine_views_revisions_ref }}
+- name: Checkout bootstrap kit plugin for redmine
+  git: repo={{ redmine_bootstrap_kit_repo }}
+       dest={{ redmine_home}}/app/redmine/plugins/redmine_bootstrap_kit
+       version={{ redmine_bootstrap_kit_ref }}
        accept_hostkey=true
   register: git_clone
 
@@ -178,4 +178,9 @@
 - name: Setup redmine nginx config
   template: src=redmine-nginx.conf dest=/etc/nginx/sites-available/{{ redmine_http_domain }}.conf owner=root group=root mode=0644
   notify: restart nginx
+
+- name: Activate redmine nginx config
+  file: path=/etc/nginx/sites-enabled/{{ redmine_http_domain }}.conf src=/etc/nginx/sites-available/{{ redmine_http_domain }}.conf state=link owner=root group=root
+  notify: restart nginx
+
 

@@ -17,10 +17,6 @@
   register: redmine_version_out
   when: redmine_build_source
 
-- name: Copy Redmine tar to expected location
-  command: cp /tmp/redmine_build/redmine-server/build/libs/redmine-server-{{ redmine_version_out.stdout }}.war /tmp/redmine.war
-  when: redmine_build_source
-
 #- name: Removing source build
 #  file: path=/tmp/redmine_build state=absent
 #  when: redmine_build_source

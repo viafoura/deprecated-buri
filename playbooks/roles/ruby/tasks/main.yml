@@ -5,11 +5,13 @@
     - ruby
     - ruby-dev
     - libruby
+    - bundler
+    - rake
     #- rubygems
 
-- name: Install gems needed for ruby
-  gem: name={{ item }} state=latest
-  with_items:
-   - bundler
-   - rake
+#- name: Install gems needed for ruby
+#  gem: name={{ item }} state=latest user_install=no
+#  with_items:
+#    - bundler
+#    - rake
 
