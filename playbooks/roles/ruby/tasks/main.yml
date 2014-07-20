@@ -5,7 +5,7 @@
     - ruby
     - ruby-dev
     - libruby
-    - rubygems
+    #- rubygems
 
 - name: Install gems needed for ruby
   gem: name={{ item }} state=latest

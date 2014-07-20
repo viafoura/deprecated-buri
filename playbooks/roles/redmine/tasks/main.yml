@@ -36,7 +36,7 @@
 - name: Generate SSH-key
   command: ssh-keygen -t rsa -N "" -f {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa creates={{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Give ssh pub file to gitolite 
   command: cp {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa.pub {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub
@@ -45,13 +45,13 @@
   file: path={{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub state=exists owner={{ gitolite_user }} group={{ gitolite_group }} mode=0600
 
 - name: Setup Gitolite for Redmine
-  command: {{ gitolite_home }}/bin/gitolite setup -pk {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub creates={{ gitolite_home }}/repositories
+  command: "{{ gitolite_home }}/bin/gitolite setup -pk {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub creates={{ gitolite_home }}/repositories"
   sudo: yes
-  sudo_user: {{ gitolite_user }}
+  sudo_user: "{{ gitolite_user }}"
 
 - name: Enable hooks in gitolite
   lineinfile: 
-    dest: {{ gitolite_home }}/.gitolite.rc
+    dest: "{{ gitolite_home }}/.gitolite.rc"
     state: present
     regexp: GIT_CONFIG_KEYS
     line: GIT_CONFIG_KEYS => '.*',
@@ -80,11 +80,11 @@
   when: not redmine_source_build
 
 - name: Create redmine database
-  mysql_db: name={{ redmine_db_name }} state=present
-  with_item:
-    - {{ redmine_db_name }}
-    - {{ redmine_db_name }}_dev
-    - {{ redmine_db_name }}_test
+  mysql_db: name={{ item }} state=present
+  with_items:
+    - "{{ redmine_db_name }}"
+    - "{{ redmine_db_name }}_dev"
+    - "{{ redmine_db_name }}_test"
 
 - name: Setup redmine MySQL user
   mysql_user: user={{ redmine_db_user }} password={{ redmine_db_password }} priv={{ redmine_db_name }}.*:ALL/{{ redmine_db_name }}_dev.*:ALL/{{ redmine_db_name }}_test.*:ALL host=localhost
@@ -110,32 +110,32 @@
 - name: Run bundle install
   command: chdir={{ redmine_home }}/app/redmine bundle install --without development test
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Run generate secret token
   command: chdir={{ redmine_home }}/app/redmine rake generate_secret_token
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Run db migrate
   shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake db:migrate
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Run db import default data
   shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:load_default_data
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Run redmine plugins migrate
   shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:plugins:migrate
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Run redmine plugins version change process
   shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:plugins:process_version_change
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Setup redmine ssh config
   template: src=ssh_config dest={{ redmine_home }}/.ssh/config owner={{ redmine_user }} group={{ redmine_group }} mode=0600
@@ -143,17 +143,17 @@
 - name: Set redmine git user name
   command: git config --global user.name "{{ redmine_user_name }}"
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Set redmine git user email
   command: git config --global user.name "{{ redmine_user_email }}"
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Set redmine git confug push.default to simple
   command: git config --global push.default simple
   sudo: yes
-  sudo_user: {{ redmine_user }}
+  sudo_user: "{{ redmine_user }}"
 
 - name: Setup redmine-git-hosting plugin config
   template: src=init.rb dest={{ redmine_home }}/app/redmine/config/plugins/redmine-git-hosting/init.rb owner={{ redmine_user }} group={{ redmine_group }} mode=0600
