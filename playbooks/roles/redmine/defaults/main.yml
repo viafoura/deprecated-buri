@@ -8,9 +8,23 @@ redmine_git_repo: https://github.com/redmine/redmine.git
 redmine_git_ref: "{{ redmine_version }}}"
 
 redmine_git_plugin_repo: https://github.com/jbox-web/redmine_git_hosting.git
+redmine_git_plugin_ref: master
 redmine_views_revisions_repo: https://github.com/jbox-web/redmine_plugin_views_revisions.git
+redmine_views_revisions_ref: master
 
 redmine_user: redmine
 redmine_group: redmine
 redmine_home: /opt/redmine
+
+redmine_user_name: Redmine Git Hosting
+redmine_user_email: redmine@yourdomain.net
+
+redmine_db_name: redmine
+redmine_db_user: redmine
+redmine_db_password: redmine
+
+redmine_ssh_domain: redmine.yourdomain.net
+redmine_http_domain: redmine.yourdomain.net
+redmine_https_domain: redmine.yourdomain.net
+redmine_http_subdir: redmine.yourdomain.net
 
