@@ -167,9 +167,15 @@
   template: src=thin_redmine.yml dest=/etc/thin/redmine.yml owner=root group={{ redmine_group }} mode=0640
   notify: restart thin
 
+- name: Add server ssl key to nginx
+  copy: src={{ buri_environment }}/local/redmine_server.key dest=/etc/nginx/ssl/redmine_server.key owner=root group=root mode=0440
+  notify: restart nginx
+
+- name: Add server ssl certificate to nginx
+  copy: src={{ buri_environment }}/local/redmine_server.crt dest=/etc/nginx/ssl/redmine_server.crt owner=root group=root mode=0440
+  notify: restart nginx
+
 - name: Setup redmine nginx config
   template: src=redmine-nginx.conf dest=/etc/nginx/sites-available/{{ redmine_http_domain }}.conf owner=root group=root mode=0644
   notify: restart nginx
-
-# setup nginx site
 
