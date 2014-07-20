@@ -167,6 +167,9 @@
   template: src=thin_redmine.yml dest=/etc/thin/redmine.yml owner=root group={{ redmine_group }} mode=0640
   notify: restart thin
 
+- name: Setup redmine nginx config
+  template: src=redmine-nginx.conf dest=/etc/nginx/sites-available/{{ redmine_http_domain }}.conf owner=root group=root mode=0644
+  notify: restart nginx
 
 # setup nginx site
 
