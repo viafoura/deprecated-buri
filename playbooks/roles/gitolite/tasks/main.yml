@@ -1,5 +1,5 @@
 ---
-- name: Install packages my mysql_server role
+- name: Install packages for gitolite role
   apt: pkg={{ item }} state=latest
   with_items:
     - git
@@ -31,4 +31,12 @@
   sudo: yes
   sudo_user: {{ gitolite_user }}
   when: git_clone.changed
+
+- name: Setup git-daemon launcher
+  template: src=git_daemon.txt dest=/etc/init.d/git-daemon owner=root group=root mode=755
+  notify: restart git-daemon
+
+- name: Inform rc.d subsystem to add git-daemon
+  command: update-rc.d -f git-daemon defaults
+  notify: restart git-daemon
 

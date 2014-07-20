@@ -1,0 +1,9 @@
+
+- name: restart git-daemon
+  service: name=git-daemon state=restarted
+  sudo: yes
+
+#- name: reload git-daemon
+#  service: name=git-daemon state=reloaded
+#  sudo: yes
+
