@@ -23,8 +23,8 @@ redmine_db_name: redmine
 redmine_db_user: redmine
 redmine_db_password: redmine
 
-redmine_ssh_domain: redmine.yourdomain.net
-redmine_http_domain: redmine.yourdomain.net
-redmine_https_domain: redmine.yourdomain.net
-redmine_http_subdir: redmine.yourdomain.net
+redmine_ssh_domain: redmine.test
+redmine_http_domain: redmine.test
+redmine_https_domain: redmine.test
+redmine_http_subdir: redmine.test
 
