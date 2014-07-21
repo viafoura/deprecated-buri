@@ -111,16 +111,16 @@
   template: src=init.rb dest={{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/init.rb owner={{ redmine_user }} group={{ redmine_group }} mode=0600
 
 - name: Get ssh keys from gitolite - public
-  command: cp {{ gitolite_home }}/gitolite_admin_id_rsa.pub {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa.pub
+  command: cp {{ gitolite_home }}/gitolite_admin_id_rsa.pub {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa.pub
 
 - name: Get ssh keys from gitolite - secret
-  command: cp {{ gitolite_home }}/gitolite_admin_id_rsa {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa
+  command: cp {{ gitolite_home }}/gitolite_admin_id_rsa {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa
 
 - name: Set permissions on ssh keys for redmine
   file: path={{ item }} state=file owner={{ redmine_user }} group={{ redmine_group }} mode=0600
   with_items:
-    - "{{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa"
-    - "{{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa.pub"
+    - "{{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa"
+    - "{{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa.pub"
 
 # after db config, as it installs based on it
 - name: Run bundle install
