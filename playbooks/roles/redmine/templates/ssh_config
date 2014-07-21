@@ -1,10 +1,10 @@
 Host localhost
   User git
-  IdentityFile {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa
+  IdentityFile {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa
   IdentitiesOnly yes
 
 Host {{ redmine_ssh_domain }}
   User git
-  IdentityFile {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa
+  IdentityFile {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssh_keys/redmine_gitolite_admin_id_rsa
   IdentitiesOnly yes
 
