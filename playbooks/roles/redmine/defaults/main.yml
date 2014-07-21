@@ -26,5 +26,5 @@ redmine_db_password: redmine
 redmine_ssh_domain: redmine.test
 redmine_http_domain: redmine.test
 redmine_https_domain: redmine.test
-redmine_http_subdir: redmine.test
+redmine_http_subdir: redmine
 

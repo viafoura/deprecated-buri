@@ -3,3 +3,8 @@ Host localhost
   IdentityFile {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa
   IdentitiesOnly yes
 
+Host {{ redmine_ssh_domain }}
+  User git
+  IdentityFile {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa
+  IdentitiesOnly yes
+
