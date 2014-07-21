@@ -38,8 +38,8 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_recycle_bin_expiration_time  => 24.0,
       :gitolite_log_level                    => 'info',
       :gitolite_log_split                    => false,
-      :git_config_username                   => '{{ remdine_user_name }}',
-      :git_config_email                      => '{{ remdine_user_email }}',
+      :git_config_username                   => '{{ redmine_user_name }}',
+      :git_config_email                      => '{{ redmine_user_email }}',
 
       # Gitolite Hooks Config
       :gitolite_hooks_are_asynchronous  => false,
@@ -52,10 +52,10 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_cache_max_elements      => 2000,
 
       # Gitolite Access Config
-      :ssh_server_domain                => '{{ remdine_ssh_domain }}',
-      :http_server_domain               => '{{ remdine_http_domain }}',
-      :https_server_domain              => '{{ remdine_https_domain }}',
-      :http_server_subdir               => '{{ remdine_http_subdir }}',
+      :ssh_server_domain                => '{{ redmine_ssh_domain }}',
+      :http_server_domain               => '{{ redmine_http_domain }}',
+      :https_server_domain              => '{{ redmine_https_domain }}',
+      :http_server_subdir               => '{{ redmine_http_subdir }}',
       :show_repositories_url            => true,
       :gitolite_daemon_by_default       => false,
       :gitolite_http_by_default         => 1,
