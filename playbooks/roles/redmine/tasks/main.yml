@@ -186,7 +186,7 @@
   file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0711
 
 - name: Add server ssl key to nginx
-  copy: src={{ buri_environment }}/local/redmine_server.key dest=/etc/nginx/ssl/redmine_server.key owner=root group=root mode=0440
+  copy: src={{ buri_environment }}/local/redmine_server.key2 dest=/etc/nginx/ssl/redmine_server.key owner=root group=root mode=0440
   notify: restart nginx
 
 - name: Add server ssl certificate to nginx
