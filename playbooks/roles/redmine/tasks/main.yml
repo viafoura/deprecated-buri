@@ -114,6 +114,22 @@
   sudo_user: "{{ redmine_user }}"
   register: git_clone
 
+- name: Setup redmine URL prefix in environment.rb (add)
+  lineinfile:
+    dest: "{{ redmine_home }}/app/redmine/config/environment.rb"
+    state: present
+    insertafter: EOF 
+    regexp: 'Redmine::Utils::relative_url_root'
+    line: 'Redmine::Utils::relative_url_root = "/{{ redmine_http_subdir }}"'
+  when: redmine_http_subdir is defined and redmine_http_subdir != ""
+
+- name: Setup redmine URL prefix in environment.rb (remove)
+  lineinfile:
+    dest: "{{ redmine_home }}/app/redmine/config/environment.rb"
+    state: absent
+    regexp: 'Redmine::Utils::relative_url_root'
+  when: redmine_http_subdir is not defined or redmine_http_subdir == ""
+
 # after db config, as it installs based on it
 - name: Run bundle install
   command: chdir={{ redmine_home }}/app/redmine bundle install --path vendor/bundle --without development test
