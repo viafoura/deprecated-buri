@@ -1,13 +1,16 @@
 ---
 - name: Registering PVM AMI to snapshot
-  command: 'ec2-register --name "{{ ami_name }}-PVM-EBS" --description "{{ ami_description }}" --architecture "x86_64" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ebs_snapshot_id }}::true --block-device-mapping /dev/sdb=ephemeral0 --block-device-mapping /dev/sdc=ephemeral1 --block-device-mapping /dev/sdd=ephemeral2 --block-device-mapping /dev/sde=ephemeral3 --region {{ ansible_ec2_placement_region }}'
+  #command: 'ec2-register --name "{{ ami_name }}-PVM-EBS" --description "{{ ami_description }}" --architecture "x86_64" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ebs_snapshot_id }}::true --block-device-mapping /dev/sdb=ephemeral0 --block-device-mapping /dev/sdc=ephemeral1 --block-device-mapping /dev/sdd=ephemeral2 --block-device-mapping /dev/sde=ephemeral3 --region {{ ansible_ec2_placement_region }}'
+  shell: 'aws ec2 register-image --name "{{ ami_name }}-PVM-EBS" --description "{{ ami_description }}" --architecture "x86_64" --kernel-id "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mappings "[{\"DeviceName\": \"/dev/sda\",\"Ebs\":{\"SnapshotId\":"{{ ebs_snapshot_id }}",\"DeleteOnTermination\":true}}, {\"DeviceName\": \"/dev/sdb\",\"VirtualName\":\"ephemeral0\"}, {\"DeviceName\": \"/dev/sdc\",\"VirtualName\":\"ephemeral1\"}, {\"DeviceName\": \"/dev/sdd\",\"VirtualName\":\"ephemeral2\"}, {\"DeviceName\": \"/dev/sde\",\"VirtualName\":\"ephemeral3\"}]" --virtualization-type pvm'
   register: amipvm
 
 - name: Saving PVM AMI ID as a fact for later use
   set_fact:
-    ami_id_pvm: '{{ item.split("\t")[1] }}'
+    ami_id_pvm: '{{ item.split("\"")[1] }}'
   with_items: amipvm.stdout
 
 - name: Tagging PVM AMI
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami_name }}-PVM-EBS" --tag creation_time="{{ ami_timestamp }}"'
+  #command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami_name }}-PVM-EBS" --tag creation_time="{{ ami_timestamp }}"'
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_pvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-PVM-EBS\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"
+
 

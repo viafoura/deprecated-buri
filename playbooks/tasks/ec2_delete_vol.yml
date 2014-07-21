@@ -1,4 +1,6 @@
 ---
 - name: Delete EBS working volume
-  command: 'ec2-delete-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+  #command: 'ec2-delete-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+  command: 'aws ec2 delete-volume --region {{ ansible_ec2_placement_region }} --volume-id {{ ebs_volume_id }}'
+
 

@@ -1,29 +1,32 @@
 ---
 # FIXME: maybe parameterize the region/zone one day
 - name: Creating new EBS volume (empty)
-  command: 'ec2-create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ ami_root_size }}'
+  #command: 'ec2-create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ ami_root_size }}'
+  command: 'aws ec2 create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ ami_root_size }} --output text'
   register: amivol
   when: ebs_parent_id is not defined or ebs_parent_id == ''
 
 - name: Saving Empty Volume ID as a fact for later use
   set_fact:
-    ebs_volume_id: '{{ item.split("\t")[1] }}'
+    ebs_volume_id: '{{ item.split("\t")[5] }}'
   with_items: amivol.stdout
   when: ebs_parent_id is not defined or ebs_parent_id == ''
 
 - name: Creating new EBS volume from snapshot
-  command: 'ec2-create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ ami_root_size }} --snapshot {{ ebs_parent_id }}'
+  #command: 'ec2-create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ ami_root_size }} --snapshot {{ ebs_parent_id }}'
+  command: 'aws ec2 create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ ami_root_size }} --snapshot-id {{ ebs_parent_id }} --output text'
   register: amivol
   when: ebs_parent_id is defined and ebs_parent_id != ''
 
 - name: Saving Snapshot New Volume ID as a fact for later use
   set_fact:
-    ebs_volume_id: '{{ item.split("\t")[1] }}'
+    ebs_volume_id: '{{ item.split("\t")[5] }}'
   with_items: amivol.stdout
   when: ebs_parent_id is defined and ebs_parent_id != ''
 
 - name: Attaching EBS work volume
-  command: "ec2-attach-volume --region {{ ansible_ec2_placement_region }} --device {{ ami_device.replace('/dev/xvd', '/dev/sd') }} --instance '{{ ansible_ec2_instance_id }}' '{{ ebs_volume_id }}'"
+  #command: "ec2-attach-volume --region {{ ansible_ec2_placement_region }} --device {{ ami_device.replace('/dev/xvd', '/dev/sd') }} --instance '{{ ansible_ec2_instance_id }}' '{{ ebs_volume_id }}'"
+  command: "aws ec2 attach-volume --region {{ ansible_ec2_placement_region }} --device {{ ami_device.replace('/dev/xvd', '/dev/sd') }} --instance-id '{{ ansible_ec2_instance_id }}' --volume-id '{{ ebs_volume_id }}'"
 
 - name: Waiting for EBS work volume attachment to complete
   wait_for:

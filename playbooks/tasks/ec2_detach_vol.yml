@@ -1,9 +1,11 @@
 ---
 - name: Detatch working volume for snapshotting
-  command: 'ec2-detach-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+  #command: 'ec2-detach-volume --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+  command: 'aws ec2 detach-volume --region {{ ansible_ec2_placement_region }} --volume-id {{ ebs_volume_id }}'
 
 - name: Waiting for completion of volume detatch
-  command: 'ec2-describe-volumes --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+  #command: 'ec2-describe-volumes --region {{ ansible_ec2_placement_region }} "{{ ebs_volume_id }}"'
+  command: 'aws ec2 describe-volumes --region {{ ansible_ec2_placement_region }} --volume-ids {{ ebs_volume_id }}'
   register: result
   until: result.stdout.find("ATTACHMENT") == -1
   retries: 30
