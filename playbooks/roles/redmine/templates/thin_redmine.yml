@@ -13,6 +13,7 @@ max_persistent_conns: 128
 servers: 2
 daemonize: true
 socket: /tmp/redmine_thin.sock
-{% if redmine_http_subir is defined and redmine_http_subdir != "" %}
+{% if redmine_http_subdir is defined and redmine_http_subdir != "" %}
 prefix: /{{ redmine_http_subdir }}
 {% endif %}
+
