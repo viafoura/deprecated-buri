@@ -4,6 +4,7 @@
   with_items:
     - imagemagick
     - libmagickwand-dev
+    - libicu-dev
 
 - name: Install gems needed for redmine
   gem: name={{ item }} state=latest
@@ -79,6 +80,9 @@
   command: mv {{ redmine_home }}/app/redmine-{{ redmine_version }} {{ redmine_home }}/app/redmine
   when: not redmine_build_source
 
+- name: Ensure redmine user owns redmine app folder
+  file: path={{ redmine_home }}/app/redmine state=directory recurse=yes owner={{ redmine_user }} group={{ redmine_group }}
+
 - name: Create redmine database
   mysql_db: name={{ item }} state=present
   with_items:
@@ -97,6 +101,8 @@
        dest={{ redmine_home}}/app/redmine/plugins/redmine_git_hosting
        version={{ redmine_git_plugin_ref }}
        accept_hostkey=true
+  sudo: yes
+  sudo_user: "{{ redmine_user }}"
   register: git_clone
 
 - name: Checkout bootstrap kit plugin for redmine
@@ -104,11 +110,13 @@
        dest={{ redmine_home}}/app/redmine/plugins/redmine_bootstrap_kit
        version={{ redmine_bootstrap_kit_ref }}
        accept_hostkey=true
+  sudo: yes
+  sudo_user: "{{ redmine_user }}"
   register: git_clone
 
 # after db config, as it installs based on it
 - name: Run bundle install
-  command: chdir={{ redmine_home }}/app/redmine bundle install --without development test
+  command: chdir={{ redmine_home }}/app/redmine bundle install --path vendor/bundle --without development test
   sudo: yes
   sudo_user: "{{ redmine_user }}"
 
@@ -123,7 +131,7 @@
   sudo_user: "{{ redmine_user }}"
 
 - name: Run db import default data
-  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:load_default_data
+  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production REDMINE_LANG=en rake redmine:load_default_data
   sudo: yes
   sudo_user: "{{ redmine_user }}"
 
@@ -132,10 +140,10 @@
   sudo: yes
   sudo_user: "{{ redmine_user }}"
 
-- name: Run redmine plugins version change process
-  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:plugins:process_version_change
-  sudo: yes
-  sudo_user: "{{ redmine_user }}"
+#- name: Run redmine plugins version change process
+#  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:plugins:process_version_change
+#  sudo: yes
+#  sudo_user: "{{ redmine_user }}"
 
 - name: Setup redmine ssh config
   template: src=ssh_config dest={{ redmine_home }}/.ssh/config owner={{ redmine_user }} group={{ redmine_group }} mode=0600
@@ -156,7 +164,7 @@
   sudo_user: "{{ redmine_user }}"
 
 - name: Setup redmine-git-hosting plugin config
-  template: src=init.rb dest={{ redmine_home }}/app/redmine/config/plugins/redmine-git-hosting/init.rb owner={{ redmine_user }} group={{ redmine_group }} mode=0600
+  template: src=init.rb dest={{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/init.rb owner={{ redmine_user }} group={{ redmine_group }} mode=0600
 
 - name: Checkout Git repo for gitolite admin, initialize hostkey
   git: repo=git@{{ redmine_ssh_domain }}:gitolite-admin
