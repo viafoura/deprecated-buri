@@ -114,6 +114,25 @@
   sudo_user: "{{ redmine_user }}"
   register: git_clone
 
+- name: Configure URL prefix in redmine (add)
+  lineinfile:
+    dest: "{{ redmine_home }}/app/redmine/config/environment.rb"
+    state: present
+    insertafter: EOF
+    regexp: '^Redmine::Utils::relative_url_root' 
+    line: Redmine::Utils::relative_url_root = "/{{ redmine_http_subdir }}"
+  when: redmine_http_subdir is defined
+
+- name: Configure URL prefix in redmine (remove)
+  lineinfile:
+    dest: "{{ redmine_home }}/app/redmine/config/environment.rb"
+    state: absent
+    regexp: '^Redmine::Utils::relative_url_root' 
+  when: redmine_http_subdir is not defined
+
+- name: Setup redmine-git-hosting plugin config
+  template: src=init.rb dest={{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/init.rb owner={{ redmine_user }} group={{ redmine_group }} mode=0600
+
 # after db config, as it installs based on it
 - name: Run bundle install
   command: chdir={{ redmine_home }}/app/redmine bundle install --path vendor/bundle --without development test
@@ -163,15 +182,12 @@
   sudo: yes
   sudo_user: "{{ redmine_user }}"
 
-- name: Setup redmine-git-hosting plugin config
-  template: src=init.rb dest={{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/init.rb owner={{ redmine_user }} group={{ redmine_group }} mode=0600
-
 - name: Set known hosts for git ssh for redmin
   shell: ssh-keygen -R {{ redmine_ssh_domain }}; ssh-keyscan -H {{ redmine_ssh_domain }} >> {{ redmine_home }}/.ssh/known_hosts
   sudo: yes
   sudo_user: "{{ redmine_user }}"
 
-- name: Checkout Git repo for gitolite admin, initialize hostkey
+- name: Checkout Git repo for gitolite admin
   git: repo=git@{{ redmine_ssh_domain }}:gitolite-admin
        dest={{ redmine_home}}/gl_admin_co
        accept_hostkey=yes
@@ -186,7 +202,7 @@
   file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0711
 
 - name: Add server ssl key to nginx
-  copy: src={{ buri_environment }}/local/redmine_server.key dest=/etc/nginx/ssl/redmine_server.key owner=root group=root mode=0440
+  copy: src={{ buri_environment }}/local/redmine_server.key2 dest=/etc/nginx/ssl/redmine_server.key owner=root group=root mode=0440
   notify: restart nginx
 
 - name: Add server ssl certificate to nginx
