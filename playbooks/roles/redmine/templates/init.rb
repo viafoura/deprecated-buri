@@ -8,7 +8,7 @@ Redmine::Plugin.register :redmine_git_hosting do
   name 'Redmine Git Hosting Plugin'
   author 'Eric Bishop, Pedro Algarvio, Christian Käser, Zsolt Parragi, Yunsang Choi, Joshua Hogendorn, Jan Schulz-Hofen, John Kubiatowicz, Nicolas Rodriguez and others'
   description 'Enables Redmine to control hosting of Git repositories through Gitolite'
-  version '0.8-devel'
+  version '0.7.6'
   url 'https://github.com/jbox-web/redmine_git_hosting'
   author_url 'https://github.com/jbox-web'
 
@@ -32,12 +32,14 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_identifier_prefix            => 'redmine_',
 
       # Gitolite Global Config
-      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting', '/').to_s,
+      :gitolite_temp_dir                     => File.join(Rails.root, 'tmp', 'redmine_git_hosting').to_s,
+      :gitolite_scripts_dir                  => './',
+      :gitolite_timeout                      => 10,
       :gitolite_recycle_bin_expiration_time  => 24.0,
       :gitolite_log_level                    => 'info',
       :gitolite_log_split                    => false,
-      :git_config_username                   => '{{ redmine_user_name }}',
-      :git_config_email                      => '{{ redmine_user_email }}',
+      :git_config_username                   => '{{ remdine_user_name }}',
+      :git_config_email                      => '{{ remdine_user_email }}',
 
       # Gitolite Hooks Config
       :gitolite_hooks_are_asynchronous  => false,
@@ -50,10 +52,10 @@ Redmine::Plugin.register :redmine_git_hosting do
       :gitolite_cache_max_elements      => 2000,
 
       # Gitolite Access Config
-      :ssh_server_domain                => '{{ redmine_ssh_domain }}',
-      :http_server_domain               => '{{ redmine_http_domain }}',
-      :https_server_domain              => '{{ redmine_https_domain }}',
-      :http_server_subdir               => '{{ redmine_http_subdir }}',
+      :ssh_server_domain                => '{{ remdine_ssh_domain }}',
+      :http_server_domain               => '{{ remdine_http_domain }}',
+      :https_server_domain              => '{{ remdine_https_domain }}',
+      :http_server_subdir               => '{{ remdine_http_subdir }}',
       :show_repositories_url            => true,
       :gitolite_daemon_by_default       => false,
       :gitolite_http_by_default         => 1,
@@ -62,10 +64,6 @@ Redmine::Plugin.register :redmine_git_hosting do
       :all_projects_use_git             => false,
       :init_repositories_on_create      => false,
       :delete_git_repositories          => true,
-
-      # This params work together!
-      # When hierarchical_organisation = true, unique_repo_identifier MUST be false
-      # When hierarchical_organisation = false, unique_repo_identifier MUST be true
       :hierarchical_organisation        => true,
       :unique_repo_identifier           => false,
 
@@ -100,10 +98,6 @@ Redmine::Plugin.register :redmine_git_hosting do
     permission :create_repository_git_config_keys, :repository_git_config_keys => :create
     permission :view_repository_git_config_keys,   :repository_git_config_keys => :index
     permission :edit_repository_git_config_keys,   :repository_git_config_keys => :edit
-
-    permission :create_repository_protected_branches, :repository_protected_branches => :create
-    permission :view_repository_protected_branches,   :repository_protected_branches => :index
-    permission :edit_repository_protected_branches,   :repository_protected_branches => :edit
 
     permission :create_repository_git_notifications, :repository_git_notifications => :create
     permission :view_repository_git_notifications,   :repository_git_notifications => :index
