@@ -34,29 +34,6 @@
 - name: Ensure redmine .ssh exists
   file: path={{ redmine_home }}/.ssh state=directory owner={{ redmine_user }} group={{ redmine_group }} mode=0700
 
-- name: Generate SSH-key
-  command: ssh-keygen -t rsa -N "" -f {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa creates={{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa
-  sudo: yes
-  sudo_user: "{{ redmine_user }}"
-
-- name: Give ssh pub file to gitolite 
-  command: cp {{ redmine_home }}/.ssh/redmine_gitolite_admin_id_rsa.pub {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub
-
-- name: Set permissions on gitolite authorized_keys file
-  file: path={{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub state=file owner={{ gitolite_user }} group={{ gitolite_group }} mode=0600
-
-- name: Setup Gitolite for Redmine
-  command: "{{ gitolite_home }}/bin/gitolite setup -pk {{ gitolite_home }}/redmine_gitolite_admin_id_rsa.pub creates={{ gitolite_home }}/repositories"
-  sudo: yes
-  sudo_user: "{{ gitolite_user }}"
-
-- name: Enable hooks in gitolite
-  lineinfile: 
-    dest: "{{ gitolite_home }}/.gitolite.rc"
-    state: present
-    regexp: GIT_CONFIG_KEYS
-    line: GIT_CONFIG_KEYS => '.*',
-
 - include: acquire_build.yml
 
 - name: Ensure redmine app base exists
@@ -129,6 +106,18 @@
     state: absent
     regexp: 'Redmine::Utils::relative_url_root'
   when: redmine_http_subdir is not defined or redmine_http_subdir == ""
+
+- name: Get ssh keys from gitolite - public
+  command: cp {{ gitolite_home }}/gitolite_admin_id_rsa.pub {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa.pub
+
+- name: Get ssh keys from gitolite - secret
+  command: cp {{ gitolite_home }}/gitolite_admin_id_rsa {{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa
+
+- name: Set permissions on ssh keys for redmine
+  file: path={{ item }} state=file owner={{ redmine_user }} group={{ redmine_group }} mode=0600
+  with_items:
+    - "{{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa"
+    - "{{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/ssk_keys/redmine_gitolite_admin_id_rsa.pub"
 
 # after db config, as it installs based on it
 - name: Run bundle install

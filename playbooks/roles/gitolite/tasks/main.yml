@@ -32,6 +32,23 @@
   sudo_user: "{{ gitolite_user }}"
   when: git_clone.changed
 
+- name: Generate SSH-key
+  command: ssh-keygen -t rsa -N "" -f {{ gitolite_home }}/gitolite_admin_id_rsa creates={{ gitolite_home }}/gitolite_admin_id_rsa
+  sudo: yes
+  sudo_user: "{{ redmine_user }}"
+
+- name: Setup Gitolite
+  command: "{{ gitolite_home }}/bin/gitolite setup -pk {{ gitolite_home }}/gitolite_admin_id_rsa.pub creates={{ gitolite_home }}/repositories"
+  sudo: yes
+  sudo_user: "{{ gitolite_user }}"
+
+- name: Enable hooks in gitolite
+  lineinfile:
+    dest: "{{ gitolite_home }}/.gitolite.rc"
+    state: present
+    regexp: GIT_CONFIG_KEYS
+    line: GIT_CONFIG_KEYS => '.*',
+
 - name: Setup git-daemon launcher
   template: src=git_daemon.txt dest=/etc/init.d/git-daemon owner=root group=root mode=755
   notify: restart git-daemon
