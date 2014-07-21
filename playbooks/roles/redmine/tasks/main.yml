@@ -100,7 +100,7 @@
   git: repo={{ redmine_git_plugin_repo }}
        dest={{ redmine_home}}/app/redmine/plugins/redmine_git_hosting
        version={{ redmine_git_plugin_ref }}
-       accept_hostkey=true
+       accept_hostkey=yes
   sudo: yes
   sudo_user: "{{ redmine_user }}"
   register: git_clone
@@ -109,7 +109,7 @@
   git: repo={{ redmine_bootstrap_kit_repo }}
        dest={{ redmine_home}}/app/redmine/plugins/redmine_bootstrap_kit
        version={{ redmine_bootstrap_kit_ref }}
-       accept_hostkey=true
+       accept_hostkey=yes
   sudo: yes
   sudo_user: "{{ redmine_user }}"
   register: git_clone
@@ -166,14 +166,24 @@
 - name: Setup redmine-git-hosting plugin config
   template: src=init.rb dest={{ redmine_home }}/app/redmine/plugins/redmine_git_hosting/init.rb owner={{ redmine_user }} group={{ redmine_group }} mode=0600
 
+- name: Set known hosts for git ssh for redmin
+  shell: ssh-keygen -R {{ redmine_ssh_domain }}; ssh-keyscan -H {{ redmine_ssh_domain }} >> {{ redmine_home }}/.ssh/known_hosts
+  sudo: yes
+  sudo_user: "{{ redmine_user }}"
+
 - name: Checkout Git repo for gitolite admin, initialize hostkey
   git: repo=git@{{ redmine_ssh_domain }}:gitolite-admin
        dest={{ redmine_home}}/gl_admin_co
-       accept_hostkey=true
+       accept_hostkey=yes
+  sudo: yes
+  sudo_user: "{{ redmine_user }}"
 
 - name: Setup redmine thin config
-  template: src=thin_redmine.yml dest=/etc/thin/redmine.yml owner=root group={{ redmine_group }} mode=0640
+  template: src=thin_redmine.yml dest=/etc/thin1.9.1/redmine.yml owner=root group={{ redmine_group }} mode=0640
   notify: restart thin
+
+- name: Make ssl dir for nginx
+  file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0711
 
 - name: Add server ssl key to nginx
   copy: src={{ buri_environment }}/local/redmine_server.key dest=/etc/nginx/ssl/redmine_server.key owner=root group=root mode=0440

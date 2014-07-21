@@ -2,6 +2,6 @@
 - name: Install packages nginx role
   apt: pkg={{ item }} state=latest
   with_items:
-    - nginx
+    - nginx-full
     - openssl
 
