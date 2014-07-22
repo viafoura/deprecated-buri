@@ -12,7 +12,6 @@
 
 - name: Tagging Instance PVM AMI
   #command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm_instance }} --tag Name="{{ ami_name }}-PVM-S3" --tag creation_time="{{ ami_timestamp }}"'
-  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_pvm_instance }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-S3\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"
-
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_pvm_instance }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-S3\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
 
 

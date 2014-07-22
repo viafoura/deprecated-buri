@@ -20,6 +20,6 @@
 
 - name: Tagging snapshot
   #command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ebs_snapshot_id }} --tag Name="{{ ami_name }} AMI"'
-  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }} EBS AMI\"}]"
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }} EBS AMI\"}]"'
 
 
