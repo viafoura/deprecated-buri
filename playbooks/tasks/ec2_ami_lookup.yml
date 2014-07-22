@@ -1,6 +1,5 @@
 ---
 - name: Find AKI ID for parent image.
-  #shell: 'ec2-describe-images {{ ami_parent }} | grep ^IMAGE'
   shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^IMAGES'
   register: aki
 
@@ -10,7 +9,6 @@
   with_items: aki.stdout
 
 - name: Find EBS Snapshot ID for parent image.
-  #shell: 'ec2-describe-images {{ ami_parent }} | grep ^BLOCK | grep /dev/sda'
   shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^EBS'
   register: ebsparent
 

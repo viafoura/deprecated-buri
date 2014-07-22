@@ -1,6 +1,5 @@
 ---
 - name: Registering PVM AMI to snapshot
-  #command: 'ec2-register --name "{{ ami_name }}-PVM-EBS" --description "{{ ami_description }}" --architecture "x86_64" --kernel "{{ ami_aki_id }}" --root-device-name /dev/sda1 --block-device-mapping /dev/sda={{ ebs_snapshot_id }}::true --block-device-mapping /dev/sdb=ephemeral0 --block-device-mapping /dev/sdc=ephemeral1 --block-device-mapping /dev/sdd=ephemeral2 --block-device-mapping /dev/sde=ephemeral3 --region {{ ansible_ec2_placement_region }}'
   command: |
     aws ec2 register-image
       --output text
@@ -19,7 +18,6 @@
     ami_id_pvm: '{{ amipvm.stdout }}'
 
 - name: Tagging PVM AMI
-  #command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm }} --tag Name="{{ ami_name }}-PVM-EBS" --tag creation_time="{{ ami_timestamp }}"'
   command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_pvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-PVM-EBS\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
 
 
