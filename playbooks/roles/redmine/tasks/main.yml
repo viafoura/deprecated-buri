@@ -162,7 +162,7 @@
   sudo_user: "{{ redmine_user }}"
 
 - name: Set redmine git user email
-  command: git config --global user.name "{{ redmine_user_email }}"
+  command: git config --global user.email "{{ redmine_user_email }}"
   sudo: yes
   sudo_user: "{{ redmine_user }}"
 
