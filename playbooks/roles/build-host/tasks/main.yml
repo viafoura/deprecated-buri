@@ -4,7 +4,6 @@
   with_items:
     - coreutils
     - ec2-ami-tools
-    - ec2-api-tools
     - python
     - python-support
     - python-dev
