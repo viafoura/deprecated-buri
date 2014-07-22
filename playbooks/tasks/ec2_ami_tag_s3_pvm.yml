@@ -1,14 +1,12 @@
 ---
 - name: Registering Instance PVM AMI to snapshot
   #command: 'ec2-register {{ ami_bundle_bucket_path }}/{{ ami_name }}/{{ ami_name }}.img.manifest.xml --name "{{ ami_name }}-PVM-S3" --description "{{ ami_description }}" --kernel "{{ ami_aki_id }}" --region {{ ansible_ec2_placement_region }}'
-  shell: 'aws ec2 register-image --image-location {{ ami_bundle_bucket_path }}/{{ ami_name }}/{{ ami_name }}.img.manifest.xml  --name "{{ ami_name }}-PVM-S3" --description "{{ ami_description }}" --kernel-id "{{ ami_aki_id }}" --region {{ ansible_ec2_placement_region }}'
-
+  shell: 'aws ec2 register-image --output text --image-location {{ ami_bundle_bucket_path }}/{{ ami_name }}/{{ ami_name }}.img.manifest.xml  --name "{{ ami_name }}-PVM-S3" --description "{{ ami_description }}" --kernel-id "{{ ami_aki_id }}" --region {{ ansible_ec2_placement_region }}'
   register: amipvminstance
 
 - name: Saving Instance PVM AMI ID as a fact for later use
   set_fact:
-    ami_id_pvm_instance: '{{ item.split("\"")[1] }}'
-  with_items: amipvminstance.stdout
+    ami_id_pvm_instance: '{{ amipvminstance.stdout }}'
 
 - name: Tagging Instance PVM AMI
   #command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_pvm_instance }} --tag Name="{{ ami_name }}-PVM-S3" --tag creation_time="{{ ami_timestamp }}"'
