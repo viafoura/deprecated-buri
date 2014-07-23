@@ -29,7 +29,7 @@ See the <a href="../../wiki/Buri-overview">Buri overview</a> page on the <a href
 
 To setup the above configuration:
 
-1. Setup an Ubuntu 14.04 server VM with a 'dev' user that can sudo with a NOPASSWD rule, and an ssh key. (IE: Ansible friendly). You're going to want the VM in bridged mode, or be you'll be setting up a lot of port forwards to use it. You should give it at least 3GB RAM.
+1. Setup an Ubuntu 14.04 server VM (64-bit), with a 'dev' user that can sudo with a NOPASSWD rule, and an ssh key. (IE: Ansible friendly). You're going to want the VM in bridged mode, or be you'll be setting up a lot of port forwards to use it. You should give it at least 3GB RAM.
 
 2. Clone Buri from GitHub on your host:
 
@@ -37,13 +37,21 @@ To setup the above configuration:
    git clone https://github.com/viafoura/buri.git
    ```
 
-3. Make sure you have ansible installed, and from the checkout, run:
+3. Make sure you have Ansible installed. On either of the supported versions of Ubuntu, you can simply use the packages available in apt. Alternately, you can use a version installed with python-pip, by running:
+
+   ```
+   pip install ansible
+   ```
+
+   Which will get you the latest version of Ansible. This is the method used when Buri sets up a builder for cloud images.
+
+4. From the checkout, run:
 
    ```
    ./all-in-one-vm.sh <IP-of-your-VM>
    ```
 
-4. Go for a coffee. If all goes well, in 5-10 minutes, ansible should be done. It may take up to 5 minutes more, or on reboots of the VM, for everything to fully come up.
+5. Go for a coffee. If all goes well, in 5-10 minutes, ansible should be done. It may take up to 5 minutes more, or on reboots of the VM, for everything to fully come up.
 
 ### Testing/Using the Flux-in-a-Box
 
