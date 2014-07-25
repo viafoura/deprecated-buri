@@ -23,7 +23,7 @@
   group: name={{ redmine_group }} system=yes
 
 - name: Add redmine user
-  user: name={{ redmine_user }} group={{ redmine_group }} shell="/bin/sh" home={{ redmine_home }} system=yes
+  user: name={{ redmine_user }} group={{ redmine_group }} shell="/bin/bash" home={{ redmine_home }} system=yes
 
 - name: Let redmine user sudo to gitolite user
   lineinfile: dest=/etc/sudoers state=present regexp='^redmine\s+ALL=\(git\)\s+NOPASSWD:ALL' line='redmine  ALL=(git)      NOPASSWD:ALL' validate='visudo -cf %s'
@@ -144,7 +144,7 @@
   sudo_user: "{{ redmine_user }}"
 
 - name: Run redmine plugins migrate
-  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production rake redmine:plugins:migrate
+  shell: chdir={{ redmine_home }}/app/redmine RAILS_ENV=production NAME=redmine_git_hosting rake redmine:plugins:migrate
   sudo: yes
   sudo_user: "{{ redmine_user }}"
 
@@ -156,20 +156,20 @@
 - name: Setup redmine ssh config
   template: src=ssh_config dest={{ redmine_home }}/.ssh/config owner={{ redmine_user }} group={{ redmine_group }} mode=0600
 
-- name: Set redmine git user name
-  command: git config --global user.name "{{ redmine_user_name }}"
-  sudo: yes
-  sudo_user: "{{ redmine_user }}"
+#- name: Set redmine git user name
+#  command: git config --global user.name "{{ redmine_user_name }}"
+#  sudo: yes
+#  sudo_user: "{{ redmine_user }}"
 
-- name: Set redmine git user email
-  command: git config --global user.email "{{ redmine_user_email }}"
-  sudo: yes
-  sudo_user: "{{ redmine_user }}"
+#- name: Set redmine git user email
+#  command: git config --global user.email "{{ redmine_user_email }}"
+#  sudo: yes
+#  sudo_user: "{{ redmine_user }}"
 
-- name: Set redmine git confug push.default to simple
-  command: git config --global push.default simple
-  sudo: yes
-  sudo_user: "{{ redmine_user }}"
+#- name: Set redmine git confug push.default to simple
+#  command: git config --global push.default simple
+#  sudo: yes
+#  sudo_user: "{{ redmine_user }}"
 
 - name: Set known hosts for git ssh for redmin
   shell: ssh-keygen -R {{ redmine_ssh_domain }}; ssh-keyscan -H {{ redmine_ssh_domain }} >> {{ redmine_home }}/.ssh/known_hosts
