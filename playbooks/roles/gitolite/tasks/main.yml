@@ -8,7 +8,7 @@
   group: name={{ gitolite_group }} system=yes
 
 - name: Add git user
-  user: name={{ gitolite_user }} group={{ gitolite_group }} shell="/bin/sh" home={{ gitolite_home }} system=yes
+  user: name={{ gitolite_user }} group={{ gitolite_group }} shell="/bin/bash" home={{ gitolite_home }} system=yes
 
 - name: Checkout code from Git
   git: repo={{ gitolite_git_repo }}
