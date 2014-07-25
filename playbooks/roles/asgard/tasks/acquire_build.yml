@@ -12,7 +12,6 @@
   git: repo={{ asgard_git_repo }}
        dest=/tmp/asgard_build
        version={{ asgard_git_ref }}
-       accept_hostkey=true
   register: git_clone
   when: asgard_build_source
 

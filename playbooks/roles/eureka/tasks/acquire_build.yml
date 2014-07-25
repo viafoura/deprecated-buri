@@ -12,7 +12,6 @@
   git: repo={{ eureka_git_repo }}
        dest=/tmp/eureka_build
        version={{ eureka_git_ref }}
-       accept_hostkey=true
   register: git_clone
   when: eureka_build_source
 
