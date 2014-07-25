@@ -108,7 +108,8 @@ classpath()
 # process is not running but the pidfile exists (to match the exit codes for
 # the "status" command; see LSB core spec 3.1, section 20.2)
 #
-CMD_PATT="-user.cassandra.+CassandraDaemon"
+#CMD_PATT="-user.cassandra.+CassandraDaemon"
+CMD_PATT="org.apache.cassandra.service.CassandraDaemon"
 is_running()
 {
     if [ -f $PIDFILE ]; then
