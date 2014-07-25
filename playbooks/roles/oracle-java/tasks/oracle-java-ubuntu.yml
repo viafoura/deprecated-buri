@@ -24,5 +24,8 @@
   apt: pkg=oracle-java{{ java_version }}-set-default state=latest install_recommends=no
 
 - name: Provide symlink to default java per debian conventions
-  file: src=/usr/lib/jvm/java-7-oracle dest=/usr/lib/jvm/default-java state=link
+  file: src=/usr/lib/jvm/java-{{ java_version }}-oracle dest=/usr/lib/jvm/default-java state=link
+
+- name: Explicitly set JAVA_HOME in system-wide environment
+  lineinfile: dest=/etc/environment regexp="JAVA_HOME=" line="JAVA_HOME=\"/usr/lib/jvm/java-{{ java_version }}-oracle\"" insertafter="EOF"
 
