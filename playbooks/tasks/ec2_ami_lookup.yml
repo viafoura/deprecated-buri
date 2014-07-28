@@ -14,6 +14,6 @@
 
 - name: Saving ebs_parent_id as a fact for later use
   set_fact:
-    ebs_parent_id: '{{ item.split("\t")[2] }}'
+    ebs_parent_id: '{{ item.split("\t")[3] }}'
   with_items: ebsparent.stdout
 
