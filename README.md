@@ -22,14 +22,17 @@ The all-in-one deploys a complete complement of the various components that Flux
 All of the above, except for Cassandra and Graphite, will be build from sources by default on the all-in-one VM. This allows for easy development that follows the repositories you are working with, and allows continuous integration and delivery setups to be made.
 
 There are also modes to generate cloud-ready images for EC2 enabling the cloud features of the NetflixOSS components.  See the <a href="../../wiki/Getting-started">getting started guide</a> for information on getting started using Buri in that manner. It should be possible to use Buri in more traditional [Ansible](http://ansible.com) setups as well.
- 
+
 See the <a href="../../wiki/Buri-overview">Buri overview</a> page on the <a href="../../wiki">wiki</a> for general info.
 
 ### Quick start, Flux-in-a-Box
 
 To setup the above configuration:
 
-1. Setup an Ubuntu 14.04 server VM (64-bit), with a 'dev' user that can sudo with a NOPASSWD rule, and an ssh key. (IE: Ansible friendly). You're going to want the VM in bridged mode, or be you'll be setting up a lot of port forwards to use it. You should give it at least 3GB RAM.
+1. Setup a Ubuntu 14.04 server VM (64-bit), with a user named 'dev' that can sudo with a NOPASSWD rule, and an ssh key. (IE: Ansible friendly). You're going to want the VM in bridged mode, or be you'll be setting up a lot of port forwards to use it. You should give it at least 3GB RAM. Passwordless sudo can be setup by running the following on the VM:
+   ```
+   echo 'dev ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/91-dev
+   ```
 
 2. Clone Buri from GitHub on your host:
 
