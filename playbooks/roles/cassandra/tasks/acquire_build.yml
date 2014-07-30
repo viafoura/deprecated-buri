@@ -15,6 +15,12 @@
   register: git_clone
   when: cassandra_build_source
 
+- name: Install build dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - ant
+  when: cassandra_build_source
+
 - name: Run build
   shell: chdir=/tmp/cassandra_build ant artifacts
   when: cassandra_build_source and git_clone.changed
