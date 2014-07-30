@@ -43,8 +43,11 @@
 - name: Create cassandra install directory
   file: path={{ cassandra_installdir }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
 
-- name: Download cassandra release archive
-  get_url: url={{ cassandra_mirror }} dest=/tmp/cassandra.tar.gz sha256sum={{ cassandra_checksum }} owner=root mode=0644
+# FIXME: remove when source build verified
+#- name: Download cassandra release archive
+#  get_url: url={{ cassandra_mirror }} dest=/tmp/cassandra.tar.gz sha256sum={{ cassandra_checksum }} owner=root mode=0644
+
+- include: acquire_build.yml
 
 - name: Extract cassandra release archive to install dir
   command: chdir={{ cassandra_installdir }} tar --strip-components 1 --no-same-owner -xzf /tmp/cassandra.tar.gz
