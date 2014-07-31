@@ -30,8 +30,13 @@
   register: cassandra_version_out
   when: cassandra_build_source
 
+- name: Recording cassandra version for later use
+  set_fact:
+    cassandra_version: '{{ cassandra_version_out.stdout }}'
+
+
 - name: Copy cassandra war to expected location
-  command: cp /tmp/cassandra_build/build/apache-cassandra-{{ cassandra_version_out.stdout }}-bin.tar.gz /tmp/cassandra.tar.gz
+  command: cp /tmp/cassandra_build/build/apache-cassandra-{{ cassandra_version }}-bin.tar.gz /tmp/cassandra.tar.gz
   when: cassandra_build_source
 
 #- name: Removing source build
