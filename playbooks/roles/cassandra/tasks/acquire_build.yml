@@ -26,13 +26,13 @@
   when: cassandra_build_source and git_clone.changed
 
 - name: Find build version
-  shell: chdir=/tmp/cassandra_build cat src/resources/org/apache/cassandra/config/version.properties| grep ^CassandraVersion= | sed 's/^CassandraVersion=//'
+  shell: chdir=/tmp/cassandra_build cat build.xml | grep 'property name="base.version"' | sed -E 's/.*value="([0-9.]+)".*/\1/'
   register: cassandra_version_out
   when: cassandra_build_source
 
 - name: Recording cassandra version for later use
   set_fact:
-    cassandra_version: '{{ cassandra_version_out.stdout }}'
+    cassandra_version: '{{ cassandra_version_out.stdout }}-SNAPSHOT'
 
 
 - name: Copy cassandra war to expected location
