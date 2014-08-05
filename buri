@@ -1,0 +1,54 @@
+#!/usr/bin/python
+
+import argparse
+import os
+
+BURI_BASE = os.path.dirname(os.path.realpath(__file__))
+
+print "PATH: %s" % BURI_BASE
+
+def foo(args):
+    print 'in foo: %s' % args.thing1
+
+def bar(args):
+    print 'in bar: %s' % args.thing2
+
+
+# ARG PARSER STUFF BELOW HERE
+
+class _HelpAction(argparse._HelpAction):
+    def __call__(self, parser, namespace, values, option_string=None):
+        parser.print_help()
+	print
+        # retrieve subparsers from parser
+        subparsers_actions = [
+            action for action in parser._actions
+            if isinstance(action, argparse._SubParsersAction)]
+        # there will probably only be one subparser_action,
+        # but better save than sorry
+        for subparsers_action in subparsers_actions:
+            # get all subparsers and print help
+            for choice, subparser in subparsers_action.choices.items():
+                print("Command: '{}'".format(choice))
+                print(subparser.format_help())
+
+        parser.exit()
+
+parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
+parser.add_argument('--help', action=_HelpAction, help='help for help if you need some help')  # add custom help
+
+subparser = parser.add_subparsers(help='sub commands')
+
+# foo
+parser_foo = subparser.add_parser('foo', help="foo group", add_help=False)
+parser_foo.add_argument('thing1', metavar='param', type=str, help='param for foo')
+parser_foo.set_defaults(func=foo)
+
+# bar
+parser_bar = subparser.add_parser('bar', help="bar group", add_help=False)
+parser_bar.add_argument('thing2', metavar='param', type=str, help='param for bar')
+parser_bar.set_defaults(func=bar)
+
+args = parser.parse_args()
+args.func(args)
+
