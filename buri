@@ -143,7 +143,7 @@ parser_resnap.set_defaults(func=resnap)
 
 # cleanup_fail
 parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation", add_help=False)
-parser_cleanup_fail.add_argument('--device', metavar='<device_node>', default="/dev/sdi", type=str, help='Device node to clean up after')
+parser_cleanup_fail.add_argument('--device', metavar='<device_node>', default="/dev/xvdi", type=str, help='Device node to clean up after')
 parser_cleanup_fail.set_defaults(func=cleanup_fail)
 
 # keys_cassandra
