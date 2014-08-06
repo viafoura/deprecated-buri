@@ -2,17 +2,16 @@
 
 import argparse
 import os
+import logging
 
-BURI_BASE = os.path.dirname(os.path.realpath(__file__))
 
-print "PATH: %s" % BURI_BASE
+# Implementations of the subcommands the subparsers specify
 
-def foo(args):
-    print 'in foo: %s' % args.thing1
+def devbox(args):
+    logging.info('Pushing a devbox to: %s' % args.host)
 
 def bar(args):
     print 'in bar: %s' % args.thing2
-
 
 # ARG PARSER STUFF BELOW HERE
 
@@ -35,14 +34,15 @@ class _HelpAction(argparse._HelpAction):
         parser.exit()
 
 parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
-parser.add_argument('--help', action=_HelpAction, help='help for help if you need some help')  # add custom help
+parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
+parser.add_argument('--loglevel', metavar='', type=str, default='warn', help='Set the log level')  # add custom help
 
 subparser = parser.add_subparsers(help='sub commands')
 
-# foo
-parser_foo = subparser.add_parser('foo', help="foo group", add_help=False)
-parser_foo.add_argument('thing1', metavar='param', type=str, help='param for foo')
-parser_foo.set_defaults(func=foo)
+# All-in-one devbox environment
+parser_devbox = subparser.add_parser('devbox', help="Install all-in-one system to a host for development use", add_help=False)
+parser_devbox.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+parser_devbox.set_defaults(func=devbox)
 
 # bar
 parser_bar = subparser.add_parser('bar', help="bar group", add_help=False)
@@ -50,5 +50,13 @@ parser_bar.add_argument('thing2', metavar='param', type=str, help='param for bar
 parser_bar.set_defaults(func=bar)
 
 args = parser.parse_args()
+numeric_level = getattr(logging, args.loglevel.upper(), None)
+if not isinstance(numeric_level, int):
+    raise ValueError('Invalid log level: %s' % loglevel)
+logging.basicConfig(level=numeric_level)
+logging.warn("LOGLEVEL: %s, %s", args.loglevel, numeric_level)
+
+args.BURI_BASE = os.path.dirname(os.path.realpath(__file__))
+logging.info("PATH: %s" % args.BURI_BASE)
 args.func(args)
 
