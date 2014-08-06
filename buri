@@ -12,8 +12,10 @@ def run_ansible_playbook(args, playbook, cli_vars):
     logging.info('executing ansible as: %s' % cmd)
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     # dump to stdout for now
-    for line in io.open(handle.stdout.fileno()):
-	print(line, end="")
+    line = handle.stdout.readline()
+    while line:
+        print(line, end="")
+        line = handle.stdout.readline()
 
 # Implementations of the subcommands the subparsers specify
 
@@ -38,7 +40,7 @@ def resnap(args):
     run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='%s' ami_role='%s'" % (args.parent, args.role))
 
 def cleanup_fail(args):
-    logging.info('Cleaning up failed AMI resnap from' % args.device)
+    logging.info('Cleaning up failed AMI resnap from: %s' % args.device)
     run_ansible_playbook(args, "cleanup_failure", "ami_device='%s'" % args.device)
 
 def keys_cassandra(args):
