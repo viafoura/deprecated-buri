@@ -1,0 +1,11 @@
+---
+dependencies:
+  - { role: cassandra }
+  - { role: exhibitor }
+  - { role: eureka }
+  - { role: hystrix_dashboard }
+  - { role: turbine }
+  - { role: graphite }
+  - { role: fluxdemo_schema }
+  - { role: fluxdemo_edge }
+  - { role: fluxdemo_middle }
