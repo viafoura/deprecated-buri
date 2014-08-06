@@ -1,0 +1,5 @@
+---
+# I assume a role needs at least a task. Just in case, just debug a message we're done.
+- name: Informing user all_in_one build is complete
+  debug: msg="The all_in_one build is complete."
+

@@ -2,6 +2,7 @@
 - name: Install build host package dependencies
   apt: pkg={{ item }} state=latest install_recommends=no
   with_items:
+    - build-essential
     - coreutils
     - ec2-ami-tools
     - python

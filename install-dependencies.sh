@@ -9,10 +9,9 @@ BURI_BASE=$(dirname ${SCRIPT_PATH})
 # FIXME: for consistency, this should install oracle java
 
 # Update and install Ubuntu packages
-export DEBIAN_FRONTEND=noninteractive
 sudo perl -pi -e 's/^# *(deb .*multiverse)$/$1/' /etc/apt/sources.list
 sudo perl -pi -e 's/^# *(deb .*backports)$/$1/' /etc/apt/sources.list
-#sudo add-apt-repository -y ppa:jhohertz/aws-ppa
+export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update
 sudo -E apt-get upgrade -y
 sudo -E apt-get install --no-install-recommends -y \
@@ -27,10 +26,10 @@ sudo -E apt-get install --no-install-recommends -y \
  make                     \
  qemu-utils               \
  git-core                 \
+ build-essential          \
  openssl                  
 
 sudo pip install boto
 sudo pip install awscli
 sudo pip install ansible
-
 
