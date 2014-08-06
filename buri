@@ -6,8 +6,11 @@ import os
 import logging
 import subprocess
 
-def run_ansible_playbook(command):
-    handle = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+def run_ansible_playbook(args, playbook, cli_vars):
+    cmd = 'ansible-playbook %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars)
+    logging.info('executing ansible as: %s' % cmd)
+    handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+    # dump to stdout for now
     for line in handle.stdout:
 	print(line, end="")
 
@@ -15,8 +18,7 @@ def run_ansible_playbook(command):
 
 def devbox(args):
     logging.info('Pushing a devbox to: %s' % args.host)
-    run_ansible_playbook("echo wheeeeee")
-    #subprocess.call("echo wheeeeee", shell=True)
+    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one'" % args.host)
 
 def keys_cassandra(args):
     logging.info('Generating cassandra keys for: %s' % args.environment)
@@ -50,7 +52,7 @@ def keys_bundle(args):
 
     if not os.path.isfile('%s/bundle_pk.pem' % env_base):
         logging.info("Creating new bundle_pk.pem")
-        subprocess.call("openssl genrsa -out %s/bundle_pk.pem 2048" % env_base, shell=True)
+        subprocess.call("openssl genrsa -out %s/bundle_pk.pem %s" % (env_base, args.keylength), shell=True)
     else:
         logging.info("Found existing bundle_pk.pem")
 
