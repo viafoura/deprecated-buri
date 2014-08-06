@@ -53,7 +53,7 @@ args = parser.parse_args()
 numeric_level = getattr(logging, args.loglevel.upper(), None)
 if not isinstance(numeric_level, int):
     raise ValueError('Invalid log level: %s' % loglevel)
-logging.basicConfig(level=numeric_level)
+logging.basicConfig(level=numeric_level, format='%(asctime)s %(levelname)s: %(message)s')
 logging.warn("LOGLEVEL: %s, %s", args.loglevel, numeric_level)
 
 args.BURI_BASE = os.path.dirname(os.path.realpath(__file__))
