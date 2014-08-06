@@ -1,17 +1,18 @@
-#!/usr/bin/python
+#!/usr/bin/python -u
 
 from __future__ import print_function
 import argparse
 import os
+import io
 import logging
 import subprocess
 
 def run_ansible_playbook(args, playbook, cli_vars):
-    cmd = 'ansible-playbook %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars)
+    cmd = 'python -u `which ansible-playbook` %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars)
     logging.info('executing ansible as: %s' % cmd)
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     # dump to stdout for now
-    for line in handle.stdout:
+    for line in io.open(handle.stdout.fileno()):
 	print(line, end="")
 
 # Implementations of the subcommands the subparsers specify
@@ -19,6 +20,26 @@ def run_ansible_playbook(args, playbook, cli_vars):
 def devbox(args):
     logging.info('Pushing a devbox to: %s' % args.host)
     run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one'" % args.host)
+
+def apply(args):
+    logging.info('Pushing a devbox to: %s' % args.host)
+    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='%s'" % (args.host, args.role))
+
+def buildhost(args):
+    logging.info('Pushing a build host to: %s' % args.host)
+    run_ansible_playbook(args, "setup-build-host", "machine_target='%s'" % args.host)
+
+def foundation(args):
+    logging.info('Creating foundation AMI for: %s' % args.environment)
+    run_ansible_playbook(args, "create-foundation-ubuntu", "ami_role='foundation'")
+
+def resnap(args):
+    logging.info('Resnapshotting AMI for: %s' % args.environment)
+    run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='%s' ami_role='%s'" % (args.parent, args.role))
+
+def cleanup_fail(args):
+    logging.info('Cleaning up failed AMI resnap from' % args.device)
+    run_ansible_playbook(args, "cleanup_failure", "ami_device='%s'" % args.device)
 
 def keys_cassandra(args):
     logging.info('Generating cassandra keys for: %s' % args.environment)
@@ -77,7 +98,7 @@ class _HelpAction(argparse._HelpAction):
         for subparsers_action in subparsers_actions:
             # get all subparsers and print help
             for choice, subparser in subparsers_action.choices.items():
-                print("Command: '{}'".format(choice))
+                print("----- Command: '{}'".format(choice))
                 print(subparser.format_help())
 
         parser.exit()
@@ -93,6 +114,33 @@ subparser = parser.add_subparsers(help='sub commands')
 parser_devbox = subparser.add_parser('devbox', help="Install all-in-one system to a host for development use", add_help=False)
 parser_devbox.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
 parser_devbox.set_defaults(func=devbox)
+
+# apply
+parser_apply = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation", add_help=False)
+parser_apply.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+parser_apply.add_argument('role', metavar='<role>', type=str, help='Role to provision to host')
+parser_apply.set_defaults(func=cleanup_fail)
+
+# EC2 buildhost environment
+parser_buildhost = subparser.add_parser('buildhost', help="Setup build-host in EC2 for AMI generation", add_help=False)
+parser_buildhost.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to setup')
+parser_buildhost.set_defaults(func=buildhost)
+
+# foundation
+parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
+parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
+parser_foundation.set_defaults(func=foundation)
+
+# resnap
+parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
+parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
+parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
+parser_resnap.set_defaults(func=resnap)
+
+# cleanup_fail
+parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation", add_help=False)
+parser_cleanup_fail.add_argument('--device', metavar='<device_node>', default="/dev/sdi", type=str, help='Device node to clean up after')
+parser_cleanup_fail.set_defaults(func=cleanup_fail)
 
 # keys_cassandra
 parser_keys_cassandra = subparser.add_parser('keys_cassandra', help="Generate SSL Keystore for cassandra", add_help=False)
