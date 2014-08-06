@@ -46,18 +46,18 @@ To setup the above configuration:
    pip install ansible
    ```
 
-   Which will get you the latest version of Ansible. This is the method used when Buri sets up a builder for cloud images. You should probably also install python-dev before running the pip install, you should be able to get all you need with this on Ubuntu:
+   Which will get you the latest version of Ansible. This is the method used when Buri sets up a builder for cloud images. You should probably also install python-dev before running the pip install, you should be able to get all you need via running the following script on Ubuntu:
 
    ```
-   apt-get install python-dev python-pip
+   ./install-dependencies.sh
    ```
 
-   Note that both LTS versions of Ubuntu tested with buri do not have Ansible 1.6 available, so use the pip method above.
+   Note that both LTS versions of Ubuntu tested with buri do not have Ansible 1.6 available in the package repositories, so use the pip method above.
 
 4. From the checkout, run:
 
    ```
-   ./all-in-one-vm.sh <IP-of-your-VM>
+   ./buri devbox <IP-of-your-VM>
    ```
 
 5. Go for a coffee. If all goes well, in 5-10 minutes, ansible should be done. It may take up to 5 minutes more, or on reboots of the VM, for everything to fully come up.
