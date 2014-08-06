@@ -10,5 +10,5 @@ ENVIRO=dev_vm
 
 ${BURI_BASE}/bin/create-cassandra-keys.sh dev_vm
 
-ansible-playbook ${BURI_BASE}/playbooks/run-role-live.yml -i ${BURI_BASE}/playbooks/${ENVIRO}/inventory -e "machine_target=$1 ami_role='all_in_one'" -vvvv
+ansible-playbook ${BURI_BASE}/playbooks/run-role-live.yml -i ${BURI_BASE}/playbooks/${ENVIRO}/inventory -e "machine_target=$1 ami_role='all_in_one'" -vv
 

@@ -18,8 +18,30 @@ def devbox(args):
     run_ansible_playbook("echo wheeeeee")
     #subprocess.call("echo wheeeeee", shell=True)
 
-def bar(args):
-    print ('in bar: %s' % args.thing2)
+def keys_cassandra(args):
+    logging.info('Generating cassandra keys for: %s' % args.environment)
+    env_base='%s/playbooks/%s/local' % (args.BURI_BASE, args.environment)
+    logging.info('Generating cassandra keys at: %s' % env_base)
+    #1 Generate key and store
+    if not os.path.isfile('%s/cassandra_keystore' % env_base):
+        logging.info("Creating new for cassandra_keystore")
+        # FIXME, test result
+        subprocess.call("keytool -genkey -v -keyalg RSA -keysize 1024 -alias '%s' -keystore %s/cassandra_keystore -storepass 'cassandra' -dname 'CN=cassandra' -keypass 'cassandra' -validity 3650" % (args.alias, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_keystore")
+
+    #2 Extract public certificate
+    if not os.path.isfile('%s/cassandra_cert' % env_base):
+        logging.info("Creating new for cassandra_cert")
+        subprocess.call("keytool -export -v -alias '%s' -file %s/cassandra_cert -keystore %s/cassandra_keystore -storepass 'cassandra'" % (args.alias, env_base, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_cert")
+
+    if not os.path.isfile('%s/cassandra_truststore' % env_base):
+        logging.info("Creating new for cassandra_truststore")
+        subprocess.call("keytool -import -v -trustcacerts -alias '%s' -file %s/cassandra_cert -keystore %s/cassandra_truststore -storepass 'cassandra' -noprompt" % (args.alias, env_base, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_truststore")
 
 # ARG PARSER STUFF BELOW HERE
 
@@ -43,7 +65,8 @@ class _HelpAction(argparse._HelpAction):
 
 parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
 parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
-parser.add_argument('--loglevel', metavar='', type=str, default='warn', help='Set the log level')  # add custom help
+parser.add_argument('--loglevel', metavar='<level>', type=str, default='warn', help='Set the log level') 
+parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', help='Set the environment context')
 
 subparser = parser.add_subparsers(help='sub commands')
 
@@ -52,10 +75,10 @@ parser_devbox = subparser.add_parser('devbox', help="Install all-in-one system t
 parser_devbox.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
 parser_devbox.set_defaults(func=devbox)
 
-# bar
-parser_bar = subparser.add_parser('bar', help="bar group", add_help=False)
-parser_bar.add_argument('thing2', metavar='param', type=str, help='param for bar')
-parser_bar.set_defaults(func=bar)
+# generate_keys
+parser_bar = subparser.add_parser('keys_cassandra', help="Generate SSL Keystore for cassandra", add_help=False)
+parser_bar.add_argument('--alias', metavar='<alias>', default='cassandra', type=str, help='Set alias for key generation')
+parser_bar.set_defaults(func=keys_cassandra)
 
 args = parser.parse_args()
 numeric_level = getattr(logging, args.loglevel.upper(), None)
