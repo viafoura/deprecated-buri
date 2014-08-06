@@ -20,6 +20,8 @@ def run_ansible_playbook(args, playbook, cli_vars):
 # Implementations of the subcommands the subparsers specify
 
 def devbox(args):
+    args.alias="cassandra"
+    keys_cassandra(args)
     logging.info('Pushing a devbox to: %s' % args.host)
     run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one'" % args.host)
 
