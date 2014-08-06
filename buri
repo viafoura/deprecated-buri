@@ -1,17 +1,25 @@
 #!/usr/bin/python
 
+from __future__ import print_function
 import argparse
 import os
 import logging
+import subprocess
 
+def run_ansible_playbook(command):
+    handle = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+    for line in handle.stdout:
+	print(line, end="")
 
 # Implementations of the subcommands the subparsers specify
 
 def devbox(args):
     logging.info('Pushing a devbox to: %s' % args.host)
+    run_ansible_playbook("echo wheeeeee")
+    #subprocess.call("echo wheeeeee", shell=True)
 
 def bar(args):
-    print 'in bar: %s' % args.thing2
+    print ('in bar: %s' % args.thing2)
 
 # ARG PARSER STUFF BELOW HERE
 
