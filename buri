@@ -1,18 +1,66 @@
 #!/usr/bin/python
 
+from __future__ import print_function
 import argparse
 import os
+import logging
+import subprocess
 
-BURI_BASE = os.path.dirname(os.path.realpath(__file__))
+def run_ansible_playbook(args, playbook, cli_vars):
+    cmd = 'ansible-playbook %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars)
+    logging.info('executing ansible as: %s' % cmd)
+    handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+    # dump to stdout for now
+    for line in handle.stdout:
+	print(line, end="")
 
-print "PATH: %s" % BURI_BASE
+# Implementations of the subcommands the subparsers specify
 
-def foo(args):
-    print 'in foo: %s' % args.thing1
+def devbox(args):
+    logging.info('Pushing a devbox to: %s' % args.host)
+    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one'" % args.host)
 
-def bar(args):
-    print 'in bar: %s' % args.thing2
+def keys_cassandra(args):
+    logging.info('Generating cassandra keys for: %s' % args.environment)
+    env_base='%s/playbooks/%s/local' % (args.BURI_BASE, args.environment)
+    logging.info('Generating cassandra keys at: %s' % env_base)
+    #1 Generate key and store
+    if not os.path.isfile('%s/cassandra_keystore' % env_base):
+        logging.info("Creating new for cassandra_keystore")
+        # FIXME, test result
+        subprocess.call("keytool -genkey -v -keyalg RSA -keysize 1024 -alias '%s' -keystore %s/cassandra_keystore -storepass 'cassandra' -dname 'CN=cassandra' -keypass 'cassandra' -validity 3650" % (args.alias, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_keystore")
 
+    #2 Extract public certificate
+    if not os.path.isfile('%s/cassandra_cert' % env_base):
+        logging.info("Creating new for cassandra_cert")
+        subprocess.call("keytool -export -v -alias '%s' -file %s/cassandra_cert -keystore %s/cassandra_keystore -storepass 'cassandra'" % (args.alias, env_base, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_cert")
+
+    if not os.path.isfile('%s/cassandra_truststore' % env_base):
+        logging.info("Creating new for cassandra_truststore")
+        subprocess.call("keytool -import -v -trustcacerts -alias '%s' -file %s/cassandra_cert -keystore %s/cassandra_truststore -storepass 'cassandra' -noprompt" % (args.alias, env_base, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_truststore")
+
+def keys_bundle(args):
+    logging.info('Generating EC2 image bundling keys for: %s' % args.environment)
+    env_base='%s/playbooks/%s/local' % (args.BURI_BASE, args.environment)
+    logging.info('Generating cassandra keys at: %s' % env_base)
+
+    if not os.path.isfile('%s/bundle_pk.pem' % env_base):
+        logging.info("Creating new bundle_pk.pem")
+        subprocess.call("openssl genrsa -out %s/bundle_pk.pem %s" % (env_base, args.keylength), shell=True)
+    else:
+        logging.info("Found existing bundle_pk.pem")
+
+    if not os.path.isfile('%s/bundle_cert.pem' % env_base):
+        logging.info("Creating new bundle_cert.pem")
+        subprocess.call("openssl req -new -x509 -sha1 -days 3750 -key %s/bundle_pk.pem -out %s/bundle_cert.pem -batch" % (env_base, env_base), shell=True)
+    else:
+        logging.info("Found existing bundle_cert.pem")
 
 # ARG PARSER STUFF BELOW HERE
 
@@ -35,20 +83,35 @@ class _HelpAction(argparse._HelpAction):
         parser.exit()
 
 parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
-parser.add_argument('--help', action=_HelpAction, help='help for help if you need some help')  # add custom help
+parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
+parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level') 
+parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', help='Set the environment context')
 
 subparser = parser.add_subparsers(help='sub commands')
 
-# foo
-parser_foo = subparser.add_parser('foo', help="foo group", add_help=False)
-parser_foo.add_argument('thing1', metavar='param', type=str, help='param for foo')
-parser_foo.set_defaults(func=foo)
+# All-in-one devbox environment
+parser_devbox = subparser.add_parser('devbox', help="Install all-in-one system to a host for development use", add_help=False)
+parser_devbox.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+parser_devbox.set_defaults(func=devbox)
 
-# bar
-parser_bar = subparser.add_parser('bar', help="bar group", add_help=False)
-parser_bar.add_argument('thing2', metavar='param', type=str, help='param for bar')
-parser_bar.set_defaults(func=bar)
+# keys_cassandra
+parser_keys_cassandra = subparser.add_parser('keys_cassandra', help="Generate SSL Keystore for cassandra", add_help=False)
+parser_keys_cassandra.add_argument('--alias', metavar='<alias>', default='cassandra', type=str, help='Set alias for key generation')
+parser_keys_cassandra.set_defaults(func=keys_cassandra)
 
+# keys_bundle
+parser_keys_bundle = subparser.add_parser('keys_bundle', help="Generate SSL pem files for EC2 image bundling", add_help=False)
+parser_keys_bundle.add_argument('--keylength', metavar='<alias>', default=2048, type=int, help='Set key length')
+parser_keys_bundle.set_defaults(func=keys_bundle)
+
+# parser all setup, parse it
 args = parser.parse_args()
+numeric_level = getattr(logging, args.loglevel.upper(), None)
+if not isinstance(numeric_level, int):
+    raise ValueError('Invalid log level: %s' % loglevel)
+logging.basicConfig(level=numeric_level, format='%(asctime)s %(levelname)s: %(message)s')
+logging.warn("LOGLEVEL: %s, %s", args.loglevel, numeric_level)
+args.BURI_BASE = os.path.dirname(os.path.realpath(__file__))
+logging.info("PATH: %s" % args.BURI_BASE)
 args.func(args)
 
