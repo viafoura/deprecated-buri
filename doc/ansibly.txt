@@ -1,0 +1,57 @@
+
+Plan for "Ansibly"
+
+1. Inventory
+
+This approach will be much more driven by the inventory file, which, we've mostly ignored so far. AMI stuff uses a dynamic insert (for now... can't if inventory file driven), and the dev VM did too, just for convenience at the time.
+
+The main thing is that the mount point has to be static for this to work. AND Ansible has to not test for it's existence at the start of some plays, maybe, depends how much we can unwrap the AMI stuff from the role stuff.
+
+And.. Ansible does test for a valid chroot target... that's ok, as we can still split up the run.
+
+So, to get started:
+
+```
+# We'll always need the localhost for early stage AMI work.
+localhost
+
+# There will be some kind of entry for the dev_vm
+# This might be more typically vagrant driven later too
+[dev_vm]
+some_dev.host_vm
+
+[test]
+/mnt/ami_test_eureka role=eureka
+/mnt/ami_test_turbine role=turbine
+[prod]
+/mnt/ami_prod_exhibitor_zoo1 role=exhibitor cluster=zoo1
+/mnt/ami_prod_priam_cluster1 role=priam cluster=cluster1
+
+# You could have some more traditional ansible stuff too
+[a_role]
+host1 role=...
+host2 ...
+
+[and_so_on]
+more_hosts
+and_more
+```
+
+2. variables
+
+group_vars
+
+  - there may be where old environment concepts get located, not as an all/overrides in odd folders, but:
+  - file per environment. it's a group
+    - looks to be multi-group support, not sure if this is about the parent/child stuff, or a list that is resolved according to... an order uncertain at this time. (FIXME: what is the order?)
+  - some later time, may also have things like regional/rack slicing as a possibility, provided things are flexible enough for this?
+
+host_vars
+
+  - for traditional setups, and the dev_vm
+  - per-host overrides
+  - unclear how chroot works, it uses paths, can have slashes in filenames... must remap somehow?
+    - need this, becomes the AMI build profile essentially under that context
+    - FIXME: resolve
+  - what will be used instead of overrides.yml after change
+
