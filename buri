@@ -26,7 +26,7 @@ def devbox(args):
     run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one'" % args.host)
 
 def apply(args):
-    logging.info('Pushing a devbox to: %s' % args.host)
+    logging.info('Pushing %s role to: %s' % (args.role, args.host))
     run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='%s'" % (args.host, args.role))
 
 def buildhost(args):
@@ -120,10 +120,10 @@ parser_devbox.add_argument('host', metavar='<ip|hostname>', type=str, help='IP o
 parser_devbox.set_defaults(func=devbox)
 
 # apply
-parser_apply = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation", add_help=False)
+parser_apply = subparser.add_parser('apply', help="Run a role against a host", add_help=False)
 parser_apply.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
 parser_apply.add_argument('role', metavar='<role>', type=str, help='Role to provision to host')
-parser_apply.set_defaults(func=cleanup_fail)
+parser_apply.set_defaults(func=apply)
 
 # EC2 buildhost environment
 parser_buildhost = subparser.add_parser('buildhost', help="Setup build-host in EC2 for AMI generation", add_help=False)
