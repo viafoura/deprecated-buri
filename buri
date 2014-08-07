@@ -110,7 +110,7 @@ class _HelpAction(argparse._HelpAction):
 parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
 parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
 parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level') 
-parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', help='Set the environment context')
+parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'prod'], help='Set the environment context')
 
 subparser = parser.add_subparsers(help='sub commands')
 
@@ -142,8 +142,8 @@ parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to pro
 parser_resnap.set_defaults(func=resnap)
 
 # cleanup_fail
-parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation", add_help=False)
-parser_cleanup_fail.add_argument('--device', metavar='<device_node>', default="/dev/xvdi", type=str, help='Device node to clean up after')
+parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation (unmount/destroy EBS volume)", add_help=False)
+parser_cleanup_fail.add_argument('--device', metavar='<device_node>', default="/dev/xvdi", type=str, help='Device node to clean up')
 parser_cleanup_fail.set_defaults(func=cleanup_fail)
 
 # keys_cassandra
