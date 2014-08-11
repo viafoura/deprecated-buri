@@ -23,6 +23,6 @@
   pip: name=awscli state=latest
 
 - name: Install Ansible via pip
-  pip: name=ansible state=latest
+  pip: name=ansible state=latest version=1.6.10
 
 

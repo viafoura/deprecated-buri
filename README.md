@@ -40,10 +40,10 @@ To setup the above configuration:
    git clone https://github.com/viafoura/buri.git
    ```
 
-3. Make sure you have Ansible 1.6 or higher installed. You can use a version installed with python-pip, by running:
+3. Make sure you have Ansible 1.6.x installed. You can use a version installed with python-pip, by running:
 
    ```
-   pip install ansible
+   pip install ansible==1.6.10
    ```
 
    Which will get you the latest version of Ansible. This is the method used when Buri sets up a builder for cloud images. You should probably also install python-dev before running the pip install, you should be able to get all you need via running the following script on Ubuntu:

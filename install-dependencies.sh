@@ -31,5 +31,5 @@ sudo -E apt-get install --no-install-recommends -y \
 
 sudo pip install boto
 sudo pip install awscli
-sudo pip install ansible
+sudo pip install ansible==1.6.10
 
