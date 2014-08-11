@@ -1,14 +1,14 @@
 ---
 - name: Registering Instance HVM AMI to snapshot
   # FIXME: check if we override bundle re: volumes here, if so, rely on it for consistency.
-  command: 'ec2-register {{ ami_bundle_bucket_path }}/{{ ami_name }}/{{ ami_name }}.img.manifest.xml --name "{{ ami_name }}-HVM-S3" --description "{{ ami_description }}" --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
+  shell: 'aws ec2 register-image --output text --image-location {{ ami_bundle_bucket_path }}/{{ ami_name }}/{{ ami_name }}.img.manifest.xml  --name "{{ ami_name }}-HVM-S3" --description "{{ ami_description }}" --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
   register: amihvminstance
 
 - name: Saving Instance HVM AMI ID as a fact for later use
   set_fact:
-    ami_id_hvm_instance: '{{ item.split("\t")[1] }}'
-  with_items: amihvminstance.stdout
+    ami_id_hvm_instance: '{{ amihvminstance.stdout }}'
 
 - name: Tagging Instance HVM AMI
-  command: 'ec2-create-tags --region {{ ansible_ec2_placement_region }} {{ ami_id_hvm_instance }} --tag Name="{{ ami_name }}-HVM-S3" --tag creation_time="{{ ami_timestamp }}"'
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_hvm_instance }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-S3\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
+
 

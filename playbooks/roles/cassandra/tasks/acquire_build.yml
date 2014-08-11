@@ -1,0 +1,44 @@
+---
+
+- name: Download binary build of cassandra
+  get_url: url={{ cassandra_build_url }} dest=/tmp/cassandra.tar.gz
+  when: not cassandra_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/cassandra_build state=directory owner=root group=root mode=0755
+#  when: cassandra_build_source
+
+- name: Checkout code from Git
+  git: repo={{ cassandra_git_repo }}
+       dest=/tmp/cassandra_build
+       version={{ cassandra_git_ref }}
+  register: git_clone
+  when: cassandra_build_source
+
+- name: Install build dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - ant
+  when: cassandra_build_source
+
+- name: Run build
+  shell: chdir=/tmp/cassandra_build ant artifacts
+  when: cassandra_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/cassandra_build cat build.xml | grep 'property name="base.version"' | sed -E 's/.*value="([0-9.]+)".*/\1/'
+  register: cassandra_version_out
+  when: cassandra_build_source
+
+- name: Recording cassandra version for later use
+  set_fact:
+    cassandra_version: '{{ cassandra_version_out.stdout }}-SNAPSHOT'
+  when: cassandra_build_source
+
+- name: Copy cassandra war to expected location
+  command: cp /tmp/cassandra_build/build/apache-cassandra-{{ cassandra_version }}-bin.tar.gz /tmp/cassandra.tar.gz
+  when: cassandra_build_source
+
+#- name: Removing source build
+#  file: path=/tmp/cassandra_build state=absent
+#  when: cassandra_build_source

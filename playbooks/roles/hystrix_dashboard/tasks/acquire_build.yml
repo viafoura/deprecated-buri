@@ -12,7 +12,6 @@
   git: repo={{ hystrix_dashboard_git_repo }}
        dest=/tmp/hystrix_dashboard_build
        version={{ hystrix_dashboard_git_ref }}
-       accept_hostkey=true
   register: git_clone
   when: hystrix_dashboard_build_source
 

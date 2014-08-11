@@ -11,6 +11,7 @@
     - mdadm
     - nano
     - ngrep
+    - nmon
     - ntp
     - openssh-client
     - openssh-server

@@ -12,7 +12,6 @@
   git: repo={{ ice_git_repo }}
        dest=/tmp/ice_build
        version={{ ice_git_ref }}
-       accept_hostkey=true
   register: git_clone
   when: ice_build_source
 

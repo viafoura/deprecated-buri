@@ -16,7 +16,6 @@
   git: repo={{ priam_git_repo }}
        dest=/tmp/priam_build
        version={{ priam_git_ref }}
-       accept_hostkey=true
   register: git_clone
   when: priam_build_source
 
