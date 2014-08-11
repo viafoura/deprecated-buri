@@ -27,5 +27,6 @@
 
 - name: Waiting for EBS work volume attachment to complete
   wait_for:
+    delay: 5
     path: '{{ ami_device }}'
 
