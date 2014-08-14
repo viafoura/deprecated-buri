@@ -21,5 +21,5 @@
   template: src=jsvc_daemon.conf dest=/etc/init/ owner=root group=root mode=0644
 
 - name: Install jsvc_daemon-instance upstart script
-  copy: src=jsvc_daemon_instance.conf dest=/etc/init/ owner=root group=root mode=0644
+  template: src=jsvc_daemon_instance.conf dest=/etc/init/ owner=root group=root mode=0644
 
