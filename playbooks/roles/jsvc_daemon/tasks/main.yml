@@ -5,6 +5,15 @@
   with_items:
     - jsvc
 
-- name: Create jsvc daemons root directory
+- name: Add group jsvc
+  group: name={{ jsvc_daemon_group }} system=yes
+
+- name: Create jsvc daemon root directory
   file: path={{ jsvc_daemon_root }} state=directory owner=root group=root mode=0755
+
+- name: Add user jsvc
+  user: name={{ jsvc_daemon_user }} group={{ jsvc_daemon_group }} shell="/bin/false" home={{ jsvc_daemon_root }} system=yes
+
+- name: Set permisisons on jsvc daemon root directory
+  file: path={{ jsvc_daemon_root }} state=directory owner={{ jsvc_daemon_user }} group={{ jsvc_daemon_group }} mode=0755
 

@@ -1,2 +1,5 @@
 ---
 jsvc_daemon_root: '/opt/jsvc_daemon'
+jsvc_daemon_user: 'jsvc'
+jsvc_daemon_group: 'jsvc'
+
