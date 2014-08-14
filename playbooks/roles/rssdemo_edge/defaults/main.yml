@@ -1,5 +1,6 @@
 ---
 rssdemo_edge_instance_name: rssdemo_edge
+rssdemo_edge_instance_classname: com.netflix.recipes.rss.server.EdgeServer
 rssdemo_edge_instance_port: 8298
 rssdemo_edge_instance_jmx_port: 7298
 rssdemo_edge_instance_karyon_port: 9298

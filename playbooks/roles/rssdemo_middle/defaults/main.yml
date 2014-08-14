@@ -1,5 +1,6 @@
 ---
 rssdemo_middle_instance_name: rssdemo_middle
+rssdemo_middle_instance_classname: com.netflix.recipes.rss.server.MiddleTierServer
 rssdemo_middle_instance_port: 8398
 rssdemo_middle_instance_jmx_port: 7398
 rssdemo_middle_instance_karyon_port: 9398

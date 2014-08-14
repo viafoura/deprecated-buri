@@ -1,4 +1,4 @@
 ---
 dependencies:
-  - { role: jsvc_daemon_instance, jsvc_daemon_instance_name: '{{ rssdemo_edge_instance_name }}', jsvc_daemon_jvm_extra_opts: '{{ rssdemo_edge_jvm_extra_opts }}', jsvc_daemon_jvm_xmx: '{{ rssdemo_edge_jvm_xmx }}' }
+  - { role: jsvc_daemon_instance, jsvc_daemon_instance_name: '{{ rssdemo_edge_instance_name }}', jsvc_daemon_instance_classname: '{{ rssdemo_edge_instance_classname }}', jsvc_daemon_jvm_extra_opts: '{{ rssdemo_edge_jvm_extra_opts }}', jsvc_daemon_jvm_xmx: '{{ rssdemo_edge_jvm_xmx }}' }
 
