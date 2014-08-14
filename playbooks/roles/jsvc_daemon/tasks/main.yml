@@ -1,0 +1,10 @@
+---
+
+- name: Ensure jsvc is installed
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - jsvc
+
+- name: Create jsvc daemons root directory
+  file: path={{ jsvc_daemon_root }} state=directory owner=root group=root mode=0755
+

@@ -1,0 +1,9 @@
+---
+rssdemo_middle_instance_name: rssdemo_middle
+rssdemo_middle_app_root: '{{ jsvc_daemon_root }}/{{ rssdemo_middle_instance_name }}'
+rssdemo_middle_build_url: http://slash-etc.com/java/rss-middle-0.1.0-SNAPSHOT.jar
+
+rssdemo_middle_build_source: True
+rssdemo_middle_git_repo: https://github.com/Netflix/recipes-rss.git
+rssdemo_middle_git_ref: master
+

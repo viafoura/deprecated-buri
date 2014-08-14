@@ -1,0 +1,17 @@
+---
+- include: acquire_build.yml
+
+- name: Remove any old version
+  file: path={{ rssdemo_middle_app_root }}/root state=absent
+  
+- name: Create rssdemo_middle deployment directory
+  file: path={{ rssdemo_middle_app_root }}/root state=directory
+
+- name: Decompress rssdemo_middle WAR file
+  command: chdir={{ rssdemo_middle_app_root }}/root unzip /tmp/rssdemo_middle.jar
+  notify: restart rssdemo middle
+  
+- name: Remove source WAR file
+  file: path=/tmp/rssdemo_middle.war state=absent
+  notify: restart rssdemo middle
+

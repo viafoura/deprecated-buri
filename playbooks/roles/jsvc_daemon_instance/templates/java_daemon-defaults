@@ -1,0 +1,1 @@
+JAVA_OPTIONS="-Djava.awt.headless=true -XX:MaxPermSize=256M -Xmx{{ jsvc_jvm_xmx|default('512m') }} -XX:+UseConcMarkSweepGC {{ jsvc_jvm_extra_opts|default('') }}"

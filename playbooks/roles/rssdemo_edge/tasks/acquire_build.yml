@@ -1,0 +1,37 @@
+---
+
+- name: Download snapshot build of rssdemo_edge
+  get_url: url={{ rssdemo_edge_build_url }} dest=/tmp/rssdemo_edge.jar
+  when: not rssdemo_edge_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/rssdemo_edge_build state=directory owner=root group=root mode=0755
+#  when: rssdemo_edge_build_source
+
+- name: Checkout code from Git
+  git: repo={{ rssdemo_edge_git_repo }}
+       dest=/tmp/rssdemo_edge_build
+       version={{ rssdemo_edge_git_ref }}
+  register: git_clone
+  when: rssdemo_edge_build_source
+
+- name: Run build
+  command: chdir=/tmp/rssdemo_edge_build ./gradlew clean assemble
+  when: rssdemo_edge_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/rssdemo_edge_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: rssdemo_edge_version_out
+  when: rssdemo_edge_build_source
+
+- name: Copy rssdemo_edge war to expected location
+  command: cp /tmp/rssdemo_edge_build/rss-edge/build/libs/flux-edge-{{ rssdemo_edge_version_out.stdout }}.jar /tmp/rssdemo_edge.jar
+  when: rssdemo_edge_build_source
+
+- name: Stop gradle daemon
+  command: chdir=/tmp/rssdemo_edge_build ./gradlew --stop
+  when: rssdemo_edge_build_source and git_clone.changed
+
+#- name: Removing source build
+#  file: path=/tmp/rssdemo_edge_build state=absent
+#  when: rssdemo_edge_build_source
