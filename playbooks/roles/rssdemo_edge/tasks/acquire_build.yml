@@ -25,7 +25,7 @@
   when: rssdemo_edge_build_source
 
 - name: Copy rssdemo_edge war to expected location
-  command: cp /tmp/rssdemo_edge_build/rss-edge/build/libs/flux-edge-{{ rssdemo_edge_version_out.stdout }}.jar /tmp/rssdemo_edge.jar
+  command: cp /tmp/rssdemo_edge_build/rss-edge/build/libs/rss-edge-{{ rssdemo_edge_version_out.stdout }}.jar /tmp/rssdemo_edge.jar
   when: rssdemo_edge_build_source
 
 - name: Stop gradle daemon

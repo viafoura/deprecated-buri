@@ -13,7 +13,7 @@
   file: path={{ fluxdemo_edge_webapps_root }}/root state=directory
 
 - name: Decompress fluxdemo_edge WAR file
-  command: chdir={{ fluxdemo_edge_webapps_root }}/root unzip /tmp/fluxdemo_edge.war
+  command: chdir={{ fluxdemo_edge_webapps_root }}/root jar xf /tmp/fluxdemo_edge.war
   notify: restart fluxdemo edge
   
 - name: Remove source WAR file

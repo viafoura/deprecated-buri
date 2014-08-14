@@ -13,7 +13,7 @@
   file: path={{ turbine_webapps_root }}/turbine state=directory
 
 - name: Decompress turbine WAR file
-  command: chdir={{ turbine_webapps_root }}/turbine unzip /tmp/turbine.war
+  command: chdir={{ turbine_webapps_root }}/turbine jar xf /tmp/turbine.war
   notify: restart turbine
   
 - name: Remove source WAR file

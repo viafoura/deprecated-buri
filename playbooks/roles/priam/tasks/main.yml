@@ -32,7 +32,7 @@
   file: path={{ priam_webapps_root }}/Priam state=directory
 
 - name: Decompress Priam WAR file
-  command: chdir={{ priam_webapps_root }}/Priam unzip /tmp/Priam.war
+  command: chdir={{ priam_webapps_root }}/Priam jar xf /tmp/Priam.war
   notify: restart priam
   
 - name: Remove source WAR file

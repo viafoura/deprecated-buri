@@ -25,7 +25,7 @@
   when: rssdemo_middle_build_source
 
 - name: Copy rssdemo_middle war to expected location
-  command: cp /tmp/rssdemo_middle_build/rss-middle/build/libs/flux-middletier-{{ rssdemo_middle_version_out.stdout }}.jar /tmp/rssdemo_middle.jar
+  command: cp /tmp/rssdemo_middle_build/rss-middletier/build/libs/rss-middletier-{{ rssdemo_middle_version_out.stdout }}.jar /tmp/rssdemo_middle.jar
   when: rssdemo_middle_build_source
 
 - name: Stop gradle daemon

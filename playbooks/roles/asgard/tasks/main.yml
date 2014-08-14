@@ -19,7 +19,7 @@
   file: path={{ asgard_webapps_root }}/ROOT state=directory
 
 - name: Decompress Asgard WAR file
-  command: chdir={{ asgard_webapps_root }}/ROOT unzip /tmp/asgard.war
+  command: chdir={{ asgard_webapps_root }}/ROOT jar xf /tmp/asgard.war
   notify: restart asgard
   
 - name: Remove source WAR file

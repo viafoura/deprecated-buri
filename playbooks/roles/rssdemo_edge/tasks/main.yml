@@ -8,7 +8,7 @@
   file: path={{ rssdemo_edge_app_root }}/app state=directory
 
 - name: Decompress rssdemo_edge WAR file
-  command: chdir={{ rssdemo_edge_app_root }}/app unzip /tmp/rssdemo_edge.jar
+  command: chdir={{ rssdemo_edge_app_root }}/app jar xf /tmp/rssdemo_edge.jar
   notify: restart rssdemo edge
   
 - name: Remove source JAR file

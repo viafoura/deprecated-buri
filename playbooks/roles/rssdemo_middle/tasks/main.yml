@@ -8,7 +8,7 @@
   file: path={{ rssdemo_middle_app_root }}/app state=directory
 
 - name: Decompress rssdemo_middle WAR file
-  command: chdir={{ rssdemo_middle_app_root }}/app unzip /tmp/rssdemo_middle.jar
+  command: chdir={{ rssdemo_middle_app_root }}/app jar xf /tmp/rssdemo_middle.jar
   notify: restart rssdemo middle
   
 - name: Remove source JAR file
