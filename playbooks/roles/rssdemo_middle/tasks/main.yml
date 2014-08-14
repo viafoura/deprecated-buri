@@ -2,16 +2,20 @@
 - include: acquire_build.yml
 
 - name: Remove any old version
-  file: path={{ rssdemo_middle_app_root }}/root state=absent
+  file: path={{ rssdemo_middle_app_root }}/app state=absent
   
 - name: Create rssdemo_middle deployment directory
-  file: path={{ rssdemo_middle_app_root }}/root state=directory
+  file: path={{ rssdemo_middle_app_root }}/app state=directory
 
 - name: Decompress rssdemo_middle WAR file
-  command: chdir={{ rssdemo_middle_app_root }}/root unzip /tmp/rssdemo_middle.jar
+  command: chdir={{ rssdemo_middle_app_root }}/app unzip /tmp/rssdemo_middle.jar
   notify: restart rssdemo middle
   
 - name: Remove source JAR file
   file: path=/tmp/rssdemo_middle.jar state=absent
+  notify: restart rssdemo middle
+
+- name: Copy middle.properties
+  template: src=middletier.properties dest={{ rssdemo_middle_app_root }}/app/middletier.properties owner={{ jsvc_daemon_user }} group={{ jsvc_daemon_group }} mode=0644
   notify: restart rssdemo middle
 
