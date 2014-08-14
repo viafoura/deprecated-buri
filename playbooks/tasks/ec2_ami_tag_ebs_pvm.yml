@@ -9,7 +9,6 @@
       --architecture "x86_64"
       --kernel-id "{{ ami_aki_id }}"
       --root-device-name /dev/sda1
-      --virtualization-type hvm
       --block-device-mappings
         '[{"DeviceName": "/dev/sda","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
   register: amipvm
