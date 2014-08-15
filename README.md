@@ -57,7 +57,7 @@ To setup the above configuration:
 4. From the checkout, run:
 
    ```
-   ./buri devbox <IP-of-your-VM>
+   ./buri fluxdemo <IP-of-your-VM>
    ```
 
 5. Go for a coffee. If all goes well, in 5-10 minutes, ansible should be done. It may take up to 5 minutes more, or on reboots of the VM, for everything to fully come up.
