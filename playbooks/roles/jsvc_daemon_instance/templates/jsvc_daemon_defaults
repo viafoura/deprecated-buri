@@ -1,0 +1,2 @@
+JAVA_OPTIONS="-Djava.awt.headless=true -XX:MaxPermSize=256M -Xmx{{ jsvc_daemon_jvm_xmx|default('512m') }} -XX:+UseConcMarkSweepGC {{ jsvc_daemon_jvm_extra_opts|default('') }}"
+JSVC_CLASS_NAME="{{ jsvc_daemon_instance_classname }}"

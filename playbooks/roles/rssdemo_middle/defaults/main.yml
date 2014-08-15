@@ -1,0 +1,18 @@
+---
+rssdemo_middle_instance_name: rssdemo_middle
+rssdemo_middle_instance_classname: com.netflix.recipes.rss.server.MiddleTierServer
+rssdemo_middle_instance_port: 8398
+rssdemo_middle_instance_jmx_port: 7398
+rssdemo_middle_instance_karyon_port: 9398
+rssdemo_middle_instance_eureka_port: 8400
+rssdemo_middle_jvm_xmx: '512m'
+rssdemo_middle_jvm_extra_opts: ''
+rssdemo_middle_cass_host: localhost
+
+rssdemo_middle_app_root: '{{ jsvc_daemon_root }}/{{ rssdemo_middle_instance_name }}'
+rssdemo_middle_build_url: http://slash-etc.com/java/rss-middle-0.1.0-SNAPSHOT.jar
+
+rssdemo_middle_build_source: True
+rssdemo_middle_git_repo: https://github.com/jhohertz/recipes-rss.git
+rssdemo_middle_git_ref: commons-daemon
+

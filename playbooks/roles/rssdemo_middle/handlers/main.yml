@@ -1,0 +1,5 @@
+---
+- name: restart rssdemo middle
+  shell: ( status jsvc_daemon_instance INAME={{ rssdemo_middle_instance_name }} && stop jsvc_daemon_instance INAME={{ rssdemo_middle_instance_name }} ) ; start jsvc_daemon_instance INAME={{ rssdemo_middle_instance_name }}
+  when: not image_build
+

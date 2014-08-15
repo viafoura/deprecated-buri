@@ -23,7 +23,7 @@
   file: path={{ ice_webapps_root }}/ice state=directory
 
 - name: Decompress Ice WAR file
-  command: chdir={{ ice_webapps_root }}/ice unzip /tmp/ice.war
+  command: chdir={{ ice_webapps_root }}/ice jar xf /tmp/ice.war
   notify: restart ice
   
 - name: Remove source WAR file

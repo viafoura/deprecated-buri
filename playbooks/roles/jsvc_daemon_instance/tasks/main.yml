@@ -1,0 +1,12 @@
+---
+- name: Create jsvc daemon instance directory structure
+  file: path={{ item }} state=directory owner={{ jsvc_daemon_user }} group={{ jsvc_daemon_group }} mode=0755
+  with_items:
+    - '{{ jsvc_daemon_root }}/{{ jsvc_daemon_instance_name }}'
+    - '{{ jsvc_daemon_root }}/{{ jsvc_daemon_instance_name }}/app'
+    - '{{ jsvc_daemon_root }}/{{ jsvc_daemon_instance_name }}/logs'
+
+- name: Install jsvc_daemon default settings file.
+  template: src=jsvc_daemon_defaults dest=/etc/default/jsvc_daemon_{{ jsvc_daemon_instance_name }} owner=root group=root mode=0644
+
+

@@ -19,11 +19,17 @@ def run_ansible_playbook(args, playbook, cli_vars):
 
 # Implementations of the subcommands the subparsers specify
 
-def devbox(args):
+def fluxdemo(args):
     args.alias="cassandra"
     keys_cassandra(args)
-    logging.info('Pushing a devbox to: %s' % args.host)
-    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one'" % args.host)
+    logging.info('Pushing all-in-one plus flux capacitor to: %s' % args.host)
+    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one_flux'" % args.host)
+
+def rssdemo(args):
+    args.alias="cassandra"
+    keys_cassandra(args)
+    logging.info('Pushing all-in-one plus Netflix recipes-rss to: %s' % args.host)
+    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one_rss'" % args.host)
 
 def apply(args):
     logging.info('Pushing %s role to: %s' % (args.role, args.host))
@@ -114,10 +120,15 @@ parser.add_argument('--environment', metavar='<env_name>', type=str, default='de
 
 subparser = parser.add_subparsers(help='sub commands')
 
-# All-in-one devbox environment
-parser_devbox = subparser.add_parser('devbox', help="Install all-in-one system to a host for development use", add_help=False)
-parser_devbox.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
-parser_devbox.set_defaults(func=devbox)
+# All-in-one devbox environment, fluxdemo
+parser_fluxdemo = subparser.add_parser('fluxdemo', help="Install all-in-one host, with flux capacitor demo", add_help=False)
+parser_fluxdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+parser_fluxdemo.set_defaults(func=fluxdemo)
+
+# All-in-one devbox environment, rssdemo
+parser_rssdemo = subparser.add_parser('rssdemo', help="Install all-in-one host, with Netflix recipes-rss demo", add_help=False)
+parser_rssdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+parser_rssdemo.set_defaults(func=rssdemo)
 
 # apply
 parser_apply = subparser.add_parser('apply', help="Run a role against a host", add_help=False)
