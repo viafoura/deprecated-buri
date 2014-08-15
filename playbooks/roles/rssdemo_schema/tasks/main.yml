@@ -1,0 +1,7 @@
+---
+- name: Copy rssdemo cassandra schema create script
+  copy: src=recreate_cassandra_rss dest=/tmp/recreate_cassandra_rss owner=root group=root mode=0644
+
+- name: Run rssdemo cassandra schema create script
+  shell: /opt/cassandra/bin/cassandra-cli < /tmp/recreate_cassandra_rss
+

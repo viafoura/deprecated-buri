@@ -1,0 +1,11 @@
+
+drop keyspace RSS;
+create keyspace RSS;
+
+use RSS;
+
+create column family Subscriptions
+  with column_type = 'Standard'
+  and comparator = 'UTF8Type'
+  and default_validation_class = 'UTF8Type'
+  and key_validation_class = 'UTF8Type';
