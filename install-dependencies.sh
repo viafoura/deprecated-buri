@@ -27,6 +27,7 @@ sudo -E apt-get install --no-install-recommends -y \
  qemu-utils               \
  git-core                 \
  build-essential          \
+ pigz                     \
  openssl                  
 
 sudo pip install boto

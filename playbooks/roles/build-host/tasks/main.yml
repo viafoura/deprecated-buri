@@ -15,6 +15,7 @@
     - qemu-utils
     - git-core
     - openssl
+    - pigz
 
 - name: Install boto Python library via pip
   pip: name=boto state=latest
