@@ -1,0 +1,5 @@
+---
+nat_ping_timeout: 1
+nat_number_of_pings: 3
+nat_wait_between_pings: 1
+nat_detach_threshold: 180
