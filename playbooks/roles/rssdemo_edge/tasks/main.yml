@@ -18,3 +18,10 @@
   template: src=edge.properties dest={{ rssdemo_edge_app_root }}/app/edge.properties owner={{ jsvc_daemon_user }} group={{ jsvc_daemon_group }} mode=0644
   notify: restart rssdemo edge
 
+# For whatever reason, the edge expects webapp resources not a part of the app bundle, in the folder structure of the source, fake that here...
+- name: Create folder for webapp...
+  file: path={{ rssdemo_edge_app_root }}/rss-edge state=directory
+
+- name: Copy webapp files
+  command: cp -r /tmp/rssdemo_edge_build/rss-edge/webapp {{ rssdemo_edge_app_root }}/rss-edge
+
