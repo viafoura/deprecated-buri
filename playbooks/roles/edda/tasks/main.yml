@@ -17,7 +17,7 @@
   file: path={{ edda_webapps_root }}/edda state=directory
 
 - name: Decompress Edda WAR file
-  command: chdir={{ edda_webapps_root }}/edda unzip /tmp/edda.war
+  command: chdir={{ edda_webapps_root }}/edda jar xf /tmp/edda.war
   notify: restart edda
   
 - name: Remove source WAR file

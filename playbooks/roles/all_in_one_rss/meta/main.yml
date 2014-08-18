@@ -1,0 +1,9 @@
+---
+dependencies:
+  - { role: cassandra }
+  - { role: eureka }
+  - { role: hystrix_dashboard }
+  - { role: turbine }
+  - { role: rssdemo_schema }
+  - { role: rssdemo_edge }
+  - { role: rssdemo_middle }

@@ -2,9 +2,9 @@
 - name: Install build host package dependencies
   apt: pkg={{ item }} state=latest install_recommends=no
   with_items:
+    - build-essential
     - coreutils
     - ec2-ami-tools
-    - ec2-api-tools
     - python
     - python-support
     - python-dev
@@ -15,6 +15,7 @@
     - qemu-utils
     - git-core
     - openssl
+    - pigz
 
 - name: Install boto Python library via pip
   pip: name=boto state=latest
@@ -23,6 +24,6 @@
   pip: name=awscli state=latest
 
 - name: Install Ansible via pip
-  pip: name=ansible state=latest
+  pip: name=ansible state=latest version=1.6.10
 
 

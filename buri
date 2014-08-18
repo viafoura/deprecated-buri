@@ -1,0 +1,180 @@
+#!/usr/bin/python -u
+
+from __future__ import print_function
+import argparse
+import os
+import io
+import logging
+import subprocess
+
+def run_ansible_playbook(args, playbook, cli_vars):
+    cmd = 'python -u `which ansible-playbook` %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars)
+    logging.info('executing ansible as: %s' % cmd)
+    handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+    # dump to stdout for now
+    line = handle.stdout.readline()
+    while line:
+        print(line, end="")
+        line = handle.stdout.readline()
+
+# Implementations of the subcommands the subparsers specify
+
+def fluxdemo(args):
+    args.alias="cassandra"
+    keys_cassandra(args)
+    logging.info('Pushing all-in-one plus flux capacitor to: %s' % args.host)
+    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one_flux'" % args.host)
+
+def rssdemo(args):
+    args.alias="cassandra"
+    keys_cassandra(args)
+    logging.info('Pushing all-in-one plus Netflix recipes-rss to: %s' % args.host)
+    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one_rss'" % args.host)
+
+def apply(args):
+    logging.info('Pushing %s role to: %s' % (args.role, args.host))
+    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='%s'" % (args.host, args.role))
+
+def buildhost(args):
+    logging.info('Pushing a build host to: %s' % args.host)
+    run_ansible_playbook(args, "setup-build-host", "machine_target='%s'" % args.host)
+
+def foundation(args):
+    logging.info('Creating foundation AMI for: %s' % args.environment)
+    run_ansible_playbook(args, "create-foundation-ubuntu", "ami_role='foundation'")
+
+def resnap(args):
+    logging.info('Resnapshotting AMI for: %s' % args.environment)
+    run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='%s' ami_role='%s'" % (args.parent, args.role))
+
+def cleanup_fail(args):
+    logging.info('Cleaning up failed AMI resnap from: %s' % args.device)
+    run_ansible_playbook(args, "cleanup-failure", "ami_device='%s'" % args.device)
+
+def keys_cassandra(args):
+    logging.info('Generating cassandra keys for: %s' % args.environment)
+    env_base='%s/playbooks/%s/local' % (args.BURI_BASE, args.environment)
+    logging.info('Generating cassandra keys at: %s' % env_base)
+    #1 Generate key and store
+    if not os.path.isfile('%s/cassandra_keystore' % env_base):
+        logging.info("Creating new for cassandra_keystore")
+        # FIXME, test result
+        subprocess.call("keytool -genkey -v -keyalg RSA -keysize 1024 -alias '%s' -keystore %s/cassandra_keystore -storepass 'cassandra' -dname 'CN=cassandra' -keypass 'cassandra' -validity 3650" % (args.alias, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_keystore")
+
+    #2 Extract public certificate
+    if not os.path.isfile('%s/cassandra_cert' % env_base):
+        logging.info("Creating new for cassandra_cert")
+        subprocess.call("keytool -export -v -alias '%s' -file %s/cassandra_cert -keystore %s/cassandra_keystore -storepass 'cassandra'" % (args.alias, env_base, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_cert")
+
+    if not os.path.isfile('%s/cassandra_truststore' % env_base):
+        logging.info("Creating new for cassandra_truststore")
+        subprocess.call("keytool -import -v -trustcacerts -alias '%s' -file %s/cassandra_cert -keystore %s/cassandra_truststore -storepass 'cassandra' -noprompt" % (args.alias, env_base, env_base), shell=True)
+    else:
+        logging.info("Found existing cassandra_truststore")
+
+def keys_bundle(args):
+    logging.info('Generating EC2 image bundling keys for: %s' % args.environment)
+    env_base='%s/playbooks/%s/local' % (args.BURI_BASE, args.environment)
+    logging.info('Generating cassandra keys at: %s' % env_base)
+
+    if not os.path.isfile('%s/bundle_pk.pem' % env_base):
+        logging.info("Creating new bundle_pk.pem")
+        subprocess.call("openssl genrsa -out %s/bundle_pk.pem %s" % (env_base, args.keylength), shell=True)
+    else:
+        logging.info("Found existing bundle_pk.pem")
+
+    if not os.path.isfile('%s/bundle_cert.pem' % env_base):
+        logging.info("Creating new bundle_cert.pem")
+        subprocess.call("openssl req -new -x509 -sha1 -days 3750 -key %s/bundle_pk.pem -out %s/bundle_cert.pem -batch" % (env_base, env_base), shell=True)
+    else:
+        logging.info("Found existing bundle_cert.pem")
+
+# ARG PARSER STUFF BELOW HERE
+
+class _HelpAction(argparse._HelpAction):
+    def __call__(self, parser, namespace, values, option_string=None):
+        parser.print_help()
+	print
+        # retrieve subparsers from parser
+        subparsers_actions = [
+            action for action in parser._actions
+            if isinstance(action, argparse._SubParsersAction)]
+        # there will probably only be one subparser_action,
+        # but better save than sorry
+        for subparsers_action in subparsers_actions:
+            # get all subparsers and print help
+            for choice, subparser in subparsers_action.choices.items():
+                print("----- Command: '{}'".format(choice))
+                print(subparser.format_help())
+
+        parser.exit()
+
+parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
+parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
+parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
+parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'prod'], help='Set the environment context')
+
+subparser = parser.add_subparsers(help='sub commands')
+
+# All-in-one devbox environment, fluxdemo
+parser_fluxdemo = subparser.add_parser('fluxdemo', help="Install all-in-one host, with flux capacitor demo", add_help=False)
+parser_fluxdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+parser_fluxdemo.set_defaults(func=fluxdemo)
+
+# All-in-one devbox environment, rssdemo
+parser_rssdemo = subparser.add_parser('rssdemo', help="Install all-in-one host, with Netflix recipes-rss demo", add_help=False)
+parser_rssdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+parser_rssdemo.set_defaults(func=rssdemo)
+
+# apply
+parser_apply = subparser.add_parser('apply', help="Run a role against a host", add_help=False)
+parser_apply.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+parser_apply.add_argument('role', metavar='<role>', type=str, help='Role to provision to host')
+parser_apply.set_defaults(func=apply)
+
+# EC2 buildhost environment
+parser_buildhost = subparser.add_parser('buildhost', help="Setup build-host in EC2 for AMI generation", add_help=False)
+parser_buildhost.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to setup')
+parser_buildhost.set_defaults(func=buildhost)
+
+# foundation
+parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
+parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
+parser_foundation.set_defaults(func=foundation)
+
+# resnap
+parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
+parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
+parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
+parser_resnap.set_defaults(func=resnap)
+
+# cleanup_fail
+parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation (unmount/destroy EBS volume)", add_help=False)
+parser_cleanup_fail.add_argument('--device', metavar='<device_node>', default="/dev/xvdi", type=str, help='Device node to clean up')
+parser_cleanup_fail.set_defaults(func=cleanup_fail)
+
+# keys_cassandra
+parser_keys_cassandra = subparser.add_parser('keys_cassandra', help="Generate SSL Keystore for cassandra", add_help=False)
+parser_keys_cassandra.add_argument('--alias', metavar='<alias>', default='cassandra', type=str, help='Set alias for key generation')
+parser_keys_cassandra.set_defaults(func=keys_cassandra)
+
+# keys_bundle
+parser_keys_bundle = subparser.add_parser('keys_bundle', help="Generate SSL pem files for EC2 image bundling", add_help=False)
+parser_keys_bundle.add_argument('--keylength', metavar='<alias>', default=2048, type=int, help='Set key length')
+parser_keys_bundle.set_defaults(func=keys_bundle)
+
+# parser all setup, parse it
+args = parser.parse_args()
+numeric_level = getattr(logging, args.loglevel.upper(), None)
+if not isinstance(numeric_level, int):
+    raise ValueError('Invalid log level: %s' % loglevel)
+logging.basicConfig(level=numeric_level, format='%(asctime)s %(levelname)s: %(message)s')
+logging.warn("LOGLEVEL: %s, %s", args.loglevel, numeric_level)
+args.BURI_BASE = os.path.dirname(os.path.realpath(__file__))
+logging.info("PATH: %s" % args.BURI_BASE)
+args.func(args)
+

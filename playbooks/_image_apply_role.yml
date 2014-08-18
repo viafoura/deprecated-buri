@@ -8,5 +8,6 @@
     - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: true
+    cloud_target: amazon
   roles:
     - "{{ ami_role }}"

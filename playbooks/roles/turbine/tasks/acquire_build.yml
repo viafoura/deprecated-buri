@@ -12,7 +12,6 @@
   git: repo={{ turbine_git_repo }}
        dest=/tmp/turbine_build
        version={{ turbine_git_ref }}
-       accept_hostkey=true
   register: git_clone
   when: turbine_build_source
 

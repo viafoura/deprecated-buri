@@ -95,5 +95,11 @@ turbine_clusters:
   fluxdemo-middletier:
     connect: :8399/hystrix.stream
     instances: 127.0.0.1
+  rssdemo-edge:
+    connect: :8298/hystrix.stream
+    instances: 127.0.0.1
+  rssdemo-middletier:
+    connect: :8398/hystrix.stream
+    instances: 127.0.0.1
 
 

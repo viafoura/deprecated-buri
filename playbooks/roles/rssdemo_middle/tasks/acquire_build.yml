@@ -1,0 +1,37 @@
+---
+
+- name: Download snapshot build of rssdemo_middle
+  get_url: url={{ rssdemo_middle_build_url }} dest=/tmp/rssdemo_middle.jar
+  when: not rssdemo_middle_build_source
+
+#- name: Setting up source build
+#  file: path=/tmp/rssdemo_middle_build state=directory owner=root group=root mode=0755
+#  when: rssdemo_middle_build_source
+
+- name: Checkout code from Git
+  git: repo={{ rssdemo_middle_git_repo }}
+       dest=/tmp/rssdemo_middle_build
+       version={{ rssdemo_middle_git_ref }}
+  register: git_clone
+  when: rssdemo_middle_build_source
+
+- name: Run build
+  command: chdir=/tmp/rssdemo_middle_build ./gradlew clean assemble
+  when: rssdemo_middle_build_source and git_clone.changed
+
+- name: Find build version
+  shell: chdir=/tmp/rssdemo_middle_build cat gradle.properties | grep ^version= | sed 's/^version=//'
+  register: rssdemo_middle_version_out
+  when: rssdemo_middle_build_source
+
+- name: Copy rssdemo_middle war to expected location
+  command: cp /tmp/rssdemo_middle_build/rss-middletier/build/libs/rss-middletier-{{ rssdemo_middle_version_out.stdout }}.jar /tmp/rssdemo_middle.jar
+  when: rssdemo_middle_build_source
+
+- name: Stop gradle daemon
+  command: chdir=/tmp/rssdemo_middle_build ./gradlew --stop
+  when: rssdemo_middle_build_source and git_clone.changed
+
+#- name: Removing source build
+#  file: path=/tmp/rssdemo_middle_build state=absent
+#  when: rssdemo_middle_build_source

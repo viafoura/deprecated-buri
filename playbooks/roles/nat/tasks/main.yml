@@ -1,0 +1,20 @@
+---
+- name: Install forwarding sysctl settings
+  copy: src=20-nat-forward.conf dest=/etc/sysctl.d/ owner=root mode=0644
+  when: image_build
+
+- name: Install iptables template settings
+  copy: src=iptables.save dest=/etc/ owner=root mode=0644
+  when: image_build
+
+- name: Install iptables template settings
+  copy: src=eth1.cfg dest=/etc/network/interfaces.d/ owner=root mode=0644
+  when: image_build
+
+- name: Install natmon upstart
+  copy: src=natmon.conf dest=/etc/init/ owner=root mode=0644
+  when: image_build
+
+- name: Add ephemeral mkdir spec for cassandra role
+  template: src=natmon.sh dest=/usr/local/bin/ owner=root mode=0744
+  when: image_build

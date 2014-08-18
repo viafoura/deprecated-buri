@@ -40,11 +40,10 @@
 - name: Create cassandra log directory
   file: path={{ cassandra_log_location }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
 
+- include: acquire_build.yml
+
 - name: Create cassandra install directory
   file: path={{ cassandra_installdir }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
-
-- name: Download cassandra release archive
-  get_url: url={{ cassandra_mirror }} dest=/tmp/cassandra.tar.gz sha256sum={{ cassandra_checksum }} owner=root mode=0644
 
 - name: Extract cassandra release archive to install dir
   command: chdir={{ cassandra_installdir }} tar --strip-components 1 --no-same-owner -xzf /tmp/cassandra.tar.gz
@@ -70,14 +69,27 @@
 - name: Add truststore to Cassandra
   copy: src={{ buri_environment }}/local/cassandra_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
 
-- name: Install initial cassandra.yaml
+- name: Install initial cassandra.yaml (1.2)
   template: src=cassandra.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+  when: cassandra_version|truncate(2, True, end="") == "1."
+
+- name: Install initial cassandra.yaml (2.0)
+  template: src=cassandra-2.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+  when: cassandra_version|truncate(2, True, end="") == "2."
 
 - name: Install cassandra init script
   template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
 
 - name: Bump up stack size in cassandra launch scripts
   lineinfile: dest={{ cassandra_home }}/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
+
+- name: Setup RMI for remote JMX
+  lineinfile:
+    dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
+    insertafter: ^JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
+    regexp: ^JVM_OPTS="\$JVM_OPTS -Djava.rmi.server.hostname=\$(ec2metadata --public-hostname)"
+    line: JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(ec2metadata --public-hostname)"
+  when: cloud_target == "amazon"
 
 - name: Disable/stop Cassanda service on init (Priam managed)
   service: name=cassandra enabled=no state=stopped

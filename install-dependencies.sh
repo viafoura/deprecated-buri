@@ -1,21 +1,22 @@
 #!/bin/bash
 
-SCRIPT_PATH=$(readlink -f $0)
+# Discover true path of where buri is running from
+pushd $(dirname $0) > /dev/null 2>&1
+SCRIPT_PATH=$PWD/$(basename $0)
+popd > /dev/null 2>&1
 BURI_BASE=$(dirname ${SCRIPT_PATH})
 
 # FIXME: for consistency, this should install oracle java
 
 # Update and install Ubuntu packages
-export DEBIAN_FRONTEND=noninteractive
 sudo perl -pi -e 's/^# *(deb .*multiverse)$/$1/' /etc/apt/sources.list
 sudo perl -pi -e 's/^# *(deb .*backports)$/$1/' /etc/apt/sources.list
-sudo add-apt-repository -y ppa:jhohertz/aws-ppa
+export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update
 sudo -E apt-get upgrade -y
 sudo -E apt-get install --no-install-recommends -y \
  coreutils                \
  ec2-ami-tools            \
- ec2-api-tools            \
  python                   \
  python-support           \
  python-dev               \
@@ -25,10 +26,11 @@ sudo -E apt-get install --no-install-recommends -y \
  make                     \
  qemu-utils               \
  git-core                 \
+ build-essential          \
+ pigz                     \
  openssl                  
 
 sudo pip install boto
 sudo pip install awscli
-sudo pip install ansible
-
+sudo pip install ansible==1.6.10
 

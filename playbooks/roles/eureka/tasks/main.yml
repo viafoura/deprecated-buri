@@ -16,7 +16,7 @@
   file: path={{ eureka_webapps_root }}/eureka state=directory
 
 - name: Decompress eureka WAR file
-  command: chdir={{ eureka_webapps_root }}/eureka unzip /tmp/eureka.war
+  command: chdir={{ eureka_webapps_root }}/eureka jar xf /tmp/eureka.war
   notify: restart eureka
   
 - name: Remove source WAR file

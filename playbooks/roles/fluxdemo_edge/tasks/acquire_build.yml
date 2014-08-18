@@ -12,7 +12,6 @@
   git: repo={{ fluxdemo_edge_git_repo }}
        dest=/tmp/fluxdemo_edge_build
        version={{ fluxdemo_edge_git_ref }}
-       accept_hostkey=true
   register: git_clone
   when: fluxdemo_edge_build_source
 

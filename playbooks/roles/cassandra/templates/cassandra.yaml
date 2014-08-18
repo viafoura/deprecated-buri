@@ -7,7 +7,11 @@
 
 # The name of the cluster. This is mainly used to prevent machines in
 # one logical cluster from joining another.
+{% if cloud_target == "amazon" and priam_clustername is defined %}
+cluster_name: '{{ priam_clustername }}'
+{% else %}
 cluster_name: 'DEV_LOCAL'
+{% endif %}
 
 # This defines the number of tokens randomly assigned to this node on the ring
 # The more tokens, relative to other nodes, the larger the proportion of data
@@ -103,7 +107,7 @@ permissions_validity_in_ms: 2000
 #
 # See http://wiki.apache.org/cassandra/Operations for more on
 # partitioners and token selection.
-partitioner: org.apache.cassandra.dht.RandomPartitioner
+partitioner: {{ cassandra_partitioner }}
 
 # Directories where Cassandra should store data on disk.  Cassandra
 # will spread data evenly across them, subject to the granularity of
@@ -386,7 +390,7 @@ rpc_keepalive: true
 #
 # Alternatively,  can provide your own RPC server by providing the fully-qualified class name
 # of an o.a.c.t.TServerFactory that can create an instance of it.
-rpc_server_type: hsha
+rpc_server_type: {{ cassandra_rpc_server_type }}
 
 # Uncomment rpc_min|max_thread to set request pool size limits.
 #
@@ -468,7 +472,7 @@ in_memory_compaction_limit_in_mb: 64
 #
 # concurrent_compactors defaults to the number of cores.
 # Uncomment to make compaction mono-threaded, the pre-0.8 default.
-concurrent_compactors: 2
+#concurrent_compactors: 1
 
 # Multi-threaded compaction. When enabled, each compaction will use
 # up to one thread per core, plus one thread per sstable being merged.
@@ -495,7 +499,7 @@ compaction_preheat_key_cache: true
 # mostly sequential IO when streaming data during bootstrap or repair, which
 # can lead to saturating the network connection and degrading rpc performance.
 # When unset, the default is 200 Mbps or 25 MB/s.
-stream_throughput_outbound_megabits_per_sec: 400
+stream_throughput_outbound_megabits_per_sec: {{ cassandra_stream_throughput }}
 
 # How long the coordinator should wait for read operations to complete
 read_request_timeout_in_ms: 10000
@@ -595,8 +599,6 @@ dynamic_snitch_reset_interval_in_ms: 600000
 # until the pinned host was 20% worse than the fastest.
 dynamic_snitch_badness_threshold: 0.1
 
-dynamic_snitch: true
-
 # request_scheduler -- Set this to a class that implements
 # RequestScheduler, which will schedule incoming client requests
 # according to the specific policy. This is useful for multi-tenancy
@@ -647,7 +649,7 @@ request_scheduler: org.apache.cassandra.scheduler.NoScheduler
 # offs.  This value is not often changed, however if you have many
 # very small rows (many to an OS page), then increasing this will
 # often lower memory usage without a impact on performance.
-index_interval: 256
+index_interval: {{ cassandra_index_interval }}
 
 # Enable or disable inter-node encryption
 # Default settings are TLS v1, RSA 1024-bit keys (it is imperative that
@@ -704,5 +706,3 @@ internode_compression: all
 # reducing overhead from the TCP protocol itself, at the cost of increasing
 # latency if you block for cross-datacenter responses.
 inter_dc_tcp_nodelay: true
-
-auto_bootstrap: true

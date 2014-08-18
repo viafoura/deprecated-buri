@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: jsvc_daemon_instance, jsvc_daemon_instance_name: '{{ rssdemo_middle_instance_name }}', jsvc_daemon_instance_classname: '{{ rssdemo_middle_instance_classname }}', jsvc_daemon_jvm_extra_opts: '{{ rssdemo_middle_jvm_extra_opts }}', jsvc_daemon_jvm_xmx: '{{ rssdemo_middle_jvm_xmx }}' }
+
