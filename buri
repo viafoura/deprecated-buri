@@ -116,7 +116,7 @@ class _HelpAction(argparse._HelpAction):
 parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
 parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
 parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
-parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'prod'], help='Set the environment context')
+parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'staging', 'prod'], help='Set the environment context')
 
 subparser = parser.add_subparsers(help='sub commands')
 
