@@ -12,8 +12,8 @@ detected.
 ===================================================================== -->
 
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
-  <Set name="contextPath">/asgard</Set>
-  <Set name="war"><Property name="jetty.webapps" default="."/>/asgard</Set>
+  <Set name="contextPath">/</Set>
+  <Set name="war"><Property name="jetty.webapps" default="."/>/ROOT</Set>
   <Set name="defaultsDescriptor"><Property name="jetty.base" default="."/>/etc/webdefault.xml</Set>
 
   <Set name="extractWAR">false</Set>
