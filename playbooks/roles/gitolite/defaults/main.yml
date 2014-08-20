@@ -2,7 +2,7 @@
 # No non-git build is supported, maybe one day
 #gitolite_build_source: True
 gitolite_git_repo: https://github.com/sitaramc/gitolite.git
-gitolite_git_ref: master
+gitolite_git_ref: v3.6.1
 
 gitolite_user: git
 gitolite_group: git

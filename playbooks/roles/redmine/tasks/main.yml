@@ -156,20 +156,20 @@
 - name: Setup redmine ssh config
   template: src=ssh_config dest={{ redmine_home }}/.ssh/config owner={{ redmine_user }} group={{ redmine_group }} mode=0600
 
-#- name: Set redmine git user name
-#  command: git config --global user.name "{{ redmine_user_name }}"
-#  sudo: yes
-#  sudo_user: "{{ redmine_user }}"
+- name: Set redmine git user name
+  command: git config --global user.name "{{ redmine_user_name }}"
+  sudo: yes
+  sudo_user: "{{ redmine_user }}"
 
-#- name: Set redmine git user email
-#  command: git config --global user.email "{{ redmine_user_email }}"
-#  sudo: yes
-#  sudo_user: "{{ redmine_user }}"
+- name: Set redmine git user email
+  command: git config --global user.email "{{ redmine_user_email }}"
+  sudo: yes
+  sudo_user: "{{ redmine_user }}"
 
-#- name: Set redmine git confug push.default to simple
-#  command: git config --global push.default simple
-#  sudo: yes
-#  sudo_user: "{{ redmine_user }}"
+- name: Set redmine git confug push.default to simple
+  command: git config --global push.default simple
+  sudo: yes
+  sudo_user: "{{ redmine_user }}"
 
 - name: Set known hosts for git ssh for redmin
   shell: ssh-keygen -R {{ redmine_ssh_domain }}; ssh-keyscan -H {{ redmine_ssh_domain }} >> {{ redmine_home }}/.ssh/known_hosts

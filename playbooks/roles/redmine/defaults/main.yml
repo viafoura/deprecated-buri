@@ -1,14 +1,14 @@
 ---
 # No non-git build is supported, maybe one day
 #redmine_build_source: True
-redmine_version: 2.5.2
+redmine_version: 2.5.1
 redmine_build_url: http://www.redmine.org/releases/redmine-{{ redmine_version }}.tar.gz
 redmine_build_source: True
 redmine_git_repo: https://github.com/redmine/redmine.git
 redmine_git_ref: "{{ redmine_version }}"
 
 redmine_git_plugin_repo: https://github.com/jbox-web/redmine_git_hosting.git
-redmine_git_plugin_ref: v0.7.6
+redmine_git_plugin_ref: v0.7.4
 redmine_bootstrap_kit_repo: https://github.com/jbox-web/redmine_bootstrap_kit.git
 redmine_bootstrap_kit_ref: devel
 
