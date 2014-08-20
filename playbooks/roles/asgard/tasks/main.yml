@@ -26,7 +26,7 @@
   file: path=/tmp/asgard.war state=absent
 
 - name: Add ASGARD_HOME to runtime environment
-  lineinfile: dest=/etc/default/jetty-{{ asgard_instance_name }} regexp="ASGARD_HOME" line="ASGARD_HOME=/opt/asgard" insertafter="EOF"
+  lineinfile: dest=/etc/default/jetty-{{ asgard_instance_name }} regexp="ASGARD_HOME" line="export ASGARD_HOME=/opt/asgard" insertafter="EOF"
   when: ansible_distribution == 'Ubuntu' and servlet_container == "jetty9"
   notify: restart asgard
 
