@@ -1,7 +1,7 @@
 ---
 # Asgard role
 - name: Copy jetty app context xml file
-  copy: src=asgard.xml dest={{ asgard_webapps_root }}/root.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
+  copy: src=asgard.xml dest={{ asgard_webapps_root }}/ROOT.xml owner={{ jetty_user }} group={{ jetty_group }} mode=0644
   notify: restart asgard
   when: servlet_container == "jetty9"
 
@@ -25,8 +25,10 @@
 - name: Remove source WAR file
   file: path=/tmp/asgard.war state=absent
 
-- name: Set ASGARD_HOME in environment
-  lineinfile: dest=/etc/environment regexp="ASGARD_HOME=" line="ASGARD_HOME=\"/opt/asgard\"" insertafter="EOF"
+- name: Add ASGARD_HOME to runtime environment
+  lineinfile: dest=/etc/default/jetty-{{ asgard_instance_name }} regexp="ASGARD_HOME" line="ASGARD_HOME=/opt/asgard" insertafter="EOF"
+  when: ansible_distribution == 'Ubuntu' and servlet_container == "jetty9"
+  notify: restart asgard
 
 - name: Create Asgard config directory
   file: path=/opt/asgard state=directory owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0755

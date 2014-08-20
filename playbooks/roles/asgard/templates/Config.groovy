@@ -1,8 +1,8 @@
 import com.netflix.asgard.model.HardwareProfile
 import com.netflix.asgard.model.InstanceTypeData
 
-grails.awsAccounts = [ {% for acct in asgard_accounts %}{% if not loop.last %}, {% endif %}'{{ asgard_accounts[acct].account_no }}'{% endfor %} ]
-grails.awsAccountNames = [ {% for acct in asgard_accounts %}{% if not loop.last %}, {% endif %}'{{ asgard_accounts[acct].account_no }}': '{{ acct }}'{% endfor %} ]
+grails.awsAccounts = [ {% for acct in asgard_accounts %}{% if not loop.first %}, {% endif %}'{{ asgard_accounts[acct].account_no }}'{% endfor %} ]
+grails.awsAccountNames = [ {% for acct in asgard_accounts %}{% if not loop.first %}, {% endif %}'{{ asgard_accounts[acct].account_no }}': '{{ acct }}'{% endfor %} ]
 
 cloud {
 	accountName = '{{ asgard_nickname }}'
