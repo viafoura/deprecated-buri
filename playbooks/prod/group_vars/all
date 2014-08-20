@@ -1,4 +1,9 @@
 ---
+### BASE: Base image composition
+buri_base_java: True
+# Not yet implemented
+buri_base_local: False              
+
 cloud_target: amazon
 buri_environment: prod
 buri_iam_role: "Aminator"

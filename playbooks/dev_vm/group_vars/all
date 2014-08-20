@@ -1,7 +1,13 @@
 ---
+### BASE: Base image composition
+buri_base_java: True
+# Not yet implemented
+buri_base_local: False
+
 #cloud_target: amazon
 cloud_target: vm
 buri_environment: dev_vm
+
 
 buri_iam_role: "Buri"
 

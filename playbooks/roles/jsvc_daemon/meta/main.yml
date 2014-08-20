@@ -1,3 +1,3 @@
 ---
 dependencies:
-  - { role: oracle-java, when: not image_build }
+  - { role: base, when: not image_build }

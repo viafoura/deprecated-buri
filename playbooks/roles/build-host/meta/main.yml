@@ -1,5 +1,5 @@
 ---
 dependencies:
   - { role: cloud_amazon }
-  - { role: oracle-java }
+  - { role: base, when: not image_build}
 
