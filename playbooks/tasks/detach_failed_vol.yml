@@ -2,7 +2,7 @@
 # ebs_volume_id:
 
 - name: Identify mount to tear down
-  shell: "df | grep {{ ami_device }} | awk '{ print $6 }'"
+  shell: "df | grep {{ buri_disk_device }} | awk '{ print $6 }'"
   register: old_mount
   #ignore_errors: yes
 
@@ -24,7 +24,7 @@
   when: old_mount.stdout != ""
 
 - name: Discover Volume ID to detatch
-  shell: "aws ec2 describe-instances --instance-ids {{ ansible_ec2_instance_id }} --region {{ ansible_ec2_placement_region }} --output text | grep -A1 BLOCKDEVICEMAPPINGS | grep -A1 {{ ami_device.replace('/dev/xvd', '/dev/sd') }} | grep EBS"
+  shell: "aws ec2 describe-instances --instance-ids {{ ansible_ec2_instance_id }} --region {{ ansible_ec2_placement_region }} --output text | grep -A1 BLOCKDEVICEMAPPINGS | grep -A1 {{ buri_disk_device.replace('/dev/xvd', '/dev/sd') }} | grep EBS"
   register: ebsvol
 
 - name: Saving Volume ID as a fact for later use
