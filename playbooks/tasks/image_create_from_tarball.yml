@@ -22,7 +22,8 @@
   command: 'mount -o loop {{ distro_tarball_extract }}/{{ distro_image_name }}.img {{ distro_tarball_loopback }}'
 
 - name: Create filesystem for new flat foundation
-  command: mkfs.ext4 -L uec-rootfs {{ buri_disk_device }}
+  #command: mkfs.ext4 -L uec-rootfs {{ buri_disk_device }}
+  command: mkfs.ext4 -L cloudimg-rootfs {{ buri_disk_device }}
 
 - name: Creating mount point for foundation build
   file:
