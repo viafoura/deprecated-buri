@@ -1,7 +1,7 @@
 ---
 # called when creating foundation of type flat
 
-- name: Fetch distribution hard disk image
+- name: Fetch distribution hard disk image files
   get_url:
     url: '{{ distro_tarball_url }}'
     dest: '{{ distro_tarball_path }}'
