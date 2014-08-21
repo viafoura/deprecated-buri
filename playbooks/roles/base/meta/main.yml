@@ -3,6 +3,3 @@ dependencies:
 # Skip foundation run when resnapping base from it
 - { role: base_buri, when: not image_build }
 - { role: oracle-java, when: buri_base_java }
-# seems to check for it even if the conditional is false?
-# FIXME: move it to the top plays
-#- { role: base_local,  when: buri_base_local }
