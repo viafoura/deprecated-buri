@@ -8,7 +8,11 @@ import logging
 import subprocess
 
 def run_ansible_playbook(args, playbook, cli_vars):
-    cmd = 'python -u `which ansible-playbook` %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars)
+    roles_path = '%s/roles_local' % args.BURI_BASE
+    roles_param = ''
+    if os.path.exists(roles_path) and not os.path.isfile(roles_path):
+        roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
+    cmd = '%s python -u `which ansible-playbook` %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (roles_param, args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars)
     logging.info('executing ansible as: %s' % cmd)
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     # dump to stdout for now
