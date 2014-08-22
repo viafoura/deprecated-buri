@@ -5,6 +5,8 @@
   connection: local
   sudo: True
   vars_files:
+    # This peeking at the role an ansible anti-pattern, more than we should need?
+    # Mostly used to set cluster names for those roles using them I think
     - [ "roles/{{ ami_role }}/defaults/main.yml" ]
     - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   vars:
