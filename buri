@@ -80,7 +80,7 @@ def resnap(args):
 
 def cleanup_fail(args):
     logging.info('Cleaning up failed AMI resnap from: %s' % args.device)
-    run_ansible_playbook(args, "cleanup-failure", "ami_device='%s'" % args.device)
+    run_ansible_playbook(args, "cleanup-failure", "buri_disk_device='%s'" % args.device)
 
 def keys_cassandra(args):
     logging.info('Generating cassandra keys for: %s' % args.environment)
