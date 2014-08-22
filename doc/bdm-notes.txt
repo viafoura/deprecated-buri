@@ -1,0 +1,55 @@
+
+EBS HVM
+ami=/dev/sda1
+root=/dev/sda1
+ephemeral
+- has a and a1
+
+EBS PVM
+ami=/dev/sda1
+root=/dev/sda1
+ephemeral
+- no a, just a1, and an a3 (a3 probably swap)
+
+S3 PVM
+ami=sda1
+root=/dev/sda1
+ephemeral
+- no a, just a1
+
+S3 HVM
+ami=sda1
+root=/dev/sda1
+ephemeral
+- a, a1, a14, 15 (probably GPT)
+
+
+-----------
+
+My Flat HVM EBS
+ami=/dev/sda1
+root=/dev/sda1
+ephemeral
+- only an a, no a1 (wrong, but flat HVM is odd)
+
+My Flat PVM S3
+ami=/dev/sda1
+root=/dev/sda1
+ephemeral
+- no a, just a1, and an a3 (a3 probably swap)
+
+My Flat S3 HVM
+ami=sda
+root=/dev/sda1
+ephemeral
+- only an a, no a1 (wrong, but flat HVM is odd)
+
+My Flat S3 PVM
+ami=sda			(this seems odd, should be sda1 we'd think)
+root=/dev/sda1
+ephemeral
+- only an a, no a1 (wrong, should be only a1, no a, the ami=sda may be what is doing this)
+
+
+
+

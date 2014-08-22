@@ -1,6 +1,9 @@
 ---
 - name: Making local image of EBS Volume to bundle
-  command: 'qemu-img convert -f host_device -O raw {{ ami_device }} /mnt/{{ ami_name }}.img'
+  # Before flat support, not sure qemu would know what to do with these...
+  #command: 'qemu-img convert -f host_device -O raw {{ buri_disk_device }} /mnt/{{ ami_name }}.img'
+  # Should work for either flat or non-flat cases
+  command: 'dd if={{ buri_disk_device }} of=/mnt/{{ ami_name }}.img bs=4M'
 
 - name: Making folder for bundle
   file:
@@ -9,7 +12,6 @@
     owner: root
     group: root
     mode: 0444
-
 
 # TODO: --product-codes blabla,foo
 - name: Bundling image for S3
