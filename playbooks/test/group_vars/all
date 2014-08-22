@@ -1,8 +1,7 @@
 ---
 # What format of disks to create?
 buri_disk_type: partition
-# Mount point to use:
-# FIXME: this should be more dynamic than this
+# Mount point to use, normally set by buri CLI
 buri_disk_device: "/dev/xvdi"
 
 ### BASE: Base image composition

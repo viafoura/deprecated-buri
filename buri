@@ -6,10 +6,35 @@ import os
 import io
 import logging
 import subprocess
+import random
+import re
+
+# Possible device permutations to select from
+device_letters = 'qrstuvwx'	# Not in Aminator's default range
+device_numbers = xrange(1, 16)
+
+# Does not lock or anything else... there is a race here if two runs happen
+# If we do any kind of lock at all, it's working w/ Aminator to have a common concept of what's locked
+def get_device_node(mode="flat"):
+    exists = True
+    while 1:
+        dev = get_random_device_node(mode)
+        if mode == "flat":
+            if not os.path.exists(dev) and not os.path.exists(re.sub(r'[0-9]+$', '', dev)):
+                return dev
+        else:
+            if not os.path.exists(dev):
+                return dev
+
+def get_random_device_node(mode="flat"):
+    ret = "/dev/xvd"
+    ret += random.choice(device_letters)
+    if mode == "flat":
+      ret += str(random.choice(device_numbers))
+    return ret
 
 def run_ansible_playbook(args, playbook, cli_vars):
     roles_param = ''
-
     roles_path = '%s/roles_local' % args.BURI_BASE
     if os.path.exists(roles_path) and not os.path.isfile(roles_path):
         roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
@@ -45,16 +70,18 @@ def buildhost(args):
     run_ansible_playbook(args, "setup-build-host", "machine_target='%s'" % args.host)
 
 def foundation(args):
-    logging.info('Creating foundation AMI for: %s' % args.environment)
-    run_ansible_playbook(args, "create-foundation-ubuntu", "ami_role='foundation'")
+    dev = get_device_node(args.disk_type)
+    logging.info('Creating foundation AMI for env %s on device {1}'.format(args.environment, dev))
+    run_ansible_playbook(args, "create-foundation-ubuntu", "ami_role='foundation' buri_disk_device='{0}' buri_disk_type='{1}'".format(dev, args.disk_type))
 
 def resnap(args):
-    logging.info('Resnapshotting AMI for: %s' % args.environment)
-    run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='%s' ami_role='%s'" % (args.parent, args.role))
+    dev = get_device_node(args.disk_type)
+    logging.info('Resnapshotting AMI for env {0} on device {1}'.format(args.environment, dev))
+    run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='{0}' ami_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
 
 def cleanup_fail(args):
     logging.info('Cleaning up failed AMI resnap from: %s' % args.device)
-    run_ansible_playbook(args, "cleanup-failure", "ami_device='%s'" % args.device)
+    run_ansible_playbook(args, "cleanup-failure", "buri_disk_device='%s'" % args.device)
 
 def keys_cassandra(args):
     logging.info('Generating cassandra keys for: %s' % args.environment)
@@ -149,17 +176,19 @@ parser_buildhost.set_defaults(func=buildhost)
 # foundation
 parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
 parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
+parser_foundation.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
 parser_foundation.set_defaults(func=foundation)
 
 # resnap
 parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
+parser_resnap.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
 parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
 parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
 parser_resnap.set_defaults(func=resnap)
 
 # cleanup_fail
 parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation (unmount/destroy EBS volume)", add_help=False)
-parser_cleanup_fail.add_argument('--device', metavar='<device_node>', default="/dev/xvdi", type=str, help='Device node to clean up')
+parser_cleanup_fail.add_argument('device', metavar='<device_node>', type=str, help='Device node to clean up')
 parser_cleanup_fail.set_defaults(func=cleanup_fail)
 
 # keys_cassandra
