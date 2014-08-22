@@ -1,9 +1,9 @@
 ---
 # What format of disks to create?
-buri_disk_type: flat
+buri_disk_type: partition
 # Mount point to use:
 # FIXME: this should be more dynamic than this
-buri_disk_device: "/dev/xvdi1"
+buri_disk_device: "/dev/xvdi"
 
 ### BASE: Base image composition
 buri_base_java: True
