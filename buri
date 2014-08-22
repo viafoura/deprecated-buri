@@ -6,6 +6,32 @@ import os
 import io
 import logging
 import subprocess
+import random
+import re
+
+# Possible device permutations to select from
+device_letters = 'qrstuvwx'	# Not in Aminator's default range
+device_numbers = xrange(1, 16)
+
+# Does not lock or anything else... there is a race here if two runs happen
+# If we do any kind of lock at all, it's working w/ Aminator to have a common concept of what's locked
+def get_device_node(mode="flat"):
+    exists = True
+    while 1:
+        dev = get_random_device_node(mode)
+        if mode == "flat":
+            if not os.path.exists(dev) and not os.path.exists(re.sub(r'[0-9]+$', '', dev)):
+                return dev
+        else:
+            if not os.path.exists(dev):
+                return dev
+
+def get_random_device_node(mode="flat"):
+    ret = "/dev/xvd"
+    ret += random.choice(device_letters)
+    if mode == "flat":
+      ret += str(random.choice(device_numbers))
+    return ret
 
 def run_ansible_playbook(args, playbook, cli_vars):
     roles_param = ''
