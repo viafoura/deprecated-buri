@@ -1,0 +1,45 @@
+---
+- name: Create config directory
+  file: name=/etc/aminator state=directory owner=root group=root mode=0755
+  
+- name: Create logging directory
+  file: name=/var/log/aminator state=directory owner=root group=root mode=0755
+  
+- name: Create working directories
+  file: name={{ item }} state=directory owner=root group=root mode=0755
+  with_items:
+    - /var/aminator
+    - /var/aminator/lock
+    - /var/aminator/volumes
+  
+- name: Checkout Aminator code from Github
+  git: repo={{ aminator_git_repo }}
+       dest=/tmp/aminator_build
+       version={{ aminator_git_ref }}
+
+- name: Install Aminator
+  command: python setup.py install chdir=/tmp/aminator_build
+
+- name: Copy config files
+  command: cp /tmp/aminator_build/aminator/default_conf/{{ item }} /etc/aminator/{{ item }}
+  with_items:
+    - aminator.yml
+    - environments.yml
+    - logging.yml
+
+# To come
+
+#- name: Install Ansible provisioner plugin
+#  command: aminator-plugin install ansible
+#  tags: plugins
+  
+#- name: Copy environments config that contains the plugins
+#  copy: src=environments.yml dest=/etc/aminator/environments.yml owner=root group=root mode=0644  
+#  tags: config
+
+#- name: Checkout NetflixOSS-Ansible code from Github
+#  git: repo=https://github.com/Answers4AWS/netflixoss-ansible.git
+#       dest=/usr/local/netflixoss-ansible
+#       version=master
+#  tags: netflixoss
+  

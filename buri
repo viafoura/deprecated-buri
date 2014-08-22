@@ -142,7 +142,7 @@ parser_apply.add_argument('role', metavar='<role>', type=str, help='Role to prov
 parser_apply.set_defaults(func=apply)
 
 # EC2 buildhost environment
-parser_buildhost = subparser.add_parser('buildhost', help="Setup build-host in EC2 for AMI generation", add_help=False)
+parser_buildhost = subparser.add_parser('buildhost', help="Setup build_host in EC2 for AMI generation", add_help=False)
 parser_buildhost.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to setup')
 parser_buildhost.set_defaults(func=buildhost)
 

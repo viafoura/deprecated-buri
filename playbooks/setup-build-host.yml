@@ -21,4 +21,4 @@
     image_build: false
     cloud_target: amazon
   roles:
-    - build-host
+    - build_host
