@@ -8,6 +8,7 @@ import logging
 import subprocess
 import random
 import re
+import sys
 
 # Possible device permutations to select from
 device_letters = 'qrstuvwx'	# Not in Aminator's default range
@@ -145,70 +146,80 @@ class _HelpAction(argparse._HelpAction):
 
         parser.exit()
 
-parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
-parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
-parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
-parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'staging', 'prod'], help='Set the environment context')
+def get_config():
+    parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
+    parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
+    parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
+    parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'staging', 'prod'], help='Set the environment context')
 
-subparser = parser.add_subparsers(help='sub commands')
+    subparser = parser.add_subparsers(help='sub commands')
 
-# All-in-one devbox environment, fluxdemo
-parser_fluxdemo = subparser.add_parser('fluxdemo', help="Install all-in-one host, with flux capacitor demo", add_help=False)
-parser_fluxdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
-parser_fluxdemo.set_defaults(func=fluxdemo)
+    # All-in-one devbox environment, fluxdemo
+    parser_fluxdemo = subparser.add_parser('fluxdemo', help="Install all-in-one host, with flux capacitor demo", add_help=False)
+    parser_fluxdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+    parser_fluxdemo.set_defaults(func=fluxdemo)
 
-# All-in-one devbox environment, rssdemo
-parser_rssdemo = subparser.add_parser('rssdemo', help="Install all-in-one host, with Netflix recipes-rss demo", add_help=False)
-parser_rssdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
-parser_rssdemo.set_defaults(func=rssdemo)
+    # All-in-one devbox environment, rssdemo
+    parser_rssdemo = subparser.add_parser('rssdemo', help="Install all-in-one host, with Netflix recipes-rss demo", add_help=False)
+    parser_rssdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+    parser_rssdemo.set_defaults(func=rssdemo)
 
-# apply
-parser_apply = subparser.add_parser('apply', help="Run a role against a host", add_help=False)
-parser_apply.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
-parser_apply.add_argument('role', metavar='<role>', type=str, help='Role to provision to host')
-parser_apply.set_defaults(func=apply)
+    # apply
+    parser_apply = subparser.add_parser('apply', help="Run a role against a host", add_help=False)
+    parser_apply.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+    parser_apply.add_argument('role', metavar='<role>', type=str, help='Role to provision to host')
+    parser_apply.set_defaults(func=apply)
 
-# EC2 buildhost environment
-parser_buildhost = subparser.add_parser('buildhost', help="Setup build_host in EC2 for AMI generation", add_help=False)
-parser_buildhost.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to setup')
-parser_buildhost.set_defaults(func=buildhost)
+    # EC2 buildhost environment
+    parser_buildhost = subparser.add_parser('buildhost', help="Setup build_host in EC2 for AMI generation", add_help=False)
+    parser_buildhost.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to setup')
+    parser_buildhost.set_defaults(func=buildhost)
 
-# foundation
-parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
-parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
-parser_foundation.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
-parser_foundation.set_defaults(func=foundation)
+    # foundation
+    parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
+    parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
+    parser_foundation.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
+    parser_foundation.set_defaults(func=foundation)
 
-# resnap
-parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
-parser_resnap.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
-parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
-parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
-parser_resnap.set_defaults(func=resnap)
+    # resnap
+    parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
+    parser_resnap.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
+    parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
+    parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
+    parser_resnap.set_defaults(func=resnap)
 
-# cleanup_fail
-parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation (unmount/destroy EBS volume)", add_help=False)
-parser_cleanup_fail.add_argument('device', metavar='<device_node>', type=str, help='Device node to clean up')
-parser_cleanup_fail.set_defaults(func=cleanup_fail)
+    # cleanup_fail
+    parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation (unmount/destroy EBS volume)", add_help=False)
+    parser_cleanup_fail.add_argument('device', metavar='<device_node>', type=str, help='Device node to clean up')
+    parser_cleanup_fail.set_defaults(func=cleanup_fail)
 
-# keys_cassandra
-parser_keys_cassandra = subparser.add_parser('keys_cassandra', help="Generate SSL Keystore for cassandra", add_help=False)
-parser_keys_cassandra.add_argument('--alias', metavar='<alias>', default='cassandra', type=str, help='Set alias for key generation')
-parser_keys_cassandra.set_defaults(func=keys_cassandra)
+    # keys_cassandra
+    parser_keys_cassandra = subparser.add_parser('keys_cassandra', help="Generate SSL Keystore for cassandra", add_help=False)
+    parser_keys_cassandra.add_argument('--alias', metavar='<alias>', default='cassandra', type=str, help='Set alias for key generation')
+    parser_keys_cassandra.set_defaults(func=keys_cassandra)
 
-# keys_bundle
-parser_keys_bundle = subparser.add_parser('keys_bundle', help="Generate SSL pem files for EC2 image bundling", add_help=False)
-parser_keys_bundle.add_argument('--keylength', metavar='<alias>', default=2048, type=int, help='Set key length')
-parser_keys_bundle.set_defaults(func=keys_bundle)
+    # keys_bundle
+    parser_keys_bundle = subparser.add_parser('keys_bundle', help="Generate SSL pem files for EC2 image bundling", add_help=False)
+    parser_keys_bundle.add_argument('--keylength', metavar='<alias>', default=2048, type=int, help='Set key length')
+    parser_keys_bundle.set_defaults(func=keys_bundle)
+    
+    # parser all setup, parse it
+    args = parser.parse_args()
+    return args
 
-# parser all setup, parse it
-args = parser.parse_args()
-numeric_level = getattr(logging, args.loglevel.upper(), None)
-if not isinstance(numeric_level, int):
-    raise ValueError('Invalid log level: %s' % loglevel)
-logging.basicConfig(level=numeric_level, format='%(asctime)s %(levelname)s: %(message)s')
-logging.warn("LOGLEVEL: %s, %s", args.loglevel, numeric_level)
-args.BURI_BASE = os.path.dirname(os.path.realpath(__file__))
-logging.info("PATH: %s" % args.BURI_BASE)
-args.func(args)
+def main():
+    args = get_config()
+    numeric_level = getattr(logging, args.loglevel.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: %s' % loglevel)
+    logging.basicConfig(level=numeric_level, format='%(asctime)s %(levelname)s: %(message)s')
+    logging.warn("LOGLEVEL: %s, %s", args.loglevel, numeric_level)
+    args.BURI_BASE = os.path.dirname(os.path.realpath(__file__))
+    logging.info("PATH: %s" % args.BURI_BASE)
+    args.func(args)
+    return 0
+
+if __name__ == '__main__':
+    status = main()
+    sys.exit(status)
 
