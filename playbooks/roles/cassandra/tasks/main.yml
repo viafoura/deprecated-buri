@@ -64,10 +64,10 @@
   template: src=cassandra-defaults dest=/etc/default/cassandra owner=root group=root mode=0644
 
 - name: Add keystore to Cassandra
-  copy: src={{ buri_environment }}/local/cassandra_keystore dest={{ cassandra_home }}/conf/.keystore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
+  copy: src={{ BURI_BASE }}/local/env/{{ buri_environment }}/cassandra_keystore dest={{ cassandra_home }}/conf/.keystore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
 
 - name: Add truststore to Cassandra
-  copy: src={{ buri_environment }}/local/cassandra_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
+  copy: src={{ BURI_BASE }}/local/env/{{ buri_environment }}/cassandra_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
 
 - name: Install initial cassandra.yaml (1.2)
   template: src=cassandra.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
