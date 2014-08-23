@@ -160,14 +160,12 @@ def get_config():
 
     config = ConfigParser.SafeConfigParser()
     config.read([args.conf_file])
+    # Gets applied after all the argparse setup w/ it's defaults
     defaults = dict(config.items("Defaults"))
-
-    # Here? Not after? Or do we drop defaults off the items?
-    parser.set_defaults(**defaults)
 
     parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
     parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
-    parser.add_argument('--environment', metavar='<env_name>', type=str, choices=['dev_vm', 'test', 'staging', 'prod'], help='Set the environment context')
+    parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'staging', 'prod'], help='Set the environment context')
 
     subparser = parser.add_subparsers(help='sub commands')
 
@@ -220,6 +218,9 @@ def get_config():
     parser_keys_bundle.add_argument('--keylength', metavar='<alias>', default=2048, type=int, help='Set key length')
     parser_keys_bundle.set_defaults(func=keys_bundle)
     
+    # Now apply ones from config
+    parser.set_defaults(**defaults)
+
     # parser all setup, parse it
     args = parser.parse_args()
 
