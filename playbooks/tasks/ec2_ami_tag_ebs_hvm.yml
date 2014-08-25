@@ -14,6 +14,11 @@
   register: amihvm
   when: buri_disk_type == "flat"
 
+- name: Saving HVM AMI ID as a fact for later use
+  set_fact:
+    ami_id_hvm: '{{ amihvm.stdout }}'
+  when: buri_disk_type == "flat"
+
 - name: Registering HVM AMI to snapshot (partitioned)
   command: |
     aws ec2 register-image
@@ -32,6 +37,7 @@
 - name: Saving HVM AMI ID as a fact for later use
   set_fact:
     ami_id_hvm: '{{ amihvm.stdout }}'
+  when: buri_disk_type != "flat"
 
 - name: Tagging HVM AMI
   command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_hvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-EBS-{{ buri_disk_type }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
