@@ -1,3 +1,4 @@
 playbooks/vars/site.yml
 playbooks/local/*
 roles_local/*
+local/*

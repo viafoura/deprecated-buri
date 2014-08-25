@@ -6,7 +6,7 @@
   sudo: True
   vars_files:
     - "roles/{{ ami_role }}/defaults/main.yml"
-    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
+    - [ "{{ BURI_BASE }}/local/env/{{ buri_environment }}/overrides.yml", "vars/dummy.yml" ]
   vars: 
     ami_root_resize: true
     image_build: true

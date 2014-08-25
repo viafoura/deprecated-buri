@@ -18,9 +18,6 @@ ami_description: "{{ ami_role }} on {{ ansible_distribution }} {{ ansible_distri
 ami_image_mount: "/mnt/{{ ami_name }}"
 
 # For S3 bundling:
-ami_bundle_pk: 'test/local/bundle_pk.pem'
-ami_bundle_cert: 'test/local/bundle_cert.pem'
-# set these ones in site.yml
 ami_bundle_account: '123456789012'
 ami_bundle_bucket_path: 'yourbucket/basepath'
 
