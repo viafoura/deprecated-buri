@@ -1,5 +1,20 @@
 ---
-- name: Registering PVM AMI to snapshot
+- name: Registering PVM AMI to snapshot (flat)
+  command: |
+    aws ec2 register-image
+      --output text
+      --region {{ ansible_ec2_placement_region }}
+      --name "{{ ami_name }}-PVM-EBS-{{ buri_disk_type }}"
+      --description "{{ ami_description }}"
+      --architecture "x86_64"
+      --root-device-name /dev/sda1
+      --kernel-id "{{ ami_aki_id }}"
+      --block-device-mappings
+        '[{"DeviceName": "/dev/sda1","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
+  register: amipvm
+  when: buri_disk_type == "flat"
+
+- name: Registering PVM AMI to snapshot (partitioned)
   command: |
     aws ec2 register-image
       --output text
@@ -12,6 +27,7 @@
       --block-device-mappings
         '[{"DeviceName": "/dev/sda","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
   register: amipvm
+  when: buri_disk_type != "flat"
 
 - name: Saving PVM AMI ID as a fact for later use
   set_fact:
