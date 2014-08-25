@@ -4,7 +4,7 @@
     aws ec2 register-image 
       --output text
       --region {{ ansible_ec2_placement_region }}
-      --name "{{ ami_name }}-HVM-EBS"
+      --name "{{ ami_name }}-HVM-EBS-{{ buri_disk_type }}"
       --description "{{ ami_description }}"
       --architecture "x86_64"
       --root-device-name /dev/sda1
@@ -18,6 +18,6 @@
     ami_id_hvm: '{{ amihvm.stdout }}'
 
 - name: Tagging HVM AMI
-  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_hvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-EBS\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_hvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-EBS-{{ buri_disk_type }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
 
 
