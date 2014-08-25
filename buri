@@ -82,6 +82,10 @@ def resnap(args):
     logging.info('Resnapshotting AMI for env {0} on device {1}'.format(args.environment, dev))
     run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='{0}' ami_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
 
+def aminator(args):
+    logging.info('Aminator Resnapshotting AMI for env {0} on mounted chroot: {1}'.format(args.environment, args.directory))
+    run_ansible_playbook(args, "resnap-from-aminator", "ami_image_mount='{0}' ami_role='{1}'".format(args.directory, args.role))
+
 def cleanup_fail(args):
     logging.info('Cleaning up failed AMI resnap from: %s' % args.device)
     run_ansible_playbook(args, "cleanup-failure", "buri_disk_device='%s'" % args.device)
@@ -217,6 +221,13 @@ def get_config():
     parser_keys_bundle = subparser.add_parser('keys_bundle', help="Generate SSL pem files for EC2 image bundling", add_help=False)
     parser_keys_bundle.add_argument('--keylength', metavar='<alias>', default=2048, type=int, help='Set key length')
     parser_keys_bundle.set_defaults(func=keys_bundle)
+
+    # resnap from within Aminator
+    parser_aminator = subparser.add_parser('aminator', help="Provisioner hook for Aminator, not for general use", add_help=False)
+    parser_aminator.add_argument('directory', metavar='<chroot_directory>', type=str, help='Location of mounted parent AMI')
+    parser_aminator.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
+    parser_aminator.set_defaults(func=aminator)
+
     
     # Now apply ones from config
     parser.set_defaults(**defaults)

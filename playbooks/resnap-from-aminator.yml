@@ -1,0 +1,17 @@
+---
+# Playbook to create a foundation snapshot/AMI from ubuntu's source images
+- name: Run role from buri-provisioner
+  hosts: localhost
+  connection: local
+  vars_files:
+    - [ "roles/{{ ami_role }}/defaults/main.yml" ]
+    - [ "{{ BURI_BASE }}/local/env/{{ buri_environment }}/overrides.yml", "vars/dummy.yml" ]
+  vars:
+    image_build: true
+    cloud_target: amazon
+    ami_root_resize: false
+  tasks:
+      add_host: hostname={{ ami_image_mount }} groupname=chroots
+
+- include: _image_apply_role.yml
+
