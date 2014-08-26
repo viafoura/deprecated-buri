@@ -51,7 +51,6 @@ def estimate_ansible_run(cmd):
     play_no = 0
     current_count = 0
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-
     while 1:
         line = handle.stdout.readline()
         if not line:
@@ -69,16 +68,16 @@ def estimate_ansible_run(cmd):
                current_count = 0
             else:
                current_count += 1
-
     ret.append(current_count)
-    logging.info('estimation is: {0}'.format(ret))
     return handle.returncode, ret
  
 def run_ansible_playbook(args, playbook, cli_vars):
     cmd = gen_ansible_command(args, playbook, cli_vars)
-
     est_err, est = estimate_ansible_run(cmd)
-    logging.debug('executing ansible as: %s' % cmd)
+    if est_err:
+        return est_err
+    tasks_total = sum(est)
+    logging.info('executing {0} tasks in ansible run: {1}'.format(tasks_total, cmd))
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     # dump to stdout for now
     while 1:
