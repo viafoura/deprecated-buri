@@ -58,16 +58,24 @@ def estimate_ansible_run(cmd):
         else:
             l = line.rstrip()
             if not l:
-               continue
-            elif (re.match(r'^playbook:', l)):
-               continue
-            elif (re.match(r'^  play #', l)):
-               if not play_no == 0:
-                   ret.append(current_count)
-               play_no += 1
-               current_count = 0
-            else:
-               current_count += 1
+                continue
+
+            m = re.match(r'^ERROR: (.*)$', l)
+            if m:
+                logging.critical('Error estimating play: {0}'.format(m.group(1)))
+                return 1, []
+
+            if (re.match(r'^playbook:', l)):
+                continue
+
+            if (re.match(r'^  play #', l)):
+                if not play_no == 0:
+                    ret.append(current_count)
+                play_no += 1
+                current_count = 0
+                continue
+
+            current_count += 1
     ret.append(current_count)
     return handle.returncode, ret
  
@@ -79,14 +87,71 @@ def run_ansible_playbook(args, playbook, cli_vars):
     tasks_total = sum(est)
     logging.info('executing {0} tasks in ansible run: {1}'.format(tasks_total, cmd))
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-    # dump to stdout for now
+
+    # Setup state/reporting vars
+    recent_lines = []
+    current_task = ""
+    current_play= ""
+    has_ended = False
+    has_failed= False
+    tasks_run = 0
+
+    # Setup our regexes
+    test_play = re.compile(r"^PLAY: \[(.*?)\]( \**)?$")
+    test_task = re.compile(r"^TASK: \[(.*?)\]( \**)?$")
+    test_recap = re.compile(r"^PLAY RECAP( \**)?$")
+    test_error = re.compile(r'^ERROR: (.*)$')
+    test_fail = re.compile(r"failed=0")
+    #test_facts = re.compile(r"^GATHERING FACTS( \**)?$")
+    #test_stat = re.compile(r"^(ok|skipping|changed): \[(.*?)\]( \**)?$")
+
     while 1:
         line = handle.stdout.readline();
         if not line:
             break
         else:
-            print(line, end="")
-    # pass along the return code to eventually return ourselves
+            l = line.rstrip()
+            if not l:
+                recent_lines.append(l)
+                continue
+            if not has_ended:
+                # Check for error
+                m = test_error.match(l)
+                if m:
+                    recent_lines.append(l)
+                    logging.critical('Error estimating play: {0}'.format(m.group(1)))
+                    has_failed = True
+                    continue
+                # Check for new play
+                m = test_play.match(l)
+                if m:
+                    current_play = m.group(1)
+                    recent_lines.append(l)
+                    continue
+                # Check for new task
+                m = test_task.match(l)
+                if m:
+                    current_task = m.group(1)
+                    tasks_run += 1
+                    recent_lines = []
+                    recent_lines.append(l)
+                    print("[{0}/{1}] {2}".format(tasks_run, tasks_total, current_task))
+                    continue
+                m = test_recap.match(l)
+                if m:
+                    has_ended = True
+            else:
+                recent_lines.append(l)
+                m = test_fail.search(l)
+                if not m:
+                    has_failed = True
+    if has_failed:
+        logging.error("Error running plays, recent output leading up to error follows:")
+        for e in recent_lines:
+            logging.error(e)
+        return 1
+
+    # pass along the return code to eventually return ourselves (alas always zero for Ansible)
     return handle.returncode
 
 # Implementations of the subcommands the subparsers specify
@@ -297,7 +362,8 @@ def main():
     # Do it, handler could be better, but gets the point across...
     try:
          return args.func(args)
-    except:
+    except Exception as e:
+        logging.error("Exception: {0}".format(e))
         return 1
     return 0
 
