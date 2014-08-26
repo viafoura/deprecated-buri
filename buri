@@ -135,7 +135,7 @@ def run_ansible_playbook(args, playbook, cli_vars):
                     tasks_run += 1
                     recent_lines = []
                     recent_lines.append(l)
-                    print("[{0}/{1}] {2}".format(tasks_run, tasks_total, current_task))
+                    logging.info("[{0}/{1}] {2}".format(tasks_run, tasks_total, current_task))
                     continue
                 m = test_recap.match(l)
                 if m:
