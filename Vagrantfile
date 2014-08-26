@@ -49,14 +49,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # View the documentation for the provider you're using for more
   # information on available options.
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.verbose = "vvvv"
-    ansible.playbook = "playbooks/all-in-one-vagrant.yml"
-    ansible.extra_vars = {
-      machine_target=
-    }
+  config.vm.provision :host_shell do |host_shell|
+    host_shell.inline = './buri --environment dev_vm fluxdemo #{config.vm.network.ip}'
   end
-
-ansible-playbook ${BURI_BASE}/playbooks/all-in-one-live.yml -i ${BURI_BASE}/playbooks/dev_vm/inventory -e "machine_target=$1" -vvvv
 
 end
