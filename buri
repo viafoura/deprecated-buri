@@ -45,10 +45,12 @@ def run_ansible_playbook(args, playbook, cli_vars):
     logging.info('executing ansible as: %s' % cmd)
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     # dump to stdout for now
-    line = handle.stdout.readline()
-    while line:
-        print(line, end="")
-        line = handle.stdout.readline()
+    while 1:
+        line = handle.stdout.readline();
+        if not line:
+            break
+        else:
+            print(line, end="")
     # pass along the return code to eventually return ourselves
     return handle.returncode
 
