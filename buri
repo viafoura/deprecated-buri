@@ -40,8 +40,8 @@ def gen_ansible_command(args, playbook, cli_vars):
     roles_param = ''
     roles_path = '%s/local/roles' % args.BURI_BASE
     if os.path.exists(roles_path) and not os.path.isfile(roles_path):
-        roles_param = 'ANSIBLE_NOCOWS=1 ANSIBLE_ROLES_PATH=%s ' % roles_path
-    cmd = '{0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3}/inventory -e "BURI_BASE=\'{1}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
+        roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
+    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3}/inventory -e "BURI_BASE=\'{1}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
     return cmd
 
 # Returns an array with as many elements as plays, each element the count of tasks for the play
