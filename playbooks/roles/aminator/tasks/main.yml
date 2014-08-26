@@ -47,7 +47,7 @@
 - name: Checkout Buri from Github
   git: repo={{ buri_git_repo }}
        dest=/opt/buri
-       version=master
+       version={{ buri_git_ref }}
   
 - name: Create buri configuration
   template: src=buri.cfg dest=/opt/buri/etc/buri.cfg owner=root group=root mode=0644  
