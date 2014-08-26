@@ -41,7 +41,7 @@ def run_ansible_playbook(args, playbook, cli_vars):
     roles_path = '%s/local/roles' % args.BURI_BASE
     if os.path.exists(roles_path) and not os.path.isfile(roles_path):
         roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
-    cmd = '%s python -u `which ansible-playbook` %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (roles_param, args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars + " BURI_BASE='{0}'".format(args.BURI_BASE))
+    cmd = '{0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3}/inventory -e "BURI_BASE=\'{1}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
     logging.info('executing ansible as: %s' % cmd)
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     # dump to stdout for now
@@ -170,6 +170,7 @@ def get_config():
     parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
     parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
     parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'staging', 'prod'], help='Set the environment context')
+    parser.add_argument('--extra-vars', dest='extravars', metavar='<varstr="foo" varnum=123>', type=str, default='', help='Extra variables to pass to Ansible playbooks')
 
     subparser = parser.add_subparsers(help='sub commands')
 
