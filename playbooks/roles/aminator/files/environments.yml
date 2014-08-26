@@ -1,4 +1,4 @@
-default: ec2_yum_linux
+default: ec2_buri_linux
 ec2_yum_linux:
     cloud: ec2
     distro: redhat
@@ -13,10 +13,10 @@ ec2_apt_linux:
     volume: linux
     blockdevice: linux
     finalizer: tagging_ebs
-ec2_ansible_linux:
+ec2_buri_linux:
     cloud: ec2
     distro: debian
-    provisioner: ansible
+    provisioner: buri
     volume: linux
     blockdevice: linux
     finalizer: tagging_ebs

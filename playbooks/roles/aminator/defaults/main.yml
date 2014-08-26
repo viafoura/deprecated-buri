@@ -1,3 +1,11 @@
 ---
 aminator_git_repo: https://github.com/Netflix/aminator.git
 aminator_git_ref: testing
+
+aminator_buri_git_repo: https://github.com/aminator-plugins/buri-provisioner.git
+aminator_buri_git_ref: develop
+
+# Maybe it's own role?
+buri_git_repo: https://github.com/viafoura/buri.git
+buri_git_ref: develop
+
