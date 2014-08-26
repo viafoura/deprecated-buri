@@ -36,13 +36,49 @@ def get_random_device_node(mode="flat"):
       ret += str(random.choice(device_numbers))
     return ret
 
-def run_ansible_playbook(args, playbook, cli_vars):
+def gen_ansible_command(args, playbook, cli_vars):
     roles_param = ''
     roles_path = '%s/local/roles' % args.BURI_BASE
     if os.path.exists(roles_path) and not os.path.isfile(roles_path):
         roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
     cmd = '{0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3}/inventory -e "BURI_BASE=\'{1}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
-    logging.info('executing ansible as: %s' % cmd)
+    return cmd
+
+# Returns an array with as many elements as plays, each element the count of tasks for the play
+def estimate_ansible_run(cmd):
+    cmd += ' --list-tasks'
+    ret = []
+    play_no = 0
+    current_count = 0
+    handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+
+    while 1:
+        line = handle.stdout.readline()
+        if not line:
+            break
+        else:
+            l = line.rstrip()
+            if not l:
+               continue
+            elif (re.match(r'^playbook:', l)):
+               continue
+            elif (re.match(r'^  play #', l)):
+               if not play_no == 0:
+                   ret.append(current_count)
+               play_no += 1
+               current_count = 0
+            else:
+               current_count += 1
+
+    ret.append(current_count)
+    logging.info('estimation is: {0}'.format(ret))
+    return handle.returncode, ret
+ 
+def run_ansible_playbook(args, playbook, cli_vars):
+    cmd = gen_ansible_command(args, playbook, cli_vars)
+
+    est_err, est = estimate_ansible_run(cmd)
+    logging.debug('executing ansible as: %s' % cmd)
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     # dump to stdout for now
     while 1:
