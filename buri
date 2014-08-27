@@ -5,6 +5,7 @@ import argparse
 import ConfigParser
 import os
 import io
+import errno
 import logging
 import subprocess
 import random
@@ -16,7 +17,8 @@ import sys
 device_letters = 'qrstuvwx'	# Not in Aminator's default range
 device_numbers = xrange(1, 16)
 
-# Does not lock or anything else... there is a race here if two runs happen
+# Does not lock or anything else... there is a race here if two runs happen, which should error on the mount if they collide
+# But does do a trivial test for exisistence of the device node randomly generated
 # If we do any kind of lock at all, it's working w/ Aminator to have a common concept of what's locked
 def get_device_node(mode="flat"):
     exists = True
@@ -29,6 +31,7 @@ def get_device_node(mode="flat"):
             if not os.path.exists(dev):
                 return dev
 
+# Random device node generator
 def get_random_device_node(mode="flat"):
     ret = "/dev/xvd"
     ret += random.choice(device_letters)
@@ -36,6 +39,19 @@ def get_random_device_node(mode="flat"):
       ret += str(random.choice(device_numbers))
     return ret
 
+def ensure_local_env(args):
+    local_env = args.BURI_BASE + "/local/env/" + args.environment
+    try:
+        os.makedirs(local_env)
+        logging.info("Local environment folder did not exist, created: " + local_env)
+        return
+    except OSError as ex:
+        if ex.errno != errno.EEXIST:
+            logging.critical("Error creating {0}: ({1}) {2}: ".format(local_env, ex.errno, ex.errstr))
+            raise
+        logging.info("Using local environment folder located at: " + local_env)
+
+# generates an ansible commandline
 def gen_ansible_command(args, playbook, cli_vars):
     roles_param = ''
     roles_path = '%s/local/roles' % args.BURI_BASE
@@ -79,6 +95,7 @@ def estimate_ansible_run(cmd):
     ret.append(current_count)
     return handle.returncode, ret
  
+# Run a playbook, first taking an estimation, and monitoring/filtering output. Ensures all text since the last successful task is included on error output
 def run_ansible_playbook(args, playbook, cli_vars):
     cmd = gen_ansible_command(args, playbook, cli_vars)
     est_err, est = estimate_ansible_run(cmd)
@@ -102,8 +119,11 @@ def run_ansible_playbook(args, playbook, cli_vars):
     test_recap = re.compile(r"^PLAY RECAP( \**)?$")
     test_error = re.compile(r'^ERROR: (.*)$')
     test_fail = re.compile(r"failed=0")
+    # May be useful for enhancing output
     #test_facts = re.compile(r"^GATHERING FACTS( \**)?$")
-    #test_stat = re.compile(r"^(ok|skipping|changed): \[(.*?)\]( \**)?$")
+    # This one is tricky, probably should be two things.. or split up in other ways.
+    # the extra text may be a blob of json, optionally preceeded by an items list (i guess if with_items is used?)
+    #test_stat = re.compile(r"^(ok|skipping|changed): \[(.*?)\](.*)?$")
 
     while 1:
         line = handle.stdout.readline();
@@ -137,10 +157,12 @@ def run_ansible_playbook(args, playbook, cli_vars):
                     recent_lines.append(l)
                     logging.info("[{0}/{1}] {2}".format(tasks_run, tasks_total, current_task))
                     continue
+                # This marks the end, all remaining lines must contain "failures=0" to be successful
                 m = test_recap.match(l)
                 if m:
                     has_ended = True
             else:
+                # Check for non-zero failure in the recap
                 recent_lines.append(l)
                 m = test_fail.search(l)
                 if not m:
@@ -151,7 +173,7 @@ def run_ansible_playbook(args, playbook, cli_vars):
             logging.error(e)
         return 1
 
-    # pass along the return code to eventually return ourselves (alas always zero for Ansible)
+    # pass along the return code to eventually return ourselves (alas always zero for Ansible but for pathological cases)
     return handle.returncode
 
 # Implementations of the subcommands the subparsers specify
@@ -195,6 +217,7 @@ def cleanup_fail(args):
     return run_ansible_playbook(args, "cleanup-failure", "buri_disk_device='%s'" % args.device)
 
 def keys_cassandra(args):
+    ensure_local_env(args)
     logging.info('Generating cassandra keys for: %s' % args.environment)
     env_base='%s/local/env/%s' % (args.BURI_BASE, args.environment)
     logging.info('Generating cassandra keys at: %s' % env_base)
@@ -221,6 +244,7 @@ def keys_cassandra(args):
     return 0
 
 def keys_bundle(args):
+    ensure_local_env(args)
     logging.info('Generating EC2 image bundling keys for: %s' % args.environment)
     env_base='%s/local/env/%s' % (args.BURI_BASE, args.environment)
     logging.info('Generating EC2 keys at: %s' % env_base)
