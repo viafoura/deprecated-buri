@@ -8,7 +8,7 @@
     image_build: false
   tasks:
     - name: Register host target in ansible inventory
-      add_host: hostname={{ machine_target }} groups=anshost
+      add_host: hostname={{ machine_target }} groups={{ ami_role }},anshost
 
 - name: Provisioning role against host
   hosts: anshost

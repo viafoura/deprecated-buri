@@ -50,7 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # information on available options.
 
   config.vm.provision :host_shell do |host_shell|
-    host_shell.inline = './buri --environment dev_vm fluxdemo #{config.vm.network.ip}'
+    host_shell.inline = './buri --environment development fluxdemo #{config.vm.network.ip}'
   end
 
 end

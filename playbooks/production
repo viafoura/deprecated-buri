@@ -22,9 +22,18 @@ ice
 nat
 priam
 
-
-[all:vars]
-buri_test_invg=sockitome
+# Actual groups, mostly empty, unles using ansible in other ways
+[aminator]
+[asgard]
+[base]
+[build_host]
+[edda]
+[eureka]
+[exhibitor]
+[foundation]
+[ice]
+[nat]
+[priam]
 
 # vars affecting all cases, or defaults
 [priam:vars]
@@ -38,7 +47,6 @@ priam_clustername=default
 
 [priam_cluster_1:vars]
 priam_clustername=cluster_1
-
 
 # vars affecting all cases, or defaults
 [exhibitor:vars]

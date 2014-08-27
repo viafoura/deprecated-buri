@@ -57,7 +57,7 @@ def gen_ansible_command(args, playbook, cli_vars):
     roles_path = '%s/local/roles' % args.BURI_BASE
     if os.path.exists(roles_path) and not os.path.isfile(roles_path):
         roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
-    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3}/inventory -e "BURI_BASE=\'{1}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
+    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3} -e "BURI_BASE=\'{1}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
     return cmd
 
 # Returns an array with as many elements as plays, each element the count of tasks for the play
@@ -299,7 +299,7 @@ def get_config():
 
     parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
     parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
-    parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'staging', 'prod'], help='Set the environment context')
+    parser.add_argument('--environment', metavar='<env_name>', type=str, default='development', choices=['development', 'test', 'staging', 'production'], help='Set the environment context')
     parser.add_argument('--extra-vars', dest='extravars', metavar='<varstr="foo" varnum=123>', type=str, default='', help='Extra variables to pass to Ansible playbooks')
 
     subparser = parser.add_subparsers(help='sub commands')

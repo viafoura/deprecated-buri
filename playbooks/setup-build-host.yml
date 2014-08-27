@@ -9,7 +9,7 @@
     cloud_target: amazon
   tasks:
     - name: Register host target in ansible inventory
-      add_host: hostname={{ machine_target }} groups=anshost
+      add_host: hostname={{ machine_target }} groups=build_host,anshost
 
 - name: Provisioning role against host
   hosts: anshost

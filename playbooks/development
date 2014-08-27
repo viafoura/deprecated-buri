@@ -22,20 +22,27 @@ fluxdemo_schema
 foundation
 graphite
 hystrix_dashboard
-jetty9
-jetty9_instance
-jsvc_daemon
-jsvc_daemon_instance
 rssdemo_edge
 rssdemo_middle
 rssdemo_schema
 turbine
 
+# Actual groups, empty unless using the ansible in other ways
+[all_in_one_flux]
+[all_in_one_rss]
+[base]
+[cassandra]
+[eureka]
+[exhibitor]
+[fluxdemo_edge]
+[fluxdemo_middle]
+[fluxdemo_schema]
+[foundation]
+[graphite]
+[hystrix_dashboard]
+[rssdemo_edge]
+[rssdemo_middle]
+[rssdemo_schema]
+[turbine]
 
-[all:vars]
-buri_test_invg=sockitome
-
-# vars affecting all cases, or defaults
-[exhibitor:vars]
-exhibitor_cluster_name=development
 

@@ -1,14 +1,8 @@
 ---
-# What format of disks to create?
-buri_disk_type: partition
-# Mount point to use, normally set by buri CLI
-buri_disk_device: "/dev/xvdi"
-
 ### BASE: Base image composition
 buri_base_java: True
 
 cloud_target: amazon
-buri_environment: test
 buri_iam_role: "Buri"
 
 # Something must override this at commandline, do not set elsewhere.
