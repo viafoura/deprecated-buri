@@ -131,14 +131,13 @@ def run_ansible_playbook(args, playbook, cli_vars):
             break
         else:
             l = line.rstrip()
+            recent_lines.append(l)
             if not l:
-                recent_lines.append(l)
                 continue
             if not has_ended:
                 # Check for error
                 m = test_error.match(l)
                 if m:
-                    recent_lines.append(l)
                     logging.critical('Error estimating play: {0}'.format(m.group(1)))
                     has_failed = True
                     continue
@@ -146,7 +145,6 @@ def run_ansible_playbook(args, playbook, cli_vars):
                 m = test_play.match(l)
                 if m:
                     current_play = m.group(1)
-                    recent_lines.append(l)
                     continue
                 # Check for new task
                 m = test_task.match(l)
@@ -163,7 +161,6 @@ def run_ansible_playbook(args, playbook, cli_vars):
                     has_ended = True
             else:
                 # Check for non-zero failure in the recap
-                recent_lines.append(l)
                 m = test_fail.search(l)
                 if not m:
                     has_failed = True
