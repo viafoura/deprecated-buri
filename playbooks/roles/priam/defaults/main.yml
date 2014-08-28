@@ -57,5 +57,5 @@ priam_cass_stopscript: "/etc/init.d/cassandra stop"
 priam_acl_groupname: "priam-{{ priam_clustername }}"
 priam_s3_base_dir: "{{ priam_clustername }}_backups"
 # We may have multiple AMIs for different clusters. Specify a suffix for image name
-ami_suffix: "{{ priam_clustername }}"
+buri_cluster_name: "{{ priam_clustername }}"
 
