@@ -10,11 +10,8 @@
     image_build: true
     cloud_target: amazon
   tasks:
-    - name: Create Buri build label folder
-      file: path={{ ami_image_mount }}/var/lib/buri state=directory owner=root group=root mode=0755
-    - name: Record Buri build label
-      file: path={{ ami_image_mount }}/var/lib/buri/{{ ami_name }} state=touch owner=root group=root mode=0644
     - name: Record Buri cluster name
-      copy: dest={{ ami_image_mount }}/var/lib/buri/cluster_name content={{ buri_cluster_name }} owner=root group=root mode=0644
+      copy: dest=/tmp/buri_cluster_name content={{ buri_cluster_name }} owner=root group=root mode=0644
+      when: buri_cluster_name is defined and buri_cluster_name != ''
   roles:
     - "{{ ami_role }}"
