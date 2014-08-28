@@ -1,4 +1,4 @@
-#[local]
+[local]
 localhost
 
 # This needs to list all top-level roles that would be aminated, resnaped, or applied.
@@ -10,6 +10,7 @@ localhost
 
 # NOTE: List is what's been setup for running in the cloud, which is assumed for all but development environments by default
 [production:children]
+local
 aminator
 asgard
 base

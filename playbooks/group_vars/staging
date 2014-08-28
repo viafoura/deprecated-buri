@@ -3,7 +3,6 @@
 buri_base_java: True
 
 cloud_target: amazon
-buri_iam_role: "Buri"
 
 # Something must override this at commandline, do not set elsewhere.
 #ami_role: ""

@@ -5,9 +5,6 @@ buri_base_java: True
 #cloud_target: amazon
 cloud_target: vm
 
-
-buri_iam_role: "Buri"
-
 # Something must override this at commandline, do not set elsewhere.
 #ami_role: ""
 # Maybe this one if you want a custom name
