@@ -13,6 +13,34 @@ ec2_apt_linux:
     volume: linux
     blockdevice: linux
     finalizer: tagging_ebs
+ec2_aptitude_linux:
+    cloud: ec2
+    distro: debian
+    provisioner: aptitude
+    volume: linux
+    blockdevice: linux
+    finalizer: tagging_ebs
+ec2_yum_linux_s3:
+    cloud: ec2
+    distro: redhat
+    provisioner: yum
+    volume: linux
+    blockdevice: linux
+    finalizer: tagging_s3
+ec2_apt_linux_s3:
+    cloud: ec2
+    distro: debian
+    provisioner: apt
+    volume: linux
+    blockdevice: linux
+    finalizer: tagging_s3
+ec2_aptitude_linux_s3:
+    cloud: ec2
+    distro: debian
+    provisioner: aptitude
+    volume: linux
+    blockdevice: linux
+    finalizer: tagging_s3
 ec2_buri_linux:
     cloud: ec2
     distro: debian
@@ -20,3 +48,10 @@ ec2_buri_linux:
     volume: linux
     blockdevice: linux
     finalizer: tagging_ebs
+ec2_buri_linux_s3:
+    cloud: ec2
+    distro: debian
+    provisioner: buri
+    volume: linux
+    blockdevice: linux
+    finalizer: tagging_s3
