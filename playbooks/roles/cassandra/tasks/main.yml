@@ -64,10 +64,10 @@
   template: src=cassandra-defaults dest=/etc/default/cassandra owner=root group=root mode=0644
 
 - name: Add keystore to Cassandra
-  copy: src={{ buri_environment }}/local/cassandra_keystore dest={{ cassandra_home }}/conf/.keystore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
+  copy: src={{ BURI_BASE }}/local/env/{{ buri_environment }}/cassandra_keystore dest={{ cassandra_home }}/conf/.keystore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
 
 - name: Add truststore to Cassandra
-  copy: src={{ buri_environment }}/local/cassandra_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
+  copy: src={{ BURI_BASE }}/local/env/{{ buri_environment }}/cassandra_truststore dest={{ cassandra_home }}/conf/.truststore owner={{ cassandra_user }} group={{ cassandra_group }} mode=0440
 
 - name: Install initial cassandra.yaml (1.2)
   template: src=cassandra.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
@@ -82,6 +82,14 @@
 
 - name: Bump up stack size in cassandra launch scripts
   lineinfile: dest={{ cassandra_home }}/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
+
+- name: Setup RMI for remote JMX
+  lineinfile:
+    dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
+    insertafter: ^JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
+    regexp: ^JVM_OPTS="\$JVM_OPTS -Djava.rmi.server.hostname=\$(ec2metadata --public-hostname)"
+    line: JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(ec2metadata --public-hostname)"
+  when: cloud_target == "amazon"
 
 - name: Disable/stop Cassanda service on init (Priam managed)
   service: name=cassandra enabled=no state=stopped

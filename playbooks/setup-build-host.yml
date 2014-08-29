@@ -3,22 +3,22 @@
   hosts: localhost
   connection: local
   vars_files:
-    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
+    - [ "{{ BURI_BASE }}/local/env/{{ buri_environment }}/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: false
     cloud_target: amazon
   tasks:
     - name: Register host target in ansible inventory
-      add_host: hostname={{ machine_target }} groups=anshost
+      add_host: hostname={{ machine_target }} groups=build_host,anshost
 
 - name: Provisioning role against host
   hosts: anshost
   user: ubuntu
   sudo: True
   vars_files:
-    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
+    - [ "{{ BURI_BASE }}/local/env/{{ buri_environment }}/overrides.yml", "vars/dummy.yml" ]
   vars: 
     image_build: false
     cloud_target: amazon
   roles:
-    - build-host
+    - build_host

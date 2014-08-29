@@ -33,5 +33,5 @@ asgard_build_url: https://github.com/Netflix/asgard/releases/download/asgard-1.5
 
 asgard_build_source: True
 asgard_git_repo: https://github.com/Netflix/asgard.git
-asgard_git_ref: master
+asgard_git_ref: asgard-1.5
 

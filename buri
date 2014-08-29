@@ -2,52 +2,235 @@
 
 from __future__ import print_function
 import argparse
+import ConfigParser
 import os
 import io
+import errno
 import logging
 import subprocess
+import random
+import re
+import sys
 
-def run_ansible_playbook(args, playbook, cli_vars):
-    cmd = 'python -u `which ansible-playbook` %s/playbooks/%s.yml -i %s/playbooks/%s/inventory -e "%s" -vv' % (args.BURI_BASE, playbook, args.BURI_BASE, args.environment, cli_vars)
-    logging.info('executing ansible as: %s' % cmd)
+# Possible device permutations to select from
+# FIXME: these in config
+device_letters = 'qrstuvwx'	# Not in Aminator's default range
+device_numbers = xrange(1, 16)
+
+# Does not lock or anything else... there is a race here if two runs happen, which should error on the mount if they collide
+# But does do a trivial test for exisistence of the device node randomly generated
+# If we do any kind of lock at all, it's working w/ Aminator to have a common concept of what's locked
+def get_device_node(mode="flat"):
+    exists = True
+    while 1:
+        dev = get_random_device_node(mode)
+        if mode == "flat":
+            if not os.path.exists(dev) and not os.path.exists(re.sub(r'[0-9]+$', '', dev)):
+                return dev
+        else:
+            if not os.path.exists(dev):
+                return dev
+
+# Random device node generator
+def get_random_device_node(mode="flat"):
+    ret = "/dev/xvd"
+    ret += random.choice(device_letters)
+    if mode == "flat":
+      ret += str(random.choice(device_numbers))
+    return ret
+
+def ensure_local_env(args):
+    local_env = args.BURI_BASE + "/local/env/" + args.environment
+    try:
+        os.makedirs(local_env)
+        logging.info("Local environment folder did not exist, created: " + local_env)
+        return
+    except OSError as ex:
+        if ex.errno != errno.EEXIST:
+            logging.critical("Error creating {0}: ({1}) {2}: ".format(local_env, ex.errno, ex.errstr))
+            raise
+        logging.info("Using local environment folder located at: " + local_env)
+
+# generates an ansible commandline
+def gen_ansible_command(args, playbook, cli_vars):
+    roles_param = ''
+    roles_path = '%s/local/roles' % args.BURI_BASE
+    if os.path.exists(roles_path) and not os.path.isfile(roles_path):
+        roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
+    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3} -e "BURI_BASE=\'{1}\' buri_environment=\'{3}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
+    return cmd
+
+# Returns an array with as many elements as plays, each element the count of tasks for the play
+def estimate_ansible_run(cmd):
+    cmd += ' --list-tasks'
+    ret = []
+    play_no = 0
+    current_count = 0
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-    # dump to stdout for now
-    line = handle.stdout.readline()
-    while line:
-        print(line, end="")
+    while 1:
         line = handle.stdout.readline()
+        if not line:
+            break
+        else:
+            l = line.rstrip()
+            if not l:
+                continue
+
+            m = re.match(r'^ERROR: (.*)$', l)
+            if m:
+                logging.critical('Error estimating play: {0}'.format(m.group(1)))
+                return 1, []
+
+            if (re.match(r'^playbook:', l)):
+                continue
+
+            if (re.match(r'^  play #', l)):
+                if not play_no == 0:
+                    ret.append(current_count)
+                play_no += 1
+                current_count = 0
+                continue
+
+            current_count += 1
+    ret.append(current_count)
+    return handle.returncode, ret
+ 
+# Run a playbook, first taking an estimation, and monitoring/filtering output. Ensures all text since the last successful task is included on error output
+def run_ansible_playbook(args, playbook, cli_vars):
+    cmd = gen_ansible_command(args, playbook, cli_vars)
+    est_err, est = estimate_ansible_run(cmd)
+    if est_err:
+        return est_err
+    tasks_total = sum(est)
+    logging.info('executing {0} tasks in ansible run: {1}'.format(tasks_total, cmd))
+    handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+
+    # Setup state/reporting vars
+    recent_lines = []
+    current_task = ""
+    current_play= ""
+    has_ended = False
+    has_failed= False
+    tasks_run = 0
+
+    # Setup our regexes
+    test_play = re.compile(r"^PLAY: \[(.*?)\]( \**)?$")
+    test_task = re.compile(r"^TASK: \[(.*?)\]( \**)?$")
+    test_recap = re.compile(r"^PLAY RECAP( \**)?$")
+    test_error = re.compile(r'^ERROR: (.*)$')
+    test_fail = re.compile(r"failed=0")
+    # May be useful for enhancing output
+    #test_facts = re.compile(r"^GATHERING FACTS( \**)?$")
+    # This one is tricky, probably should be two things.. or split up in other ways.
+    # the extra text may be a blob of json, optionally preceeded by an items list (i guess if with_items is used?)
+    #test_stat = re.compile(r"^(ok|skipping|changed): \[(.*?)\](.*)?$")
+
+    while 1:
+        line = handle.stdout.readline();
+        if not line:
+            break
+        else:
+            l = line.rstrip()
+            recent_lines.append(l)
+            if args.verbose:
+                logging.info(l)
+            if not l:
+                continue
+            if not has_ended:
+                # Check for error
+                m = test_error.match(l)
+                if m:
+                    logging.critical('Error estimating play: {0}'.format(m.group(1)))
+                    has_failed = True
+                    continue
+                # Check for new play
+                m = test_play.match(l)
+                if m:
+                    current_play = m.group(1)
+                    continue
+                # Check for new task
+                m = test_task.match(l)
+                if m:
+                    current_task = m.group(1)
+                    tasks_run += 1
+                    recent_lines = []
+                    recent_lines.append(l)
+                    if not args.verbose:
+                        logging.info("[{0}/{1}] {2}".format(tasks_run, tasks_total, current_task))
+                    continue
+                # This marks the end, all remaining lines must contain "failures=0" to be successful
+                m = test_recap.match(l)
+                if m:
+                    has_ended = True
+            else:
+                # Check for non-zero failure in the recap
+                m = test_fail.search(l)
+                if not m:
+                    has_failed = True
+    if has_failed:
+        if not args.verbose:
+            logging.error("Error running plays, recent output leading up to error follows:")
+            for e in recent_lines:
+                logging.error(e)
+        return 1
+
+    reporting_playbooks = ['create-foundation-ubuntu', 'resnap-via-playbook']
+    if playbook in reporting_playbooks:
+        fh = open('/mnt/latest-report.txt')
+        while 1:
+            line = fh.readline()
+            if not line:
+                break
+            logging.info(line.rstrip())
+        fh.close()
+
+    # pass along the return code to eventually return ourselves (alas always zero for Ansible but for pathological cases)
+    return handle.returncode
 
 # Implementations of the subcommands the subparsers specify
 
-def devbox(args):
+def fluxdemo(args):
     args.alias="cassandra"
     keys_cassandra(args)
-    logging.info('Pushing a devbox to: %s' % args.host)
-    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one'" % args.host)
+    logging.info('Pushing all-in-one plus flux capacitor to: %s' % args.host)
+    return run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one_flux'" % args.host)
+
+def rssdemo(args):
+    args.alias="cassandra"
+    keys_cassandra(args)
+    logging.info('Pushing all-in-one plus Netflix recipes-rss to: %s' % args.host)
+    return run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one_rss'" % args.host)
 
 def apply(args):
     logging.info('Pushing %s role to: %s' % (args.role, args.host))
-    run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='%s'" % (args.host, args.role))
+    return run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='%s'" % (args.host, args.role))
 
 def buildhost(args):
     logging.info('Pushing a build host to: %s' % args.host)
-    run_ansible_playbook(args, "setup-build-host", "machine_target='%s'" % args.host)
+    return run_ansible_playbook(args, "setup-build-host", "machine_target='%s'" % args.host)
 
 def foundation(args):
-    logging.info('Creating foundation AMI for: %s' % args.environment)
-    run_ansible_playbook(args, "create-foundation-ubuntu", "ami_role='foundation'")
+    dev = get_device_node(args.disk_type)
+    logging.info('Creating foundation AMI for env {0} on device {1}'.format(args.environment, dev))
+    return run_ansible_playbook(args, "create-foundation-ubuntu", "ami_role='foundation' buri_disk_device='{0}' buri_disk_type='{1}'".format(dev, args.disk_type))
 
 def resnap(args):
-    logging.info('Resnapshotting AMI for: %s' % args.environment)
-    run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='%s' ami_role='%s'" % (args.parent, args.role))
+    dev = get_device_node(args.disk_type)
+    logging.info('Resnapshotting AMI for env {0} on device {1}'.format(args.environment, dev))
+    return run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='{0}' ami_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
+
+def aminator(args):
+    logging.info('Aminator Resnapshotting AMI for env {0} on mounted chroot: {1}'.format(args.environment, args.directory))
+    return run_ansible_playbook(args, "resnap-from-aminator", "ami_image_mount='{0}' ami_role='{1}'".format(args.directory, args.role))
 
 def cleanup_fail(args):
     logging.info('Cleaning up failed AMI resnap from: %s' % args.device)
-    run_ansible_playbook(args, "cleanup-failure", "ami_device='%s'" % args.device)
+    return run_ansible_playbook(args, "cleanup-failure", "buri_disk_device='%s'" % args.device)
 
 def keys_cassandra(args):
+    ensure_local_env(args)
     logging.info('Generating cassandra keys for: %s' % args.environment)
-    env_base='%s/playbooks/%s/local' % (args.BURI_BASE, args.environment)
+    env_base='%s/local/env/%s' % (args.BURI_BASE, args.environment)
     logging.info('Generating cassandra keys at: %s' % env_base)
     #1 Generate key and store
     if not os.path.isfile('%s/cassandra_keystore' % env_base):
@@ -69,11 +252,13 @@ def keys_cassandra(args):
         subprocess.call("keytool -import -v -trustcacerts -alias '%s' -file %s/cassandra_cert -keystore %s/cassandra_truststore -storepass 'cassandra' -noprompt" % (args.alias, env_base, env_base), shell=True)
     else:
         logging.info("Found existing cassandra_truststore")
+    return 0
 
 def keys_bundle(args):
+    ensure_local_env(args)
     logging.info('Generating EC2 image bundling keys for: %s' % args.environment)
-    env_base='%s/playbooks/%s/local' % (args.BURI_BASE, args.environment)
-    logging.info('Generating cassandra keys at: %s' % env_base)
+    env_base='%s/local/env/%s' % (args.BURI_BASE, args.environment)
+    logging.info('Generating EC2 keys at: %s' % env_base)
 
     if not os.path.isfile('%s/bundle_pk.pem' % env_base):
         logging.info("Creating new bundle_pk.pem")
@@ -86,6 +271,7 @@ def keys_bundle(args):
         subprocess.call("openssl req -new -x509 -sha1 -days 3750 -key %s/bundle_pk.pem -out %s/bundle_cert.pem -batch" % (env_base, env_base), shell=True)
     else:
         logging.info("Found existing bundle_cert.pem")
+    return 0
 
 # ARG PARSER STUFF BELOW HERE
 
@@ -107,63 +293,117 @@ class _HelpAction(argparse._HelpAction):
 
         parser.exit()
 
-parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
-parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
-parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level') 
-parser.add_argument('--environment', metavar='<env_name>', type=str, default='dev_vm', choices=['dev_vm', 'test', 'prod'], help='Set the environment context')
+def get_config():
+    parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
 
-subparser = parser.add_subparsers(help='sub commands')
+    # where we at?
+    BURI_BASE = os.path.dirname(os.path.realpath(__file__))
 
-# All-in-one devbox environment
-parser_devbox = subparser.add_parser('devbox', help="Install all-in-one system to a host for development use", add_help=False)
-parser_devbox.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
-parser_devbox.set_defaults(func=devbox)
+    # Process this first
+    parser.add_argument('-c', '--conf_file', metavar='<FILE>', help='specify config file location', default='{0}/etc/buri.cfg'.format(BURI_BASE))
+    args, remaining_argv = parser.parse_known_args()
 
-# apply
-parser_apply = subparser.add_parser('apply', help="Run a role against a host", add_help=False)
-parser_apply.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
-parser_apply.add_argument('role', metavar='<role>', type=str, help='Role to provision to host')
-parser_apply.set_defaults(func=apply)
+    config = ConfigParser.SafeConfigParser()
+    config.read([args.conf_file])
+    # Gets applied after all the argparse setup w/ it's defaults
+    defaults = dict(config.items("Defaults"))
 
-# EC2 buildhost environment
-parser_buildhost = subparser.add_parser('buildhost', help="Setup build-host in EC2 for AMI generation", add_help=False)
-parser_buildhost.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to setup')
-parser_buildhost.set_defaults(func=buildhost)
+    parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
+    parser.add_argument('-v', '--verbose', action='store_true', help='Be verbose with ansible output')
+    parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
+    parser.add_argument('--environment', metavar='<env_name>', type=str, default='development', choices=['development', 'test', 'staging', 'production'], help='Set the environment context')
+    parser.add_argument('--extra-vars', dest='extravars', metavar='<varstr="foo" varnum=123>', type=str, default='', help='Extra variables to pass to Ansible playbooks')
 
-# foundation
-parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
-parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
-parser_foundation.set_defaults(func=foundation)
+    subparser = parser.add_subparsers(help='sub commands')
 
-# resnap
-parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
-parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
-parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
-parser_resnap.set_defaults(func=resnap)
+    # All-in-one devbox environment, fluxdemo
+    parser_fluxdemo = subparser.add_parser('fluxdemo', help="Install all-in-one host, with flux capacitor demo", add_help=False)
+    parser_fluxdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+    parser_fluxdemo.set_defaults(func=fluxdemo)
 
-# cleanup_fail
-parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation (unmount/destroy EBS volume)", add_help=False)
-parser_cleanup_fail.add_argument('--device', metavar='<device_node>', default="/dev/xvdi", type=str, help='Device node to clean up')
-parser_cleanup_fail.set_defaults(func=cleanup_fail)
+    # All-in-one devbox environment, rssdemo
+    parser_rssdemo = subparser.add_parser('rssdemo', help="Install all-in-one host, with Netflix recipes-rss demo", add_help=False)
+    parser_rssdemo.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+    parser_rssdemo.set_defaults(func=rssdemo)
 
-# keys_cassandra
-parser_keys_cassandra = subparser.add_parser('keys_cassandra', help="Generate SSL Keystore for cassandra", add_help=False)
-parser_keys_cassandra.add_argument('--alias', metavar='<alias>', default='cassandra', type=str, help='Set alias for key generation')
-parser_keys_cassandra.set_defaults(func=keys_cassandra)
+    # apply
+    parser_apply = subparser.add_parser('apply', help="Run a role against a host", add_help=False)
+    parser_apply.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to install to')
+    parser_apply.add_argument('role', metavar='<role>', type=str, help='Role to provision to host')
+    parser_apply.set_defaults(func=apply)
 
-# keys_bundle
-parser_keys_bundle = subparser.add_parser('keys_bundle', help="Generate SSL pem files for EC2 image bundling", add_help=False)
-parser_keys_bundle.add_argument('--keylength', metavar='<alias>', default=2048, type=int, help='Set key length')
-parser_keys_bundle.set_defaults(func=keys_bundle)
+    # EC2 buildhost environment
+    parser_buildhost = subparser.add_parser('buildhost', help="Setup build_host in EC2 for AMI generation", add_help=False)
+    parser_buildhost.add_argument('host', metavar='<ip|hostname>', type=str, help='IP or hostname to setup')
+    parser_buildhost.set_defaults(func=buildhost)
 
-# parser all setup, parse it
-args = parser.parse_args()
-numeric_level = getattr(logging, args.loglevel.upper(), None)
-if not isinstance(numeric_level, int):
-    raise ValueError('Invalid log level: %s' % loglevel)
-logging.basicConfig(level=numeric_level, format='%(asctime)s %(levelname)s: %(message)s')
-logging.warn("LOGLEVEL: %s, %s", args.loglevel, numeric_level)
-args.BURI_BASE = os.path.dirname(os.path.realpath(__file__))
-logging.info("PATH: %s" % args.BURI_BASE)
-args.func(args)
+    # foundation
+    parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
+    parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
+    parser_foundation.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
+    parser_foundation.set_defaults(func=foundation)
+
+    # resnap
+    parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
+    parser_resnap.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
+    parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
+    parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
+    parser_resnap.set_defaults(func=resnap)
+
+    # cleanup_fail
+    parser_cleanup_fail = subparser.add_parser('cleanup_fail', help="Clean up after a failed AMI creation (unmount/destroy EBS volume)", add_help=False)
+    parser_cleanup_fail.add_argument('device', metavar='<device_node>', type=str, help='Device node to clean up')
+    parser_cleanup_fail.set_defaults(func=cleanup_fail)
+
+    # keys_cassandra
+    parser_keys_cassandra = subparser.add_parser('keys_cassandra', help="Generate SSL Keystore for cassandra", add_help=False)
+    parser_keys_cassandra.add_argument('--alias', metavar='<alias>', default='cassandra', type=str, help='Set alias for key generation')
+    parser_keys_cassandra.set_defaults(func=keys_cassandra)
+
+    # keys_bundle
+    parser_keys_bundle = subparser.add_parser('keys_bundle', help="Generate SSL pem files for EC2 image bundling", add_help=False)
+    parser_keys_bundle.add_argument('--keylength', metavar='<alias>', default=2048, type=int, help='Set key length')
+    parser_keys_bundle.set_defaults(func=keys_bundle)
+
+    # resnap from within Aminator
+    parser_aminator = subparser.add_parser('aminator', help="Provisioner hook for Aminator, not for general use", add_help=False)
+    parser_aminator.add_argument('directory', metavar='<chroot_directory>', type=str, help='Location of mounted parent AMI')
+    parser_aminator.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
+    parser_aminator.set_defaults(func=aminator)
+
+    
+    # Now apply ones from config
+    parser.set_defaults(**defaults)
+
+    # parser all setup, parse it
+    args = parser.parse_args()
+
+    # Add this to the args
+    args.BURI_BASE = BURI_BASE
+
+    return args
+
+def main():
+    # combination of args, configfile, and defaults, checked in that order
+    args = get_config()
+
+    # setup the logging
+    numeric_level = getattr(logging, args.loglevel.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: %s' % loglevel)
+    logging.basicConfig(level=numeric_level, format='%(asctime)s %(levelname)s: %(message)s')
+    logging.warn("LOGLEVEL: %s, %s", args.loglevel, numeric_level)
+    logging.info("PATH: %s" % args.BURI_BASE)
+
+    # Do it, handler could be better, but gets the point across...
+    try:
+         return args.func(args)
+    except Exception as e:
+        logging.error("Exception: {0}".format(e))
+        return 1
+    return 0
+
+if __name__ == '__main__':
+    status = main()
+    sys.exit(status)
 

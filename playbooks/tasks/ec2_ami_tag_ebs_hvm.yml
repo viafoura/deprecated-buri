@@ -1,22 +1,45 @@
 ---
-- name: Registering HVM AMI to snapshot
+- name: Registering HVM AMI to snapshot (flat)
   command: |
-    aws ec2 register-image 
+    aws ec2 register-image
       --output text
       --region {{ ansible_ec2_placement_region }}
-      --name "{{ ami_name }}-HVM-EBS"
+      --name "{{ ami_name }}-HVM-EBS-{{ buri_disk_type }}"
       --description "{{ ami_description }}"
       --architecture "x86_64"
       --root-device-name /dev/sda1
+      --virtualization-type hvm
       --block-device-mappings
-        '[{"DeviceName": "/dev/sda1","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]' 
+        '[{"DeviceName": "/dev/sda1","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
   register: amihvm
+  when: buri_disk_type == "flat"
 
 - name: Saving HVM AMI ID as a fact for later use
   set_fact:
     ami_id_hvm: '{{ amihvm.stdout }}'
+  when: buri_disk_type == "flat"
+
+- name: Registering HVM AMI to snapshot (partitioned)
+  command: |
+    aws ec2 register-image
+      --output text
+      --region {{ ansible_ec2_placement_region }}
+      --name "{{ ami_name }}-HVM-EBS-{{ buri_disk_type }}"
+      --description "{{ ami_description }}"
+      --architecture "x86_64"
+      --root-device-name /dev/sda1
+      --virtualization-type hvm
+      --block-device-mappings
+        '[{"DeviceName": "/dev/sda1","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
+  register: amihvm
+  when: buri_disk_type != "flat"
+
+- name: Saving HVM AMI ID as a fact for later use
+  set_fact:
+    ami_id_hvm: '{{ amihvm.stdout }}'
+  when: buri_disk_type != "flat"
 
 - name: Tagging HVM AMI
-  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_hvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-EBS\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_hvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-EBS-{{ buri_disk_type }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
 
 

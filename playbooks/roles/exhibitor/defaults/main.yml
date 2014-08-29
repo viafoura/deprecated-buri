@@ -80,4 +80,4 @@ exhibitor_defaultconfig_auto_manage_instances: '1'
 exhibitor_defaultconfig_servers_spec: ''
 
 # For multiple clusters, apply cluster name
-ami_suffix: "{{ exhibitor_cluster_name }}"
+buri_cluster_name: "{{ exhibitor_cluster_name }}"

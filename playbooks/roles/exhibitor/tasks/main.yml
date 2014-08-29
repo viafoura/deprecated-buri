@@ -34,7 +34,7 @@
   file: path={{ exhibitor_webapps_root }}/root state=directory
 
 - name: Decompress Exhibitor WAR file
-  command: chdir={{ exhibitor_webapps_root }}/root unzip /tmp/exhibitor.war
+  command: chdir={{ exhibitor_webapps_root }}/root jar xf /tmp/exhibitor.war
   notify: restart exhibitor
   
 - name: Remove source WAR file

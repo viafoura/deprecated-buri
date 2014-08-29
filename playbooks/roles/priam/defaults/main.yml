@@ -44,8 +44,8 @@ priam_ext_mirror: "http://slash-etc.com/java/priam-cass-extensions-{{ priam_vers
 priam_ext_checksum: "2c845fd10d957ef631e87a6944b9009174dea2d69b948552280267b754a3182d"
 
 priam_build_source: True
-priam_git_repo: https://github.com/Netflix/Priam.git
-priam_git_ref: master
+priam_git_repo: https://github.com/jhohertz/Priam.git
+priam_git_ref: staging_2.0
 
 priam_cass_startscript: "/etc/init.d/cassandra start"
 priam_cass_stopscript: "/etc/init.d/cassandra stop"
@@ -57,5 +57,5 @@ priam_cass_stopscript: "/etc/init.d/cassandra stop"
 priam_acl_groupname: "priam-{{ priam_clustername }}"
 priam_s3_base_dir: "{{ priam_clustername }}_backups"
 # We may have multiple AMIs for different clusters. Specify a suffix for image name
-ami_suffix: "{{ priam_clustername }}"
+buri_cluster_name: "{{ priam_clustername }}"
 
