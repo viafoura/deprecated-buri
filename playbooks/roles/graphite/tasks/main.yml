@@ -2,7 +2,7 @@
 # Graphite only available in 14.04 it looks
 - name: Checking sanity of play...
   fail: msg="Graphite role requires Ubuntu 14.04 or later"
-  when: ansible_distribution_version|float < 14.04
+  when: ansible_distribution_version|version_compare('14.04', '<')
 
 - name: Install packages
   apt: pkg={{ item }} state=latest
