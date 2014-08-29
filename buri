@@ -53,11 +53,20 @@ def ensure_local_env(args):
 
 # generates an ansible commandline
 def gen_ansible_command(args, playbook, cli_vars):
+    # check for and include local roles. this does not link to the local inventory inclusion, and each can run on it's own
+    # however, new top-level roles you wish to image/push will need to be included in the inventory file
     roles_param = ''
     roles_path = '%s/local/roles' % args.BURI_BASE
     if os.path.exists(roles_path) and not os.path.isfile(roles_path):
         roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
-    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3} -e "BURI_BASE=\'{1}\' buri_environment=\'{3}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
+    # check for local inventory, needs local group_vars as well, else fall back to one in the base of buri
+    inventory_path = '{0}/playbooks/{1}'.format(args.BURI_BASE, args.environment)
+    local_inventory_path = '{0}/local/inventory/{1}'.format(args.BURI_BASE, args.environment)
+    local_group_vars_path = '{0}/local/inventory/group_vars/{1}'.format(args.BURI_BASE, args.environment)
+    if os.path.exists(local_inventory_path) and os.path.isfile(local_inventory_path) and os.path.exists(local_group_vars_path) and os.path.isfile(local_group_vars_path):
+        inventory_path = local_inventory_path
+    # commandify
+    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {3} -e "BURI_BASE=\'{1}\' buri_environment=\'{4}\' {5} {6}" -vv'.format(roles_param, args.BURI_BASE, playbook, inventory_path, args.environment, cli_vars, args.extravars)
     return cmd
 
 # Returns an array with as many elements as plays, each element the count of tasks for the play
