@@ -60,7 +60,7 @@ def gen_ansible_command(args, playbook, cli_vars):
     if os.path.exists(roles_path) and not os.path.isfile(roles_path):
         roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
     # check for local inventory, needs local group_vars as well, else fall back to one in the base of buri
-    inventory_path = '{0}/playbooks/{1}'.format(args.BURI_BASE, args.environment)
+    inventory_path = '{0}/etc/inventory/{1}'.format(args.BURI_BASE, args.environment)
     local_inventory_path = '{0}/local/inventory/{1}'.format(args.BURI_BASE, args.environment)
     local_group_vars_path = '{0}/local/inventory/group_vars/{1}'.format(args.BURI_BASE, args.environment)
     if os.path.exists(local_inventory_path) and os.path.isfile(local_inventory_path) and os.path.exists(local_group_vars_path) and os.path.isfile(local_group_vars_path):
