@@ -52,4 +52,9 @@
 - name: Create buri configuration
   template: src=buri.cfg dest=/opt/buri/etc/buri.cfg owner=root group=root mode=0644  
 
-
+- name: Checkout local Buri configuration from Git
+  git: repo={{ buri_local_git_repo }}
+       dest=/opt/buri/local
+       version={{ buri_local_git_ref }}
+  when: buri_local_git_repo is defined and buri_local_git_ref is defined
+  
