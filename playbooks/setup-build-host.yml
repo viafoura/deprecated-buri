@@ -11,7 +11,7 @@
 
 - name: Provisioning role against host
   hosts: anshost
-  user: ubuntu
+  user: {{ buri_remote_user|default('ubuntu') }}
   sudo: True
   vars: 
     image_build: false

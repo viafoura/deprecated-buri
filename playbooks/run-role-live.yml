@@ -10,7 +10,7 @@
 
 - name: Provisioning role against host
   hosts: anshost
-  user: dev
+  user: "{{ buri_remote_user|default('dev') }}"
   sudo: True
   vars_files:
     - [ "{{ BURI_BASE }}/local/env/{{ buri_environment }}/overrides.yml", "vars/dummy.yml" ]
