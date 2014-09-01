@@ -1,5 +1,7 @@
 [local]
 localhost
+# For Vagrant
+192.168.33.10          ansible_ssh_user="vagrant" ansible_ssh_pass="vagrant"
 
 # This needs to list all top-level roles that would be aminated, resnaped, or applied.
 # Every role gets a group, however not all need have group vars specified. Most native

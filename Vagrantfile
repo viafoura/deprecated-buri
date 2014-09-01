@@ -13,6 +13,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "3072"]
   end
   config.vm.provision :host_shell do |host_shell|
-    host_shell.inline = './buri --environment development fluxdemo 192.168.33.10'
+    host_shell.inline = 'ssh-add ~/.vagrant.d/insecure_private_key && ./buri -u vagrant --environment development fluxdemo 192.168.33.10'
   end
 end

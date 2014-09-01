@@ -25,6 +25,18 @@ There are also modes to generate cloud-ready images for EC2 enabling the cloud f
 
 See the <a href="../../wiki/Buri-overview">Buri overview</a> page on the <a href="../../wiki">wiki</a> for general info.
 
+### Quick start, using Vagrant
+
+#### Requirements:
+
+- Vagrant and Virtualbox installed
+- Ansible 1.6.10 installed
+- Vagrant host shell plugin installed, via:
+
+    vagrant plugin install vagrant-host-shell
+
+
+
 ### Quick start, Flux-in-a-Box
 
 To setup the above configuration:
