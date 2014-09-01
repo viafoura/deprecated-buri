@@ -4,8 +4,8 @@
   connection: local
   sudo: True
   vars_files:
+    # ugly due to be removed
     - roles/{{ ami_role }}/defaults/main.yml
-    - [ "{{ BURI_BASE }}/local/env/{{ buri_environment }}/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: true
     cloud_target: amazon

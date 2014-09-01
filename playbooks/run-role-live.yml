@@ -2,8 +2,6 @@
 - name: Adding host to inventory
   hosts: localhost
   connection: local
-  vars_files:
-    - [ "{{ BURI_BASE }}/local/env/{{ buri_environment }}/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: false
   tasks:
