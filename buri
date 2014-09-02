@@ -76,6 +76,7 @@ def gen_ansible_command(args, playbook, cli_vars):
 # Returns an array with as many elements as plays, each element the count of tasks for the play
 def estimate_ansible_run(cmd):
     cmd += ' --list-tasks'
+    logging.info("Estimating ansible run using: " + cmd)
     ret = []
     play_no = 0
     current_count = 0
