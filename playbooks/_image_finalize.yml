@@ -3,9 +3,6 @@
   hosts: localhost
   connection: local
   sudo: True
-  vars_files:
-    # ugly due to be removed
-    - roles/{{ ami_role }}/defaults/main.yml
   vars:
     image_build: true
     cloud_target: amazon

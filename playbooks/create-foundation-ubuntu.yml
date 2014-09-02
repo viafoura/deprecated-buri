@@ -4,9 +4,6 @@
   hosts: localhost
   connection: local
   sudo: True
-  vars_files:
-    # again, due to go away, see resnap
-    - "roles/{{ ami_role }}/defaults/main.yml"
   vars: 
     ami_root_resize: true
     image_build: true

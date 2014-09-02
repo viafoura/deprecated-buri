@@ -3,9 +3,6 @@
 - name: Run role from buri-provisioner
   hosts: localhost
   connection: local
-  vars_files:
-    # due to go away...
-    - [ "roles/{{ ami_role }}/defaults/main.yml" ]
   vars:
     image_build: true
     cloud_target: amazon
