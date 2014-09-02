@@ -36,7 +36,6 @@ exhibitor_build_source: True
 exhibitor_instance_port: 8401
 exhibitor_instance_jmx_port: 7401
 exhibitor_jvm_xmx: '512m'
-exhibitor_cluster_name: 'devvm'
 exhibitor_opts_configtype: 'file'
 # If true, the Explorer UI will allow nodes to be modified (use with caution).
 exhibitor_opts_nodemodification: "true" # true/false

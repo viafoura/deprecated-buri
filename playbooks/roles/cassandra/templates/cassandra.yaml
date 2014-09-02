@@ -7,8 +7,8 @@
 
 # The name of the cluster. This is mainly used to prevent machines in
 # one logical cluster from joining another.
-{% if cloud_target == "amazon" and priam_clustername is defined %}
-cluster_name: '{{ priam_clustername }}'
+{% if cloud_target == "amazon" and priam_cluster_name is defined %}
+cluster_name: '{{ priam_cluster_name }}'
 {% else %}
 cluster_name: 'DEV_LOCAL'
 {% endif %}

@@ -55,7 +55,6 @@ edda_region: us-east-1
 exhibitor_instance_port: 8401
 exhibitor_instance_jmx_port: 7401
 exhibitor_jvm_xmx: '512m'
-exhibitor_cluster_name: 'default'
 exhibitor_s3_bucket: 'exhibitor'
 exhibitor_opts_configtype: 's3'
 exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
@@ -146,8 +145,6 @@ priam_compaction_throughput: 0
 priam_compaction_limit: 256
 # Disable if you like, not used in classic NetflixOSS setups
 priam_native_transport_enabled: true
-# Name of cluster instance (for supporting multiple clusters)
-priam_clustername: "priam"
 # Set this true unless in a VPC in a single region
 priam_multiregion_enable: true
 # How Priam reports cluster member to eachother changes in a VPC, this is the signal to do so

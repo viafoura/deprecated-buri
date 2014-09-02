@@ -8,7 +8,7 @@ import boto.sdb
 import sys
 from pprint import pprint
 
-appId = "{{ priam_clustername }}"
+appId = "{{ priam_cluster_name }}"
 
 def put_record(domain, prop, val):
   print "Inserting into %s: %s -> %s" % (domain, prop, val)
@@ -30,7 +30,7 @@ if pp is None:
 
 put_record("PriamProperties", "priam.s3.bucket", "{{ priam_s3_bucket }}")
 put_record("PriamProperties", "priam.s3.base_dir", "{{ priam_s3_base_dir }}")
-put_record("PriamProperties", "priam.clustername", "{{ priam_clustername }}")
+put_record("PriamProperties", "priam.clustername", "{{ priam_cluster_name }}")
 put_record("PriamProperties", "priam.data.location", "{{ cassandra_data_location }}")
 put_record("PriamProperties", "priam.cache.location", "{{ cassandra_cache_location }}")
 put_record("PriamProperties", "priam.commitlog.location", "{{ cassandra_commitlog_location }}")
