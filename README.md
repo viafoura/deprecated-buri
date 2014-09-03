@@ -43,7 +43,7 @@ Requirements:
 
     vagrant provision
 
-This will do all the below setups, letting you skip most of the following section, letting you get right to using it.
+This will do all the below setups, letting you skip most of the following section, so you can get right to using it. (May still want to get that coffee mind you...)
 
 ### Quick start, Flux-in-a-Box
 
