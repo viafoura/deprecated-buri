@@ -1,0 +1,99 @@
+---
+### BASE: Base image composition
+buri_base_java: True
+
+#cloud_target: amazon
+cloud_target: vm
+
+# Something must override this at commandline, do not set elsewhere.
+#ami_role: ""
+# Maybe this one if you want a custom name
+ami_description: "{{ ami_role }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
+ami_image_mount: "/mnt/{{ ami_name }}"
+
+# For S3 bundling:
+ami_bundle_account: '123456789012'
+ami_bundle_bucket_path: 'yourbucket/basepath'
+
+# These are more likely to be set in a site config or on command line
+
+# In GB, a default. whole numbers only.
+ami_root_size: 10
+ami_build_pvm_ebs: True
+ami_build_hvm_ebs: True
+ami_build_pvm_instance: False
+ami_build_hvm_instance: False
+
+eureka_build_source: True
+eureka_instance_port: 8400
+eureka_instance_jmx_port: 7400
+eureka_jvm_xmx: '512m'
+# Do not apply to this environment
+#eureka_dns_txt_domain: eureka.mydomain.net
+#eureka_aws_region: us-east-1
+
+exhibitor_build_source: True
+exhibitor_instance_port: 8401
+exhibitor_instance_jmx_port: 7401
+exhibitor_jvm_xmx: '512m'
+exhibitor_opts_configtype: 'file'
+# If true, the Explorer UI will allow nodes to be modified (use with caution).
+exhibitor_opts_nodemodification: "true" # true/false
+# If true, enables AWS S3 backup of ZooKeeper log files (s3credentials may be provided as well).
+exhibitor_opts_s3backup: False
+#exhibitor_s3_bucket: 'exhibitor'
+#exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
+
+fluxdemo_edge_build_source: True
+fluxdemo_edge_instance_port: 8299
+fluxdemo_edge_instance_jmx_port: 7299
+fluxdemo_edge_instance_karyon_port: 9299
+fluxdemo_edge_instance_eureka_port: 8400
+fluxdemo_edge_jvm_xmx: '512m'
+fluxdemo_edge_graphite_host: 'localhost'
+fluxdemo_edge_zk_host: 'localhost'
+
+fluxdemo_middle_build_source: True
+fluxdemo_middle_instance_port: 8399
+fluxdemo_middle_instance_jmx_port: 7399
+fluxdemo_middle_instance_karyon_port: 9399
+fluxdemo_middle_instance_eureka_port: 8400
+fluxdemo_middle_jvm_xmx: '512m'
+fluxdemo_middle_graphite_host: 'localhost'
+fluxdemo_middle_zk_host: 'localhost'
+fluxdemo_middle_cass_host: 'localhost'
+
+hystrix_dashboard_build_source: True
+hystrix_dashboard_instance_port: 8403
+hystrix_dashboard_instance_jmx_port: 7403
+hystrix_dashboard_jvm_xmx: '512m'
+
+
+turbine_build_source: True
+turbine_instance_port: 8402
+turbine_instance_jmx_port: 7402
+turbine_jvm_xmx: '512m'
+# Right now only config supported, eventually eureka will be added. Will probably ignore file-based
+turbine_discovery_impl: com.netflix.turbine.discovery.ConfigPropertyBasedDiscovery
+#turbine_discovery_impl: com.netflix.turbine.discovery.FileBasedInstanceDiscovery
+#turbine_discovery_impl: com.netflix.turbine.discovery.EurekaInstanceDiscovery
+# Use if the cluster list below does not specify a path
+turbine_default_connect: :80/hystrix.stream
+# Only used when using ConfigPropertyBasedDiscovery
+turbine_default_instances: 127.0.0.1
+# This section only applies for ConfigPropertyBasedDiscovery
+turbine_clusters:
+  fluxdemo-edge:
+    connect: :8299/hystrix.stream
+    instances: 127.0.0.1
+  fluxdemo-middletier:
+    connect: :8399/hystrix.stream
+    instances: 127.0.0.1
+  rssdemo-edge:
+    connect: :8298/hystrix.stream
+    instances: 127.0.0.1
+  rssdemo-middletier:
+    connect: :8398/hystrix.stream
+    instances: 127.0.0.1
+
+

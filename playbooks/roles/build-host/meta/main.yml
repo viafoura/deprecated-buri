@@ -1,5 +1,0 @@
----
-dependencies:
-  - { role: cloud_amazon }
-  - { role: base, when: not image_build }
-

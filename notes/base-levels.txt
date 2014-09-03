@@ -1,0 +1,34 @@
+
+So... The "base" is going to get a bit more complex...
+
+We need to provide flexibility in how the base gets created.
+
+Here are the main points:
+
+- foundation remains as-is, the bare image
+- what is now the base, becomes "buri_base"
+  - it's scope is everything not in the foundation, that buri itself wants, or are commonly useful at a basic level. (vim, tcpdump, etc)
+- major "platform" things, that you'd not want to install every resnap, but should be optional, or switchable
+  - the only one of this class for now is "oracle-java", which I would like to see switchable with openjdk, as it *would* be a better default...
+- a local base layer, would run atop all the above, almost like a platform item that runs last (or maybe exactly like)
+  - would be a part of a "local roles" folder
+  - need to detect it somehow, as it will be only run if present (of course)
+    - ansible has not yielded a nice way to do this yet...
+    - buri front end could check
+
+And the new setup would be something like:
+
+Foundation AMI: foundation
+      Base AMI: (foundation), buri_base, oracle_java, local_base
+
+The new role of name "base" would really just be a meta file with:
+
+dependencies:
+- { role: base_buri )
+- { role: oracle_java, when: buri_base_java }
+- { role: base_local,  when: buri_base_local }
+
+
+And we rely on the ordering here to control base_buri, which will depends foundation, then the java, and local, which may itself be a composite of dependencies.
+
+

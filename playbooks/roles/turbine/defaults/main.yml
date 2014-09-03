@@ -30,5 +30,5 @@ turbine_build_url: http://search.maven.org/remotecontent?filepath=com/netflix/tu
 # New git-based building controls
 turbine_build_source: False
 turbine_git_repo: https://github.com/Netflix/turbine.git
-turbine_git_ref: master
+turbine_git_ref: 1.x
 

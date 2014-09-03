@@ -2,23 +2,19 @@
 - name: Adding host to inventory
   hosts: localhost
   connection: local
-  vars_files:
-    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: false
     cloud_target: amazon
   tasks:
     - name: Register host target in ansible inventory
-      add_host: hostname={{ machine_target }} groups=anshost
+      add_host: hostname={{ machine_target }} groups=aminator,anshost
 
 - name: Provisioning role against host
   hosts: anshost
-  user: ubuntu
+  user: {{ buri_remote_user|default('ubuntu') }}
   sudo: True
-  vars_files:
-    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   vars: 
     image_build: false
     cloud_target: amazon
   roles:
-    - build-host
+    - aminator

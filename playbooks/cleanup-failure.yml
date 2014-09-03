@@ -3,8 +3,6 @@
   hosts: localhost
   connection: local
   sudo: True
-  vars_files:
-    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   tasks:
     - include: tasks/ec2_get_facts.yml
     - include: tasks/detach_failed_vol.yml

@@ -1,19 +1,15 @@
 ---
-# image_url:    the URL for the imagefile to retrieve
-# image_path:   the local filename for retrieved image
-# image_device: the device node to write the image to
-
 - name: Fetch distribution hard disk image
   get_url:
-    url: '{{ image_url }}'
-    dest: '{{ image_path }}'
+    url: '{{ distro_image_url }}'
+    dest: '{{ distro_image_path }}'
     owner: 'root'
     group: 'root'
     mode: 0444
 
 - name: Writing disk image to volume
-  command: 'qemu-img convert -O host_device {{ image_path }} {{ image_device }}'
+  command: 'qemu-img convert -O host_device {{ distro_image_path }} {{ buri_disk_device }}'
 
 - name: Scanning EBS volume for new partition table
-  command: 'partprobe {{ image_device }}'
+  command: 'partprobe {{ buri_disk_device }}'
 

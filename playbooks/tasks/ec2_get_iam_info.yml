@@ -5,7 +5,7 @@
 
 - name: Saving IAM Role as fact for later use
   set_fact:
-    iam_role: "{{ item }}"
+    buri_iam_role: "{{ item }}"
   with_items: iamcheck.stdout
 
 - name: Determine IAM Role AccessKeyID 

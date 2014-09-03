@@ -2,9 +2,10 @@
 BUILD COMPLETED
 ===============
 
-AMI build name:    {{ ami_name}}
+AMI build name:    {{ ami_name }}
 AMI Description:   {{ ami_description }}
 Region (Zone):     {{ ansible_ec2_placement_region }} ({{ ansible_ec2_placement_availability_zone }})
+AMI disk format:   {{ buri_disk_type }}
 {% if ami_parent is defined and ami_parent != "" %}
 AMI Parent Image:  {{ ami_parent }}
 EBS Parent:        {{ ebs_parent_id }}
@@ -17,10 +18,10 @@ EBS volume ID:     {{ ebs_volume_id }} (deleted)
 EBS snapshot ID:   {{ ebs_snapshot_id }}
 {% endif %}
 {% if ami_id_pvm is defined and ami_id_pvm != "" %}
-AMI ID - PVM/EBS:  {{ ami_id_pvm }}'
+AMI ID - PVM/EBS:  {{ ami_id_pvm }}
 {% endif %}
 {% if ami_id_hvm is defined and ami_id_hvm != "" %}
-AMI ID - HVM/EBS:  {{ ami_id_hvm }}'
+AMI ID - HVM/EBS:  {{ ami_id_hvm }}
 {% endif %}
 {% if ami_id_pvm_instance is defined and ami_id_pvm_instance != "" %}
 AMI ID - PVM/S3:   {{ ami_id_pvm_instance }}

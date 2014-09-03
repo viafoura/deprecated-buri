@@ -11,7 +11,7 @@ priam_compaction_limit: 256
 # Disable if you like, not used in classic NetflixOSS setups
 priam_native_transport_enabled: true
 # Name of cluster instance (for supporting multiple clusters)
-priam_clustername: "priam"
+priam_cluster_name: "{{ buri_cluster_name|default('default') }}"
 # Set this true unless in a VPC in a single region
 priam_multiregion_enable: true
 # How Priam reports cluster member to eachother changes in a VPC, this is the signal to do so
@@ -51,11 +51,9 @@ priam_cass_startscript: "/etc/init.d/cassandra start"
 priam_cass_stopscript: "/etc/init.d/cassandra stop"
 
 # You *can* override these, but better to use a convention here
-# priam_clustername MUST match the autoscaling group name (before the dash) in order to be used 
+# priam_cluster_name MUST match the autoscaling group name (before the dash) in order to be used 
 # i.e. project_stage_db-useast1 == cluster_name-ec2region
-# priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
-priam_acl_groupname: "priam-{{ priam_clustername }}"
-priam_s3_base_dir: "{{ priam_clustername }}_backups"
-# We may have multiple AMIs for different clusters. Specify a suffix for image name
-ami_suffix: "{{ priam_clustername }}"
+# priam_cluster_name is effectively the reference to the correct set of SimpleDB Configuration
+priam_acl_groupname: "priam-{{ priam_cluster_name }}"
+priam_s3_base_dir: "{{ priam_cluster_name }}_backups"
 

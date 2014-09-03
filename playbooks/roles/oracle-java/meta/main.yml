@@ -1,0 +1,4 @@
+---
+dependencies:
+  # Skip foundation run when resnapping base from it
+  - { role: base, when: not image_build }

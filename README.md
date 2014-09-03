@@ -21,9 +21,29 @@ The all-in-one deploys a complete complement of the various components that Flux
 
 All of the above, except for Cassandra and Graphite, will be build from sources by default on the all-in-one VM. This allows for easy development that follows the repositories you are working with, and allows continuous integration and delivery setups to be made.
 
-There are also modes to generate cloud-ready images for EC2 enabling the cloud features of the NetflixOSS components.  See the <a href="../../wiki/Getting-started">getting started guide</a> for information on getting started using Buri in that manner. It should be possible to use Buri in more traditional [Ansible](http://ansible.com) setups as well.
+Buri can also generate cloud-ready images for EC2 enabling the cloud features of the NetflixOSS components.  See the <a href="../../wiki/Getting-started">getting started guide</a> for information on getting started using Buri in that manner. It should be possible to use Buri in more traditional [Ansible](http://ansible.com) setups as well. There is also now a [provisioner plugin](https://github.com/aminator-plugins/buri-provisioner) for [aminator](https://github.com/Netflix/aminator), for using it versus Buri's AMI resnap operation. (Better for high volume setups due to better error handling, locking, etc)
 
 See the <a href="../../wiki/Buri-overview">Buri overview</a> page on the <a href="../../wiki">wiki</a> for general info.
+
+### Quick start, using Vagrant
+
+Requirements:
+
+- Vagrant and Virtualbox installed
+- Ansible 1.6.10 installed
+- Vagrant host shell plugin installed, via:
+
+    vagrant plugin install vagrant-host-shell
+
+- Run from the buri checkout:
+
+    vagrant up
+
+- Sometimes, this might fail on the first try, we might need to add a delay some where. if it does, run:
+
+    vagrant provision
+
+This will do all the below setups, letting you skip most of the following section, so you can get right to using it. (May still want to get that coffee mind you...)
 
 ### Quick start, Flux-in-a-Box
 
@@ -60,52 +80,57 @@ To setup the above configuration:
    ./buri fluxdemo <IP-of-your-VM>
    ```
 
-5. Go for a coffee. If all goes well, in 5-10 minutes, ansible should be done. It may take up to 5 minutes more, or on reboots of the VM, for everything to fully come up.
+5. Go for a coffee. If all goes well, in 10-20 minutes, ansible should be done. It may take up to 3-5 minutes more, or on reboots of the VM, for everything to fully come up.
 
 ### Testing/Using the Flux-in-a-Box
+
+Change the IP below to the the one you provisioned. All examples use the IP the Vagrantfile specifies, for demonstration purposes.
 
 1. First check on Eureka with this URL, you should see an EDGE, EUREKA, and MIDDLETIER instance registered when fully booted. Don't worry about the eureka URL never moving from unavailable-replicas to available-replicas. There are no replicas in this configuration. It will block the requests coming in until it goes through an internal cluster discovery sequence, then decide to initialize a new one. That's what takes the most time for initializing on boot.
 
    ```
-   http://<IP-of-your-VM>:8400/eureka/jsp/status.jsp
+   http://192.168.33.10:8400/eureka/jsp/status.jsp
    ```
 
 2. Have a look at Exhibitor/Zookeeper status here. When the status is green/serving, and the server id is a positive integer, zookeeper is fully running. A negative number means it's still initializing. Node editing is enabled in the all-in-one for dev tinkering.
 
    ```
-   http://<IP-of-your-VM>:8401
+   http://192.168.33.10:8401
    ```
 
 3. Pull up the Hystrix dashboard and use the turbine URL following for the stream on it's page. Keep it visible as you run edge tests.
 
    ```
-   http://<IP-of-your-VM>:8403/hystrix-dashboard
-   http://<IP-of-your-VM>:8402/turbine/turbine.stream?cluster=fluxdemo-edge
+   http://192.168.33.10:8403/hystrix-dashboard
+   http://192.168.33.10:8402/turbine/turbine.stream?cluster=fluxdemo-edge
    ```
 
 4. Generate some edge requests, run a few of the first and then the second URL. You should see graphs in real time generated on the hystrix dashboard page with very little latentcy.
 
    ```
    # Stuff a message onto the numbered log
-   curl -D- http://<IP-of-your-VM>:8299/service/edge/v1/log/1234?log=blahblah
+   curl -D- http://192.168.33.10:8299/service/edge/v1/log/1234?log=blahblah
    # Get the messages logged against the numbered log
-   curl -D- http://<IP-of-your-VM>:8299/service/edge/v1/logs/1234
+   curl -D- http://192.168.33.10:8299/service/edge/v1/logs/1234
    ```
 
 5. Have a look at the graphite console, you should see on opening the Graphite folder, trees of metrics for both the flux-edge, and flux-middletier coming from Servo. These also come in very close to real-time:
 
    ```
-   http://<IP-of-your-VM>
+   http://192.168.33.10
    ```
 
 6. Poke around the Karyon consoles, Eureka tab should match with step #1, and looking @ the Archaius tab is educational on what that provides:
 
    ```
-   Edge  : http://<IP-of-your-VM>:9299
-   Middle: http://<IP-of-your-VM>:9399
+   Edge  : http://192.168.33.10:9299
+   Middle: http://192.168.33.10:9399
    ```
 
 ### Status
 
-Buri is around a late alpha kind of state. Things are starting to not move around as much, we have most of the mechanisms we need, and a fairly complete set of role templates for provisioning a good base of the NetflixOSS component stack, both to a VM and EC2. The core is not expected to change much unless needed from this point, and we should mostly be focusing on component integration and implementations as roles going forward.
+Buri is approaching an initial beta release. The overall structure for configuration to the end user, allowing localization of configuration, extending with local roles, and managing that as a seperate entity, and has met all current goals. We have most of the mechanisms we need, and a fairly complete set of role templates for provisioning a good base of the NetflixOSS component stack, both to a VM and EC2. It has also reached the goal of integrating back to Aminator vs. supplanting it, and going forward, aims to become a supplementary tool, compatible to Aminator to the greatest extent possible in terms of it's own internal AMI handling. This is not currently the case, mostly around metadata concerns.
 
+The core is not expected to change much from this point, and we should mostly be focusing on component integration and implementations as roles going forward, with the following exceptions:
+- Names of variables may yet change, but not dramatically, and only for specific areas. 
+- Non-role plays/tasks are to be re-organized, but no major functional changes planned. 

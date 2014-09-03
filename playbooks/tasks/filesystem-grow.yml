@@ -1,6 +1,7 @@
 ---
+# These tasks only relevant to the partitioned disk type
 - name: Discovering start of partition
-  shell: 'parted {{ ami_device }} -ms unit s p | grep "^1"'
+  shell: 'parted {{ buri_disk_device }} -ms unit s p | grep "^1"'
   register: partout
 
 - name: Saving partition start for later use
@@ -10,12 +11,12 @@
 
 # Be very careful editing this shell command...
 - name: Growing partition to fill disk
-  shell: 'echo -e "p\nd\n1\nn\np\n1\n{{ partition_start }}\n\np\nw\n" | fdisk {{ ami_device }}'
+  shell: 'echo -e "p\nd\n1\nn\np\n1\n{{ partition_start }}\n\np\nw\n" | fdisk {{ buri_disk_device }}'
   register: partout
 
 - name: Running filesystem check required before resize
-  shell: 'e2fsck -y -f {{ ami_device }}1'
+  shell: 'e2fsck -y -f {{ buri_disk_device }}1'
 
 - name: Growing filesystem to fill partition
-  shell: 'resize2fs {{ ami_device }}1'
+  shell: 'resize2fs {{ buri_disk_device }}1'
 

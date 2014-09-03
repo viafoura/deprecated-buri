@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: cloud_amazon }
+  - { role: build_host }

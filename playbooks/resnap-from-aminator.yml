@@ -1,0 +1,15 @@
+---
+# Playbook to create a foundation snapshot/AMI from ubuntu's source images
+- name: Run role from buri-provisioner
+  hosts: localhost
+  connection: local
+  vars:
+    image_build: true
+    cloud_target: amazon
+    ami_root_resize: false
+  tasks:
+    - name: Register chroot target in ansible inventory
+      add_host: hostname={{ ami_image_mount }} groups={{ ami_role }},chroots
+
+- include: _image_apply_role.yml
+

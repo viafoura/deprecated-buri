@@ -1,6 +1,5 @@
 ---
 dependencies:
-  # Skip foundation run when resnapping base from it
-  - { role: foundation, when: not image_build }
-  # This will get skipped by the base references
-  - { role: oracle-java }
+# Skip foundation run when resnapping base from it
+- { role: base_buri }
+- { role: oracle-java, when: buri_base_java }

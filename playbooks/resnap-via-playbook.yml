@@ -4,9 +4,6 @@
   hosts: localhost
   connection: local
   sudo: True
-  vars_files:
-    - [ "roles/{{ ami_role }}/defaults/main.yml" ]
-    - [ "{{ buri_environment }}/local/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: true
     cloud_target: amazon
@@ -18,10 +15,10 @@
     - include: tasks/ec2_ami_lookup.yml
     - include: tasks/ec2_create_vol_and_attach.yml
     - include: tasks/filesystem-grow.yml
-      when: ami_root_resize
+      when: ami_root_resize and buri_disk_type != "flat" 
     - include: tasks/chroot_mount_and_setup.yml
     - name: Register chroot target in ansible inventory
-      add_host: hostname={{ ami_image_mount }} groupname=chroots
+      add_host: hostname={{ ami_image_mount }} groups={{ ami_role }},chroots
 
 - include: _image_apply_role.yml
 - include: _image_finalize.yml

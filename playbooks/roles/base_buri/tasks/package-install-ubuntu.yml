@@ -1,0 +1,34 @@
+---
+- name: Install packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - ca-certificates-java
+    - curl
+    - dnsutils
+    - git-core
+    - less
+    - lynx
+    - make
+    - mdadm
+    - nano
+    - ngrep
+    - nmon
+    - ntp
+    - openssh-client
+    - openssh-server
+    - perl
+    - perl-modules
+    - python
+    - python-support
+    - python-pip
+    - rsync
+    - ssh
+    - sudo
+    - sysstat
+    - tcpdump
+    - telnet
+    - traceroute
+    - unzip
+    - vim
+    - xfsprogs
+    - zip

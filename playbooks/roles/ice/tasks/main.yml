@@ -36,7 +36,7 @@
   
 # FIXME: is this even needed, and if so, can it be less ugly?
 - name: Add ICE_HOME to environment
-  lineinfile: dest=/etc/default/jetty-{{ ice_instance_name }} regexp="ICE_HOME" line="ICE_HOME={{ ice_webapps_root }}/ice/WEB-INF/classes/"
+  lineinfile: dest=/etc/default/jetty-{{ ice_instance_name }} regexp="ICE_HOME" line="export ICE_HOME={{ ice_webapps_root }}/ice/WEB-INF/classes/" insertafter="EOF"
   when: ansible_distribution == 'Ubuntu' and servlet_container == "jetty9"
   notify: restart ice
 

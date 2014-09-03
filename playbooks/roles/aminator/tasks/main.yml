@@ -1,0 +1,60 @@
+---
+- name: Create config directory
+  file: name=/etc/aminator state=directory owner=root group=root mode=0755
+  
+- name: Create logging directory
+  file: name=/var/log/aminator state=directory owner=root group=root mode=0755
+  
+- name: Create working directories
+  file: name={{ item }} state=directory owner=root group=root mode=0755
+  with_items:
+    - /var/aminator
+    - /var/aminator/lock
+    - /var/aminator/volumes
+  
+- name: Checkout Aminator code from Github
+  git: repo={{ aminator_git_repo }}
+       dest=/tmp/aminator_build
+       version={{ aminator_git_ref }}
+
+- name: Install Aminator
+  command: python setup.py install chdir=/tmp/aminator_build
+
+- name: Copy config Aminator files
+  command: cp /tmp/aminator_build/aminator/default_conf/{{ item }} /etc/aminator/{{ item }}
+  with_items:
+    - aminator.yml
+    - logging.yml
+    # We replace this below
+    #- environments.yml
+
+- name: Checkout Aminator/Buri provisioner plugin from Github
+  git: repo={{ aminator_buri_git_repo }}
+       dest=/tmp/buri_provisioner_build
+       version={{ aminator_buri_git_ref }}
+
+- name: Install Aminator/Buri provisioner plugin
+  command: python setup.py install chdir=/tmp/buri_provisioner_build
+
+# FIXME: Switch from above source install to something like this once we're stable enough to do so
+#- name: Install Ansible provisioner plugin
+#  command: aminator-plugin install ansible
+#  tags: plugins
+  
+- name: Copy environments config that contains the plugins
+  copy: src=environments.yml dest=/etc/aminator/environments.yml owner=root group=root mode=0644  
+
+- name: Checkout Buri from Github
+  git: repo={{ buri_git_repo }}
+       dest=/opt/buri
+       version={{ buri_git_ref }}
+  
+- name: Create buri configuration
+  template: src=buri.cfg dest=/opt/buri/etc/buri.cfg owner=root group=root mode=0644  
+
+- name: Checkout local Buri configuration from Git
+  git: repo={{ buri_local_git_repo }}
+       dest=/opt/buri/local
+       version={{ buri_local_git_ref }}
+  when: buri_local_git_repo is defined and buri_local_git_ref is defined
+  
