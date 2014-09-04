@@ -117,7 +117,7 @@ Change the IP below to the the one you provisioned. All examples use the IP the 
 5. Have a look at the graphite console, you should see on opening the Graphite folder, trees of metrics for both the flux-edge, and flux-middletier coming from Servo. These also come in very close to real-time:
 
    ```
-   http://192.168.33.10
+   http://192.168.33.10:7070
    ```
 
 6. Poke around the Karyon consoles, Eureka tab should match with step #1, and looking @ the Archaius tab is educational on what that provides:

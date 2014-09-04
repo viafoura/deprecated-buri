@@ -10,18 +10,18 @@
     - include: tasks/ec2_get_facts.yml
     - include: tasks/chroot_clean_and_unmount.yml
     - include: tasks/image_bundle_to_s3.yml
-      when: ami_build_pvm_instance or ami_build_hvm_instance
+      when: ami_build_pvm_instance|bool or ami_build_hvm_instance|bool
     - include: tasks/ec2_ami_tag_s3_pvm.yml
-      when: ami_build_pvm_instance
+      when: ami_build_pvm_instance|bool
     - include: tasks/ec2_ami_tag_s3_hvm.yml
-      when: ami_build_hvm_instance
+      when: ami_build_hvm_instance|bool
     - include: tasks/ec2_detach_vol.yml
     - include: tasks/ec2_snapshot_vol.yml
-      when: ami_build_pvm_ebs or ami_build_hvm_ebs
+      when: ami_build_pvm_ebs|bool or ami_build_hvm_ebs|bool
     - include: tasks/ec2_delete_vol.yml
     - include: tasks/ec2_ami_tag_ebs_pvm.yml
-      when: ami_build_pvm_ebs
+      when: ami_build_pvm_ebs|bool
     - include: tasks/ec2_ami_tag_ebs_hvm.yml
-      when: ami_build_hvm_ebs
+      when: ami_build_hvm_ebs|bool
     - include: tasks/report.yml
 

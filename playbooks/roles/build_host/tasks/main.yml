@@ -26,4 +26,5 @@
 - name: Install Ansible via pip
   pip: name=ansible state=present version=1.6.10
 
-
+- name: Swapping pigz in for gzip, for parallel compression
+  script: swap-pigz-in.sh
