@@ -1,0 +1,56 @@
+
+From an example:
+
+2014-09-04 19:52:07 [INFO] id: ami-5ef75636
+2014-09-04 19:52:07 [INFO] name: base--201409041950-x86_64-201409041950-ebs
+2014-09-04 19:52:07 [INFO] description: name=base, arch=x86_64, ancestor_name=foundation-Ubuntu-trusty-2014-09-04-1904-PVM-EBS-flat, ancestor_id=ami-f8f35290, ancestor_version=
+
+
+root@ip-10-3-96-68:/home/ubuntu# aws ec2 describe-images --image-ids ami-5ef75636 --region us-east-1 --output text
+IMAGES	x86_64	name=base, arch=x86_64, ancestor_name=foundation-Ubuntu-trusty-2014-09-04-1904-PVM-EBS-flat, ancestor_id=ami-f8f35290, ancestor_version=	xen	ami-5ef75636	218894879100/base--201409041950-x86_64-201409041950-ebs	machine	aki-919dcaf8	base--201409041950-x86_64-201409041950-ebs	218894879100	False	/dev/sda1	ebs	available	paravirtual
+BLOCKDEVICEMAPPINGS	/dev/sda1	
+EBS	True	False	snap-ba92a81a	10	standard
+BLOCKDEVICEMAPPINGS	/dev/sdb	ephemeral0
+BLOCKDEVICEMAPPINGS	/dev/sdc	ephemeral1
+BLOCKDEVICEMAPPINGS	/dev/sdd	ephemeral2
+BLOCKDEVICEMAPPINGS	/dev/sde	ephemeral3
+TAGS	creator	aminator
+TAGS	creation_time	2014-09-04 19:52:06 UTC
+TAGS	appversion	base--201409041950
+TAGS	base_ami_version	None
+
+
+--------------------------------------------
+
+NAME:
+
+base--201409041950-x86_64-201409041950-ebs
+
+DESC:
+
+name=base, arch=x86_64, ancestor_name=foundation-Ubuntu-trusty-2014-09-04-1904-PVM-EBS-flat, ancestor_id=ami-f8f35290, ancestor_version=
+
+TAGS:
+
+TAGS	creator	aminator
+TAGS	creation_time	2014-09-04 19:52:06 UTC
+TAGS	appversion	base--201409041950
+TAGS	base_ami_version	None
+
+-------------------------------------------------------
+
+From Aminator internal configs, another process appends -ebs or -s3 to name:
+
+description_format: 'name={name}, arch={arch}, ancestor_name={base_ami_name}, ancestor_id={base_ami_id}, ancestor_version={base_ami_version}'
+name_format: '{name}-{version}-{release}-{arch}-{suffix}'
+tag_formats:
+    appversion: '{name}-{version}-{release}'
+    base_ami_version: '{base_ami_version}'
+
+description_format: 'name={name}, arch={arch}, ancestor_name={base_ami_name}, ancestor_id={base_ami_id}, ancestor_version={base_ami_version}'
+name_format: '{name}-{version}-{release}-{arch}-{suffix}'
+tag_formats:
+    appversion: '{name}-{version}-{release}'
+    base_ami_version: '{base_ami_version}'
+suffix_format: '{0:%Y%m%d%H%M}'
+
