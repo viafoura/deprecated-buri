@@ -1,0 +1,11 @@
+---
+# Information for Ubuntu foundation creation
+distro_image_name: "{{ ansible_distribution_release }}-server-cloudimg-amd64"
+distro_image_url: "http://uec-images.ubuntu.com/{{ ansible_distribution_release }}/current/{{ distro_image_name }}-disk1.img"
+distro_image_path: "/mnt/{{ distro_image_name }}.img"
+distro_tarball_url: "http://uec-images.ubuntu.com/{{ ansible_distribution_release }}/current/{{ distro_image_name }}.tar.gz"
+distro_tarball_path: "/mnt/{{ distro_image_name }}.tar.gz"
+distro_tarball_extract: "/mnt/{{ distro_image_name }}-flat-files"
+distro_tarball_loopback: "/mnt/{{ distro_image_name }}-loopback"
+distro_image_query: "http://uec-images.ubuntu.com/query/{{ ansible_distribution_release }}/server/released.current.txt"
+

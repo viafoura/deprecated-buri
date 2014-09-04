@@ -4,6 +4,8 @@
   hosts: localhost
   connection: local
   sudo: True
+  vars_files:
+    - vars/distro/{{ ansible_distribution }}.yml
   vars: 
     ami_root_resize: true
     image_build: true
