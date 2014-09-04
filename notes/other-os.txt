@@ -1,4 +1,6 @@
 
+Info on usernames for other os: http://alestic.com/2014/01/ec2-ssh-username
+
 Collections of possible other OSes to support for foundation phase, and pointers to guide on their creation
 
 Centos: 
