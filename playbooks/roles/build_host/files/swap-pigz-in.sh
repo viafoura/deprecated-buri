@@ -11,6 +11,10 @@ if [ ! -f "/usr/bin/pigz" ]; then
 fi
 
 mv /bin/gzip /bin/gzip.orig     && ln -s /usr/bin/pigz /bin/gzip
-mv /bin/gunzip /bin/gunzip.orig && ln -s /usr/bin/unpigz /bin/gunzip
+
+# older distros dont have this
+if [ -f "/usr/bin/unpigz" ]; then
+    mv /bin/gunzip /bin/gunzip.orig && ln -s /usr/bin/unpigz /bin/gunzip
+fi
 
 exit 0
