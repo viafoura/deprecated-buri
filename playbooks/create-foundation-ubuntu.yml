@@ -12,20 +12,20 @@
   tasks:
     - name: Dump all vars
       template: src=templates/debug.j2 dest=/tmp/ansible.all
-    - include: tasks/set_build_info.yml
-    - include: tasks/ec2_get_facts.yml
-    - include: tasks/ec2_get_iam_info.yml
-    - include: tasks/ec2_ami_find_aki_ubuntu.yml
-    - include: tasks/ec2_create_vol_and_attach.yml
-    - include: tasks/image_create_from_tarball.yml
+    - include: tasks/buri/set_build_info.yml
+    - include: tasks/ec2/instance/facts.yml
+    - include: tasks/ec2/iam/lookup.yml
+    - include: tasks/image/Ubuntu/find_aki.yml
+    - include: tasks/ec2/vol/create_and_attach.yml
+    - include: tasks/image/Ubuntu/create_from_tarball.yml
       when: buri_disk_type == "flat"
-    - include: tasks/image_write_qcow_from_url.yml
+    - include: tasks/image/Ubuntu/write_qcow_from_url.yml
       when: buri_disk_type != "flat"
-    - name: Dump all vars
-      template: src=templates/debug.j2 dest=/tmp/ansible.all2
-    - include: tasks/filesystem-grow.yml 
+    #- name: Dump all vars
+    #  template: src=templates/debug.j2 dest=/tmp/ansible.all2
+    - include: tasks/image/Ubuntu/grow_filesystem.yml 
       when: ami_root_resize and buri_disk_type != "flat"
-    - include: tasks/chroot_mount_and_setup.yml
+    - include: tasks/chroot/mount.yml
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ ami_image_mount }} groups=foundation,chroots
 

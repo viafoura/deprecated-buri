@@ -7,21 +7,21 @@
     image_build: true
     cloud_target: amazon
   tasks:
-    - include: tasks/ec2_get_facts.yml
-    - include: tasks/chroot_clean_and_unmount.yml
-    - include: tasks/image_bundle_to_s3.yml
+    - include: tasks/ec2/instance/facts.yml
+    - include: tasks/chroot/unmount.yml
+    - include: tasks/ec2/bundle/create_and_upload.yml
       when: ami_build_pvm_instance|bool or ami_build_hvm_instance|bool
-    - include: tasks/ec2_ami_tag_s3_pvm.yml
+    - include: tasks/ec2/ami/tag/s3_pvm.yml
       when: ami_build_pvm_instance|bool
-    - include: tasks/ec2_ami_tag_s3_hvm.yml
+    - include: tasks/ec2/ami/tag/s3_hvm.yml
       when: ami_build_hvm_instance|bool
-    - include: tasks/ec2_detach_vol.yml
-    - include: tasks/ec2_snapshot_vol.yml
+    - include: tasks/ec2/vol/detach.yml
+    - include: tasks/ec2/vol/snapshot.yml
       when: ami_build_pvm_ebs|bool or ami_build_hvm_ebs|bool
-    - include: tasks/ec2_delete_vol.yml
-    - include: tasks/ec2_ami_tag_ebs_pvm.yml
+    - include: tasks/ec2/vol/delete.yml
+    - include: tasks/ec2/ami/tag/ebs_pvm.yml
       when: ami_build_pvm_ebs|bool
-    - include: tasks/ec2_ami_tag_ebs_hvm.yml
+    - include: tasks/ec2/ami/tag/ebs_hvm.yml
       when: ami_build_hvm_ebs|bool
-    - include: tasks/report.yml
+    - include: tasks/buri/report.yml
 

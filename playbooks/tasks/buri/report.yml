@@ -1,6 +1,6 @@
 ---
 - name: Generate build report
-  template: src=report.j2 dest=/mnt/{{ ami_name }}-report.txt owner=root group=root mode=0644
+  template: src={{ BURI_BASE }}/playbooks/templates/report.j2 dest=/mnt/{{ ami_name }}-report.txt owner=root group=root mode=0644
 
 # Put report in a known place for Buri to pick up
 # FIXME: this is ugly/racy, but until the ami_name is driven top down, we need something like it
