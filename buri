@@ -67,11 +67,11 @@ def gen_ansible_command(args, playbook, cli_vars):
         inventory_path = local_inventory_path
     # user param
     user_var = ''
-    if 'buri_remote_user' in args:
+    if args.buri_remote_user != None:
         user_var = " buri_remote_user='{0}'".format(args.buri_remote_user)
     # cluster param
     cluster_var = ''
-    if 'buri_cluster_name' in args:
+    if args.buri_cluster_name != None:
         cluster_var = " buri_cluster_name='{0}'".format(args.buri_cluster_name)
     # commandify
     cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {3} -e "BURI_BASE=\'{1}\' buri_environment=\'{4}\' {5} {6}{7}{8}" -vv'.format(roles_param, args.BURI_BASE, playbook, inventory_path, args.environment, cli_vars, args.extravars, user_var, cluster_var)
@@ -331,7 +331,7 @@ def get_config():
     parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
     parser.add_argument('--environment', metavar='<env_name>', type=str, default='development', choices=['development', 'test', 'staging', 'production'], help='Set the environment context')
     parser.add_argument('--extra-vars', dest='extravars', metavar='<varstr="foo" varnum=123>', type=str, default='', help='Extra variables to pass to Ansible playbooks')
-    parser.add_argument('-u', '--user', dest='buri_remote_user', metavar='<remote username>', type=str, default='', help='User Ansible will user to remote ssh to a host as')
+    parser.add_argument('-u', '--user', dest='buri_remote_user', metavar='<remote username>', type=str, help='User Ansible will user to remote ssh to a host as')
     parser.add_argument('--cluster-name', dest='buri_cluster_name', metavar='<name>', type=str, help='Cluster name, required by some roles, can be used by any to differentiate configurations')
 
     subparser = parser.add_subparsers(help='sub commands')
