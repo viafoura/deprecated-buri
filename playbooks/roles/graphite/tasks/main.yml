@@ -23,6 +23,12 @@
 - name: Setup apache to serve graphite UI
   command: cp /usr/share/graphite-web/apache2-graphite.conf /etc/apache2/sites-available/000-default.conf
 
+- name: Change graphite vhost to port 7070
+  lineinfile: dest=/etc/apache2/sites-available/000-default.conf regexp="^<VirtualHost" line="<VirtualHost *:7070>"
+
+- name: Change apache2 listen to port 7070
+  lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen" line="Listen 7070"
+
 - name: Enable startup of carbon cache
   lineinfile: dest=/etc/default/graphite-carbon regexp="CARBON_CACHE_ENABLED" line="CARBON_CACHE_ENABLED=true"
 
