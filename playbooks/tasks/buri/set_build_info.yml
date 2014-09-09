@@ -10,13 +10,18 @@
   set_fact:
     buri_ami_creation_time: "{{ ansible_date_time.date }} {{ ansible_date_time.time }} {{ ansible_date_time.tz }}"
 
-- name: Setting build name (No Suffix)
+# Following two rules will create a composite name including cluster name if specified
+- name: Setting base build name (No Suffix)
   set_fact:
-    ami_name: "{{ ami_role }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ buri_ami_release_timestamp }}"
+    buri_ami_base_name: "{{ ami_role }}"
   when: buri_cluster_name is not defined or buri_cluster_name == ""
 
-- name: Setting build name (With Suffix)
+- name: Setting base build name (With Suffix)
   set_fact:
-    ami_name: "{{ ami_role }}-{{ buri_cluster_name }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ buri_ami_release_timestamp }}"
+    buri_ami_base_name: "{{ ami_role }}_{{ buri_cluster_name }}"
   when: buri_cluster_name is defined and buri_cluster_name != ""
 
+# Set "full" name to be used in tagging. Other process may append additional details (IE: -ebs or -s3)
+- name: Setting full build name
+  set_fact:
+    ami_name: "{{ buri_ami_base_name }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ buri_ami_release_timestamp }}"

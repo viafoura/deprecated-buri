@@ -60,13 +60,26 @@ suffix_format: '{0:%Y%m%d%H%M}'
 ELEMENTS:
 
 name:    the top-level role being run, with optional suffix for cluster naming
+
 version: some kind of version identifier, provided by role?
+         roles will need to do a fact set to accomodate this
+
 release: a sub-version of sorts, the apt/yum provisioners use this for the package release. 
          - plugin currently setting to a timestamp, which is redundant w/ suffix
-arch:    will always be x86_64 for us
-suffix:  aminator defaults this to a datestamp.
+
+arch:    will always be x86_64 for us, and we will hardcode this in for the sake of being work-alike
+suffix:  aminator defaults this to a datestamp, calculated in Buri as buri_ami_release_timestamp at start of run
 
 creation_time: for tags, calculated in Buri as buri_ami_creation_time at start of run
+
+
+-----------------
+
+buri_role   - role name passed in with no suffix, etc
+buri_ami_base_name - role name with optional cluster name
+buri_ami_full_name - fully formatted ami name used for tagging per the format name-version-release-arch-suffix
+
+
 
 
 
