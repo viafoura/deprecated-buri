@@ -9,6 +9,6 @@
     ami_id_hvm_instance: '{{ amihvminstance.stdout }}'
 
 - name: Tagging Instance HVM AMI
-  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_hvm_instance }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-S3-{{ buri_disk_type }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_hvm_instance }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-HVM-S3-{{ buri_disk_type }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ buri_ami_release_timestamp }}\"}]"'
 
 

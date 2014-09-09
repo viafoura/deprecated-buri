@@ -40,6 +40,6 @@
   when: buri_disk_type != "flat"
 
 - name: Tagging PVM AMI
-  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_pvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-PVM-EBS-{{ buri_disk_type }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ ami_timestamp }}\"}]"'
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ami_id_pvm }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }}-PVM-EBS-{{ buri_disk_type }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ buri_ami_release_timestamp }}\"}]"'
 
 
