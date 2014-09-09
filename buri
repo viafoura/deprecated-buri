@@ -239,7 +239,7 @@ def resnap(args):
 
 def aminator(args):
     logging.info('Aminator Resnapshotting AMI for env {0} on mounted chroot: {1}'.format(args.environment, args.directory))
-    return run_ansible_playbook(args, "resnap-from-aminator", "ami_image_mount='{0}' buri_role='{1}'".format(args.directory, args.role))
+    return run_ansible_playbook(args, "resnap-from-aminator", "buri_ami_mount_point='{0}' buri_role='{1}'".format(args.directory, args.role))
 
 def cleanup_fail(args):
     logging.info('Cleaning up failed AMI resnap from: %s' % args.device)

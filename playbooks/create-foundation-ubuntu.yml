@@ -27,7 +27,7 @@
       when: ami_root_resize and buri_disk_type != "flat"
     - include: tasks/chroot/mount.yml
     - name: Register chroot target in ansible inventory
-      add_host: hostname={{ ami_image_mount }} groups=foundation,chroots
+      add_host: hostname={{ buri_ami_mount_point }} groups=foundation,chroots
 
 - include: _image_apply_role.yml
 - include: _image_finalize.yml

@@ -9,7 +9,7 @@
     ami_root_resize: false
   tasks:
     - name: Register chroot target in ansible inventory
-      add_host: hostname={{ ami_image_mount }} groups={{ buri_role }},chroots
+      add_host: hostname={{ buri_ami_mount_point }} groups={{ buri_role }},chroots
 
 - include: _image_apply_role.yml
 
