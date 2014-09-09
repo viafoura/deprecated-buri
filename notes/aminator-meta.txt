@@ -54,3 +54,20 @@ tag_formats:
     base_ami_version: '{base_ami_version}'
 suffix_format: '{0:%Y%m%d%H%M}'
 
+
+--------------------------------------------------------
+
+ELEMENTS:
+
+name:    the top-level role being run, with optional suffix for cluster naming
+version: some kind of version identifier, provided by role?
+release: a sub-version of sorts, the apt/yum provisioners use this for the package release. 
+         - plugin currently setting to a timestamp, which is redundant w/ suffix
+arch:    will always be x86_64 for us
+suffix:  aminator defaults this to a datestamp.
+
+
+
+
+
+
