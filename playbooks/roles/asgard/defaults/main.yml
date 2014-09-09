@@ -28,8 +28,8 @@ asgard_instance_name: asgard
 asgard_jvm_extra_opts: -Darchaius.deployment.applicationId=asgard
 asgard_webapps_root: "{{ jetty_apps }}/{{ asgard_instance_name }}/webapps"
 
-asgard_build_url: https://github.com/Netflix/asgard/releases/download/asgard-1.5/asgard.war
-#asgard_build_url: https://netflixoss.ci.cloudbees.com/job/asgard-master/lastStableBuild/artifact/target/asgard.war 
+asgard_version: 1.5
+asgard_build_url: "https://github.com/Netflix/asgard/releases/download/asgard-{{ asgard_version }}/asgard.war"
 
 asgard_build_source: True
 asgard_git_repo: https://github.com/Netflix/asgard.git

@@ -50,9 +50,12 @@ ice_instance_name: ice
 ice_jvm_extra_opts: -Darchaius.deployment.applicationId=ice
 ice_webapps_root: "{{ jetty_apps }}/{{ ice_instance_name }}/webapps"
 
+# FIXME: This needs to be manually updated, as the only builds available are from the CI
+# Current as of Sept 2014
+ice_version: 1.1.0
 ice_build_url: https://netflixoss.ci.cloudbees.com/job/ice-master/lastSuccessfulBuild/artifact/target/ice.war
 
-ice_build_source: False
+ice_build_source: True
 ice_git_repo: https://github.com/Netflix/ice.git
 ice_git_ref: master
 

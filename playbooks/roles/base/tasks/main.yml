@@ -1,0 +1,5 @@
+---
+- name: Collect distro version information
+  include: version-info-ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+

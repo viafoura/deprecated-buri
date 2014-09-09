@@ -4,9 +4,11 @@
   get_url: url={{ edda_build_url }} dest=/tmp/edda.war
   when: not edda_build_source
 
-#- name: Setting up source build
-#  file: path=/tmp/edda_build state=directory owner=root group=root mode=0755
-#  when: edda_build_source
+- name: Set build version (binary)
+  set_fact:
+    buri_build_version: "{{ edda_version }}"
+    buri_build_release: "bin"
+  when: not edda_build_source
 
 - name: Checkout code from Git
   git: repo={{ edda_git_repo }}
@@ -32,6 +34,9 @@
   command: chdir=/tmp/edda_build ./gradlew --stop
   when: edda_build_source and git_clone.changed
 
-#- name: Removing source build
-#  file: path=/tmp/edda_build state=absent
-#  when: edda_build_source
+- name: Set build version (source)
+  set_fact:
+    buri_build_version: "{{ edda_version_out.stdout }}"
+    buri_build_release: "{{ git_clone.after }}"
+  when: edda_build_source
+

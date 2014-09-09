@@ -1,0 +1,11 @@
+---
+
+- name: Find Ubuntu build serial
+  shell: curl http://uec-images.ubuntu.com/trusty/current/unpacked/build-info.txt | grep ^serial= | sed 's/^serial=//'
+  register: foundation_release_out
+
+- name: Set version info
+  set_fact:
+    buri_build_version: "{{ ansible_distribution_version }}"
+    buri_build_release: "{{ foundation_release_out.stdout }} "
+

@@ -13,3 +13,6 @@
 - name: Fixup boot loader
   include: boot-fix.yml
 
+- name: Collect distro version information
+  include: version-info-ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'

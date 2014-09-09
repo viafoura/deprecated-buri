@@ -1,0 +1,8 @@
+---
+
+- name: Set version info
+  set_fact:
+    buri_build_version: "{{ ansible_distribution_version }}"
+    # let the default today date/time kick in by not setting this
+    #buri_build_release: "{{ foundation_release_out.stdout }} "
+

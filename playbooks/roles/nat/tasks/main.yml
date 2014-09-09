@@ -18,3 +18,13 @@
 - name: Add ephemeral mkdir spec for cassandra role
   template: src=natmon.sh dest=/usr/local/bin/ owner=root mode=0744
   when: image_build
+
+# Required by all roles that will get resnapped going forward.
+# We don't really have an external source for this, and no internal version for buri is yet available
+# Hardcoding is temporary
+- name: Set build version)
+  set_fact:
+    buri_build_version: "0.0.1"
+    # Don't set this, let the timestamp kick in
+    #buri_build_release: "{{ git_clone.after }}"
+
