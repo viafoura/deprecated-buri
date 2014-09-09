@@ -12,4 +12,4 @@
       copy: dest=/tmp/buri_cluster_name content={{ buri_cluster_name }} owner=root group=root mode=0644
       when: buri_cluster_name is defined and buri_cluster_name != ''
   roles:
-    - "{{ ami_role }}"
+    - "{{ buri_role }}"

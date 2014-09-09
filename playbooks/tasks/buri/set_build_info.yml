@@ -13,12 +13,12 @@
 # Following two rules will create a composite name including cluster name if specified
 - name: Setting base build name (No Suffix)
   set_fact:
-    buri_ami_base_name: "{{ ami_role }}"
+    buri_ami_base_name: "{{ buri_role }}"
   when: buri_cluster_name is not defined or buri_cluster_name == ""
 
 - name: Setting base build name (With Suffix)
   set_fact:
-    buri_ami_base_name: "{{ ami_role }}_{{ buri_cluster_name }}"
+    buri_ami_base_name: "{{ buri_role }}_{{ buri_cluster_name }}"
   when: buri_cluster_name is defined and buri_cluster_name != ""
 
 # Set "full" name to be used in tagging. Other process may append additional details (IE: -ebs or -s3)
