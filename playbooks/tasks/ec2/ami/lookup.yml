@@ -28,7 +28,7 @@
 
 - name: Saving buri_ami_ancestor_name value
   set_fact:
-    buri_ami_ancestor_name: '{{ item.split("\t")[8]|default('') }}'
+    buri_ami_ancestor_name: '{{ item.split("\t")[8]|default("") }}'
   with_items: ancestor_name_out.stdout
 
 - name: Find ancestor image appversion tag
@@ -37,7 +37,7 @@
 
 - name: Saving buri_ami_ancestor_appversion value
   set_fact:
-    buri_ami_ancestor_appversion: '{{ item.split("\t")[2]|default('') }}'
+    buri_ami_ancestor_appversion: '{{ item.split("\t")[2]|default("") }}'
   with_items: ancestor_appversion_out.stdout
 
 - name: Find ancestor image base_ami_version tag
@@ -46,7 +46,7 @@
 
 - name: Saving buri_ami_ancestor_version value
   set_fact:
-    buri_ami_ancestor_version: '{{ item.split("\t")[2]|default('') }}'
+    buri_ami_ancestor_version: '{{ item.split("\t")[2]|default("") }}'
   with_items: ancestor_base_ami_version_out.stdout
 
 
