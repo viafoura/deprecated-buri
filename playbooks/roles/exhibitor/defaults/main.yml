@@ -15,7 +15,7 @@ exhibitor_opts_s3backup: True
 
 # required for any jetty9_instance
 exhibitor_instance_name: exhibitor
-exhibitor_jvm_extra_opts: -Darchaius.deployment.applicationId=exhibitor -Dexhibitor-hostname=$(curl -m 2 http://169.254.169.254 2>&1 > /dev/null && ec2metadata --public-hostname || hostname)
+exhibitor_jvm_extra_opts: -Darchaius.deployment.applicationId=exhibitor -Dexhibitor-hostname=$(curl -s -m 2 http://169.254.169.254 2>&1 > /dev/null && ec2metadata --public-hostname || hostname)
 exhibitor_webapps_root: "{{ jetty_apps }}/{{ exhibitor_instance_name }}/webapps"
 
 zookeeper_version: '3.4.6'
