@@ -6,8 +6,8 @@ AMI build name:    {{ buri_ami_full_name }}
 AMI Description:   {{ buri_ami_description }}
 Region (Zone):     {{ ansible_ec2_placement_region }} ({{ ansible_ec2_placement_availability_zone }})
 AMI disk format:   {{ buri_disk_type }}
-{% if ami_parent is defined and ami_parent != "" %}
-AMI Parent Image:  {{ ami_parent }}
+{% if buri_ami_ancestor_id is defined and buri_ami_ancestor_id != "" %}
+AMI Parent Image:  {{ buri_ami_ancestor_id }}
 EBS Parent:        {{ ebs_parent_id }}
 {% endif %}
 AMI AKI ID:        {{ ami_aki_id }}

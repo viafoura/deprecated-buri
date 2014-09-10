@@ -235,7 +235,7 @@ def foundation(args):
 def resnap(args):
     dev = get_device_node(args.disk_type)
     logging.info('Resnapshotting AMI for env {0} on device {1}'.format(args.environment, dev))
-    return run_ansible_playbook(args, "resnap-from-buri", "ami_parent='{0}' buri_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
+    return run_ansible_playbook(args, "resnap-from-buri", "buri_ami_ancestor_id='{0}' buri_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
 
 def aminator(args):
     logging.info('Aminator Resnapshotting AMI for env {0} on mounted chroot: {1}'.format(args.environment, args.directory))

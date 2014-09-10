@@ -89,9 +89,9 @@ Pending:
   - rename to buri_ami_full_name (DONE)
 - add the additional tags we are not currently using
 - add the new info to the report
-- setup ancestor handling
-  - work around pulling ancestor information to add to description
-  - just needs fetch of the values really
+- setup ancestor handling (DONE)
+  - work around pulling ancestor information to add to description (DONE)
+  - just needs fetch of the values really (DONE)
 
 
 

@@ -1,6 +1,7 @@
 ---
+# FIXME: the same thing gets queried and filtered over and over. query once and grep within
 - name: Find AKI ID for parent image.
-  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^IMAGES'
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^IMAGES'
   register: aki
 
 - name: Saving AKI ID as a fact for later use
@@ -13,7 +14,7 @@
   when: not (ami_aki_id | match("aki-.*"))
 
 - name: Find EBS Snapshot ID for parent image.
-  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^EBS'
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^EBS'
   register: ebsparent
 
 - name: Saving ebs_parent_id as a fact for later use
@@ -22,7 +23,7 @@
   with_items: ebsparent.stdout
 
 - name: Find ancestor image name
-  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^IMAGES'
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^IMAGES'
   register: ancestor_name_out
 
 - name: Saving buri_ami_ancestor_name value
@@ -31,7 +32,7 @@
   with_items: ancestor_name_out.stdout
 
 - name: Find ancestor image appversion tag
-  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^TAGS | grep appversion'
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^TAGS | grep appversion'
   register: ancestor_appversion_out
 
 - name: Saving buri_ami_ancestor_appversion value
@@ -40,7 +41,7 @@
   with_items: ancestor_appversion_out.stdout
 
 - name: Find ancestor image base_ami_version tag
-  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^TAGS | grep base_ami_version'
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^TAGS | grep base_ami_version'
   register: ancestor_base_ami_version_out
 
 - name: Saving buri_ami_ancestor_version value
