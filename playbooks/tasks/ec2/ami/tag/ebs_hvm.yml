@@ -5,7 +5,7 @@
       --output text
       --region {{ ansible_ec2_placement_region }}
       --name "{{ buri_ami_full_name }}-HVM-EBS-{{ buri_disk_type }}"
-      --description "{{ ami_description }}"
+      --description "{{ buri_ami_description }}"
       --architecture "x86_64"
       --root-device-name /dev/sda1
       --virtualization-type hvm
@@ -25,7 +25,7 @@
       --output text
       --region {{ ansible_ec2_placement_region }}
       --name "{{ buri_ami_full_name }}-HVM-EBS-{{ buri_disk_type }}"
-      --description "{{ ami_description }}"
+      --description "{{ buri_ami_description }}"
       --architecture "x86_64"
       --root-device-name /dev/sda1
       --virtualization-type hvm

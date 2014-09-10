@@ -3,7 +3,7 @@ BUILD COMPLETED
 ===============
 
 AMI build name:    {{ buri_ami_full_name }}
-AMI Description:   {{ ami_description }}
+AMI Description:   {{ buri_ami_description }}
 Region (Zone):     {{ ansible_ec2_placement_region }} ({{ ansible_ec2_placement_availability_zone }})
 AMI disk format:   {{ buri_disk_type }}
 {% if ami_parent is defined and ami_parent != "" %}

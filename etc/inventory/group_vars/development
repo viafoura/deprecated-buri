@@ -5,9 +5,6 @@ buri_base_java: True
 #cloud_target: amazon
 cloud_target: vm
 
-# Maybe this one if you want a custom name
-ami_description: "{{ buri_role }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
-
 # For S3 bundling:
 ami_bundle_account: '123456789012'
 ami_bundle_bucket_path: 'yourbucket/basepath'
