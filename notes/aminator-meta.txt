@@ -92,7 +92,7 @@ Pending:
 - setup ancestor handling (DONE)
   - work around pulling ancestor information to add to description (DONE)
   - just needs fetch of the values really (DONE)
-
+- move ami register functions to better place
 
 
 
