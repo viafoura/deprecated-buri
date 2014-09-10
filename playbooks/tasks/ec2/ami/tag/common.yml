@@ -1,0 +1,11 @@
+---
+# Params:
+#   tag_ami_id   - id of ami to tag
+#   tag_ami_name - name for AMI, with all suffixes
+#
+# Other values in common to all types are brought in from the global variables.
+
+- name: Adding tags to AMI
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ tag_ami_id }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ tag_ami_name }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ buri_ami_creation_time }}\"}, {\"Key\":\"creator\",\"Value\":\"buri\"}, {\"Key\":\"appversion\",\"Value\":\"{{ buri_ami_appversion }}\"},  {\"Key\":\"base_ami_version\",\"Value\":\"{{ buri_ami_ancestor_version }}\"}]"'
+
+
