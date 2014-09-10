@@ -8,7 +8,7 @@
   set_fact:
     ami_id_hvm_instance: '{{ amihvminstance.stdout }}'
 
-- include: common.yml
+- include: ../tag/common.yml
   vars:
     tag_ami_id: '{{ ami_id_hvm_instance }}'
     tag_ami_name: '{{ buri_ami_full_name }}-HVM-S3-{{ buri_disk_type }}'

@@ -12,17 +12,17 @@
     - include: tasks/chroot/unmount.yml
     - include: tasks/ec2/bundle/create_and_upload.yml
       when: buri_ami_build_pvm_instance|bool or buri_ami_build_hvm_instance|bool
-    - include: tasks/ec2/ami/tag/s3_pvm.yml
+    - include: tasks/ec2/ami/register/s3_pvm.yml
       when: buri_ami_build_pvm_instance|bool
-    - include: tasks/ec2/ami/tag/s3_hvm.yml
+    - include: tasks/ec2/ami/register/s3_hvm.yml
       when: buri_ami_build_hvm_instance|bool
     - include: tasks/ec2/vol/detach.yml
     - include: tasks/ec2/vol/snapshot.yml
       when: buri_ami_build_pvm_ebs|bool or buri_ami_build_hvm_ebs|bool
     - include: tasks/ec2/vol/delete.yml
-    - include: tasks/ec2/ami/tag/ebs_pvm.yml
+    - include: tasks/ec2/ami/register/ebs_pvm.yml
       when: buri_ami_build_pvm_ebs|bool
-    - include: tasks/ec2/ami/tag/ebs_hvm.yml
+    - include: tasks/ec2/ami/register/ebs_hvm.yml
       when: buri_ami_build_hvm_ebs|bool
     - include: tasks/buri/report.yml
 
