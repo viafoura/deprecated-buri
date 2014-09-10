@@ -11,10 +11,10 @@ ami_bundle_bucket_path: 'yourbucket/basepath'
 
 # These are more likely to be set in a site config or on command line
 
-ami_build_pvm_ebs: True
-ami_build_hvm_ebs: True
-ami_build_pvm_instance: False
-ami_build_hvm_instance: False
+buri_ami_build_pvm_ebs: True
+buri_ami_build_hvm_ebs: True
+buri_ami_build_pvm_instance: False
+buri_ami_build_hvm_instance: False
 
 eureka_build_source: True
 eureka_instance_port: 8400
