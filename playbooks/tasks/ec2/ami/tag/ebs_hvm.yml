@@ -39,7 +39,7 @@
     ami_id_hvm: '{{ amihvm.stdout }}'
   when: buri_disk_type != "flat"
 
-- include: tasks/ec2/ami/tag/common.yml
+- include: common.yml
   vars:
     tag_ami_id: '{{ ami_id_hvm }}'
     tag_ami_name: '{{ buri_ami_full_name }}-HVM-EBS-{{ buri_disk_type }}'

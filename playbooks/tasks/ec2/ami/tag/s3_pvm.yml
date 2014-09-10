@@ -7,7 +7,7 @@
   set_fact:
     ami_id_pvm_instance: '{{ amipvminstance.stdout }}'
 
-- include: tasks/ec2/ami/tag/common.yml
+- include: common.yml
   vars:
     tag_ami_id: '{{ ami_id_pvm_instance }}'
     tag_ami_name: '{{ buri_ami_full_name }}-PVM-S3-{{ buri_disk_type }}'
