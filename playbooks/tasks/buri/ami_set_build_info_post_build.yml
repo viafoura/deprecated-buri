@@ -12,5 +12,5 @@
 
 - name: Setting AMI description
   set_fact:
-    buri_ami_description: "name={{ buri_ami_base_name }}, arch=x86_64, ancestor_name={{ buri_ami_ancestor_name|default('') }}, ancestor_name={{ buri_ami_ancestor_id|default('') }}, ancestor_name={{ buri_ami_ancestor_version|default('') }}"
+    buri_ami_description: "name={{ buri_ami_base_name }}, arch=x86_64, ancestor_name={{ buri_ami_ancestor_name|default('') }}, ancestor_id={{ buri_ami_ancestor_id|default('') }}, ancestor_version={{ buri_ami_ancestor_version|default('') }}"
 

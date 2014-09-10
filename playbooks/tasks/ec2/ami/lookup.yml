@@ -21,3 +21,31 @@
     ebs_parent_id: '{{ item.split("\t")[3] }}'
   with_items: ebsparent.stdout
 
+- name: Find ancestor image name
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^IMAGES'
+  register: ancestor_name_out
+
+- name: Saving buri_ami_ancestor_name value
+  set_fact:
+    buri_ami_ancestor_name: '{{ item.split("\t")[8]|default('') }}'
+  with_items: ancestor_name_out.stdout
+
+- name: Find ancestor image appversion tag
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^TAGS | grep appversion'
+  register: ancestor_appversion_out
+
+- name: Saving buri_ami_ancestor_appversion value
+  set_fact:
+    buri_ami_ancestor_appversion: '{{ item.split("\t")[2]|default('') }}'
+  with_items: ancestor_appversion_out.stdout
+
+- name: Find ancestor image base_ami_version tag
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ ami_parent }} --output text | grep ^TAGS | grep base_ami_version'
+  register: ancestor_base_ami_version_out
+
+- name: Saving buri_ami_ancestor_version value
+  set_fact:
+    buri_ami_ancestor_version: '{{ item.split("\t")[2]|default('') }}'
+  with_items: ancestor_base_ami_version_out.stdout
+
+
