@@ -1,14 +1,13 @@
 ---
 # Set "full" name to be used in tagging. Other process may append additional details (IE: -ebs or -s3)
 
-# Old way
-#- name: Setting full build name
-#  set_fact:
-#    ami_name: "{{ buri_ami_base_name }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ buri_ami_release_timestamp }}"
-
 # New way, looks to the hostvars for what the chroot host set as facts for the build
-- name: Setting full build name
+- name: Setting appversion information
   set_fact:
-    ami_name: "{{ buri_ami_base_name }}-{{ hostvars[buri_ami_mount_point]['buri_build_version']|default('unavailable') }}-{{ hostvars[buri_ami_mount_point]['buri_build_release']|default(buri_ami_release_timestamp) }}-x86_64-{{ buri_ami_suffix|default(buri_ami_release_timestamp) }}"
+    buri_ami_appversion: "{{ buri_ami_base_name }}-{{ hostvars[buri_ami_mount_point]['buri_build_version']|default('unavailable') }}-{{ hostvars[buri_ami_mount_point]['buri_build_release']|default(buri_ami_release_timestamp) }}"
+
+- name: Setting full build name (less machine/disk suffixes)
+  set_fact:
+    buri_ami_full_name: "{{ buri_ami_appversion }}-x86_64-{{ buri_ami_suffix|default(buri_ami_release_timestamp) }}"
 
 
