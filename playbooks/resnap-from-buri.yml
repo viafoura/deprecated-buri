@@ -9,7 +9,7 @@
     cloud_target: amazon
     ami_root_resize: false
   tasks:
-    - include: tasks/buri/set_build_info.yml
+    - include: tasks/buri/ami_set_build_info_initial.yml
     - include: tasks/ec2/instance/facts.yml
     - include: tasks/ec2/iam/lookup.yml
     - include: tasks/ec2/ami/lookup.yml

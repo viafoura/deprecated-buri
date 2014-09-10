@@ -12,7 +12,7 @@
   tasks:
     - name: Dump all vars
       template: src=templates/debug.j2 dest=/tmp/ansible.all
-    - include: tasks/buri/set_build_info.yml
+    - include: tasks/buri/ami_set_build_info_initial.yml
     - include: tasks/ec2/instance/facts.yml
     - include: tasks/ec2/iam/lookup.yml
     - include: tasks/image/Ubuntu/find_aki.yml

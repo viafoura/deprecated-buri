@@ -8,6 +8,7 @@
     cloud_target: amazon
   tasks:
     - include: tasks/ec2/instance/facts.yml
+    - include: tasks/buri/ami_set_build_info_post_build.yml
     - include: tasks/chroot/unmount.yml
     - include: tasks/ec2/bundle/create_and_upload.yml
       when: ami_build_pvm_instance|bool or ami_build_hvm_instance|bool

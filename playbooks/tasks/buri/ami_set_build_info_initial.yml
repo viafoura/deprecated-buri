@@ -21,12 +21,6 @@
     buri_ami_base_name: "{{ buri_role }}_{{ buri_cluster_name }}"
   when: buri_cluster_name is defined and buri_cluster_name != ""
 
-# Set "full" name to be used in tagging. Other process may append additional details (IE: -ebs or -s3)
-# FIXME: this will move to a later section as some of the variables will come via the role.
-- name: Setting full build name
-  set_fact:
-    ami_name: "{{ buri_ami_base_name }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}-{{ buri_ami_release_timestamp }}"
-
 # TODO: a better location than /mnt, or a user controllable location
 - name: Calculating mount point
   set_fact:
