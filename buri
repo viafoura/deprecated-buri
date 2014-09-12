@@ -211,17 +211,17 @@ def fluxdemo(args):
     args.alias="cassandra"
     keys_cassandra(args)
     logging.info('Pushing all-in-one plus flux capacitor to: %s' % args.host)
-    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' ami_role='all_in_one_flux'" % args.host)
+    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' buri_role='all_in_one_flux'" % args.host)
 
 def rssdemo(args):
     args.alias="cassandra"
     keys_cassandra(args)
     logging.info('Pushing all-in-one plus Netflix recipes-rss to: %s' % args.host)
-    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' ami_role='all_in_one_rss'" % args.host)
+    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' buri_role='all_in_one_rss'" % args.host)
 
 def apply(args):
     logging.info('Pushing %s role to: %s' % (args.role, args.host))
-    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' ami_role='%s'" % (args.host, args.role))
+    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' buri_role='%s'" % (args.host, args.role))
 
 def buildhost(args):
     logging.info('Pushing a build host to: %s' % args.host)
@@ -230,16 +230,16 @@ def buildhost(args):
 def foundation(args):
     dev = get_device_node(args.disk_type)
     logging.info('Creating foundation AMI for env {0} on device {1}'.format(args.environment, dev))
-    return run_ansible_playbook(args, "create-foundation-ubuntu", "ami_role='foundation' buri_disk_device='{0}' buri_disk_type='{1}'".format(dev, args.disk_type))
+    return run_ansible_playbook(args, "create-foundation-ubuntu", "buri_role='foundation' buri_disk_device='{0}' buri_disk_type='{1}'".format(dev, args.disk_type))
 
 def resnap(args):
     dev = get_device_node(args.disk_type)
     logging.info('Resnapshotting AMI for env {0} on device {1}'.format(args.environment, dev))
-    return run_ansible_playbook(args, "resnap-from-buri", "ami_parent='{0}' ami_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
+    return run_ansible_playbook(args, "resnap-from-buri", "buri_ami_ancestor_id='{0}' buri_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
 
 def aminator(args):
     logging.info('Aminator Resnapshotting AMI for env {0} on mounted chroot: {1}'.format(args.environment, args.directory))
-    return run_ansible_playbook(args, "resnap-from-aminator", "ami_image_mount='{0}' ami_role='{1}'".format(args.directory, args.role))
+    return run_ansible_playbook(args, "resnap-from-aminator", "buri_ami_mount_point='{0}' buri_role='{1}'".format(args.directory, args.role))
 
 def cleanup_fail(args):
     logging.info('Cleaning up failed AMI resnap from: %s' % args.device)

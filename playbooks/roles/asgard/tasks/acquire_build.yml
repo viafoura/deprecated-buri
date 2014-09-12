@@ -4,9 +4,11 @@
   get_url: url={{ asgard_build_url }} dest=/tmp/asgard.war
   when: not asgard_build_source
 
-#- name: Setting up source build
-#  file: path=/tmp/asgard_build state=directory owner=root group=root mode=0755
-#  when: asgard_build_source
+- name: Set build version (binary)
+  set_fact:
+    buri_build_version: "{{ asgard_version }}"
+    buri_build_release: "bin"
+  when: not asgard_build_source
 
 - name: Checkout code from Git
   git: repo={{ asgard_git_repo }}
@@ -24,6 +26,9 @@
   register: asgard_version_out
   when: asgard_build_source
 
-#- name: Removing source build
-#  file: path=/tmp/asgard_build state=absent
-#  when: asgard_build_source
+- name: Set build version (source)
+  set_fact:
+    buri_build_version: "{{ asgard_version_out.stdout }}"
+    buri_build_release: "{{ git_clone.after }}"
+  when: asgard_build_source
+

@@ -1,7 +1,7 @@
 ---
 # Not using snapshot module from ansible, as supporting 1.4.4 is needed
 - name: Create snapshot from EBS volume
-  command: 'aws ec2 create-snapshot --region {{ ansible_ec2_placement_region }} --description "{{ ami_description }}" --volume-id "{{ ebs_volume_id }}" --output text'
+  command: 'aws ec2 create-snapshot --region {{ ansible_ec2_placement_region }} --description "{{ buri_ami_description }}" --volume-id "{{ ebs_volume_id }}" --output text'
   register: snap
 
 - name: Saving Snapshot ID as a fact for later use
@@ -17,6 +17,6 @@
   delay: 3
 
 - name: Tagging snapshot
-  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ ami_name }} {{ buri_disk_type }} EBS AMI\"}]"'
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ buri_ami_full_name }} {{ buri_disk_type }} EBS AMI\"}]"'
 
 

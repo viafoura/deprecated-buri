@@ -4,9 +4,11 @@
   get_url: url={{ ice_build_url }} dest=/tmp/ice.war
   when: not ice_build_source
 
-#- name: Setting up source build
-#  file: path=/tmp/ice_build state=directory owner=root group=root mode=0755
-#  when: ice_build_source
+- name: Set build version (binary)
+  set_fact:
+    buri_build_version: "{{ ice_version }}"
+    buri_build_release: "bin"
+  when: not ice_build_source
 
 - name: Checkout code from Git
   git: repo={{ ice_git_repo }}
@@ -24,6 +26,9 @@
   register: ice_version_out
   when: ice_build_source
 
-#- name: Removing source build
-#  file: path=/tmp/ice_build state=absent
-#  when: ice_build_source
+- name: Set build version (source)
+  set_fact:
+    buri_build_version: "{{ ice_version_out.stdout }}"
+    buri_build_release: "{{ git_clone.after }}"
+  when: ice_build_source
+

@@ -5,24 +5,16 @@ buri_base_java: True
 #cloud_target: amazon
 cloud_target: vm
 
-# Something must override this at commandline, do not set elsewhere.
-#ami_role: ""
-# Maybe this one if you want a custom name
-ami_description: "{{ ami_role }} on {{ ansible_distribution }} {{ ansible_distribution_release }}"
-ami_image_mount: "/mnt/{{ ami_name }}"
-
 # For S3 bundling:
 ami_bundle_account: '123456789012'
 ami_bundle_bucket_path: 'yourbucket/basepath'
 
 # These are more likely to be set in a site config or on command line
 
-# In GB, a default. whole numbers only.
-ami_root_size: 10
-ami_build_pvm_ebs: True
-ami_build_hvm_ebs: True
-ami_build_pvm_instance: False
-ami_build_hvm_instance: False
+buri_ami_build_pvm_ebs: True
+buri_ami_build_hvm_ebs: True
+buri_ami_build_pvm_instance: False
+buri_ami_build_hvm_instance: False
 
 eureka_build_source: True
 eureka_instance_port: 8400

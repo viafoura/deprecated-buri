@@ -1,0 +1,12 @@
+---
+# Params:
+#   tag_ami_id   - id of ami to tag
+#   tag_ami_name - name for AMI, with all suffixes
+#
+# Other values in common to all types are brought in from the global variables.
+
+# Looks to the ancestor base_ami_version if found, unless foundation or base, in which case the base is set to self.
+
+- name: Adding tags to AMI
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ tag_ami_id }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ tag_ami_name }}\"}, {\"Key\":\"creation_time\",\"Value\":\"{{ buri_ami_creation_time }}\"}, {\"Key\":\"creator\",\"Value\":\"buri\"}, {\"Key\":\"appversion\",\"Value\":\"{{ buri_ami_appversion }}\"}, {% if buri_ami_ancestor_version is defined and not (buri_role == "foundation" or buri_role == "base") %}{\"Key\":\"base_ami_version\",\"Value\":\"{{ buri_ami_ancestor_version }}\"}{% else %}{\"Key\":\"base_ami_version\",\"Value\":\"{{ buri_ami_appversion }}\"}{% endif %}]"'
+

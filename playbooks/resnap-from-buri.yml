@@ -9,7 +9,7 @@
     cloud_target: amazon
     ami_root_resize: false
   tasks:
-    - include: tasks/buri/set_build_info.yml
+    - include: tasks/buri/ami_set_build_info_initial.yml
     - include: tasks/ec2/instance/facts.yml
     - include: tasks/ec2/iam/lookup.yml
     - include: tasks/ec2/ami/lookup.yml
@@ -18,7 +18,7 @@
       when: ami_root_resize and buri_disk_type != "flat" 
     - include: tasks/chroot/mount.yml
     - name: Register chroot target in ansible inventory
-      add_host: hostname={{ ami_image_mount }} groups={{ ami_role }},chroots
+      add_host: hostname={{ buri_ami_mount_point }} groups={{ buri_role }},chroots
 
 - include: _image_apply_role.yml
 - include: _image_finalize.yml

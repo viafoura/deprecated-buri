@@ -1,0 +1,27 @@
+---
+
+# Format intended to match that used in aminator for the deault "release" value
+- name: Setting build timestamp
+  set_fact:
+    buri_ami_release_timestamp: "{{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"
+
+# Format intended to match aminator creation_time tags
+- name: Setting AMI creation_time string value
+  set_fact:
+    buri_ami_creation_time: "{{ ansible_date_time.date }} {{ ansible_date_time.time }} {{ ansible_date_time.tz }}"
+
+# Following two rules will create a composite name including cluster name if specified
+- name: Setting base build name (No Suffix)
+  set_fact:
+    buri_ami_base_name: "{{ buri_role }}"
+  when: buri_cluster_name is not defined or buri_cluster_name == ""
+
+- name: Setting base build name (With Suffix)
+  set_fact:
+    buri_ami_base_name: "{{ buri_role }}_{{ buri_cluster_name }}"
+  when: buri_cluster_name is defined and buri_cluster_name != ""
+
+# TODO: a better location than /mnt, or a user controllable location
+- name: Calculating mount point
+  set_fact:
+    buri_ami_mount_point: "{{ buri_disk_device.replace('/dev/', '/mnt/') }}"

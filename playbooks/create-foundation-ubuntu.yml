@@ -12,7 +12,7 @@
   tasks:
     - name: Dump all vars
       template: src=templates/debug.j2 dest=/tmp/ansible.all
-    - include: tasks/buri/set_build_info.yml
+    - include: tasks/buri/ami_set_build_info_initial.yml
     - include: tasks/ec2/instance/facts.yml
     - include: tasks/ec2/iam/lookup.yml
     - include: tasks/image/Ubuntu/find_aki.yml
@@ -27,7 +27,7 @@
       when: ami_root_resize and buri_disk_type != "flat"
     - include: tasks/chroot/mount.yml
     - name: Register chroot target in ansible inventory
-      add_host: hostname={{ ami_image_mount }} groups=foundation,chroots
+      add_host: hostname={{ buri_ami_mount_point }} groups=foundation,chroots
 
 - include: _image_apply_role.yml
 - include: _image_finalize.yml
