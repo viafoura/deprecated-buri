@@ -14,8 +14,6 @@
     - ngrep
     - nmon
     - ntp
-    - openssh-client
-    - openssh-server
     - perl
     - perl-modules
     - python

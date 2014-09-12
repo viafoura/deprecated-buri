@@ -15,24 +15,6 @@
   service: name=ntp state=stopped
   when: image_build
   
-# SSH settings
-- name: Set SSH config
-  copy: src={{ ansible_distribution }}/ssh_config dest=/etc/ssh/ssh_config owner=root mode=0440
-    
-- name: Set SSHd config
-  copy: src={{ ansible_distribution }}/sshd_config dest=/etc/ssh/sshd_config owner=root mode=0440
-    
-- name: Enable SSH service
-  service: name=ssh enabled=yes
-  
-- name: Starting SSH service
-  service: name=ssh state=started
-  when: not image_build
-  
-- name: Stopping SSH service
-  service: name=ssh state=stopped
-  when: image_build
-
 # Ephemeral RAID
 - name: Add first-boot ephemeral raid setup script
   copy: src=ephemeral-raid.conf dest=/etc/init owner=root mode=0644
