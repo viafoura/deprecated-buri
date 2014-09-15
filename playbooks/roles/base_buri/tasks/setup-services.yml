@@ -1,18 +1,18 @@
 ---
 
 - name: Make sure rsync is not running as a service
-  service: name=rsync enabled=off
+  command: update-rc.d rsync disable
   when: ansible_distribution == 'Ubuntu'
   
 - name: Enable NTP service
-  service: name=ntp enabled=yes
+  command: update-rc.d ntp enable
 
 - name: Starting NTP
-  service: name=ntp state=started
+  command: service ntp start
   when: not image_build
 
 - name: Stopping NTP
-  service: name=ntp state=stopped
+  command: service ntp stop
   when: image_build
   
 # Ephemeral RAID

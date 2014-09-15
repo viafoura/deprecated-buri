@@ -91,11 +91,19 @@
     line: JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(ec2metadata --public-hostname)"
   when: cloud_target == "amazon"
 
-- name: Disable/stop Cassanda service on init (Priam managed)
-  service: name=cassandra enabled=no state=stopped
+- name: Disable Cassanda service on boot (Priam managed)
+  command: update-rc.d cassandra disable
+  when: image_build
+
+- name: Stop Cassanda service
+  command: service cassandra stop
   when: image_build
   
-- name: Enable Cassanda service
-  service: name=cassandra enabled=yes state=started
+- name: Enable Cassanda service on boot (Not Priam managed)
+  command: update-rc.d cassandra disable
+  when: not image_build
+
+- name: Start Cassanda service
+  command: service cassandra start
   when: not image_build
   
