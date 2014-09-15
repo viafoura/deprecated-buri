@@ -338,7 +338,7 @@ def get_config():
     parser.add_argument('--extra-vars', dest='extravars', metavar='<varstr="foo" varnum=123>', type=str, default='', help='Extra variables to pass to Ansible playbooks')
     parser.add_argument('-u', '--user', dest='buri_remote_user', metavar='<remote username>', type=str, help='User Ansible will user to remote ssh to a host as')
     parser.add_argument('--cluster-name', dest='buri_cluster_name', metavar='<name>', type=str, help='Cluster name, required by some roles, can be used by any to differentiate configurations')
-    parser.add_argument('--vol_type', metavar='<standard|gp2|io1>', type=str, default='standard', choices=['standard', 'gp2', 'io1'], help='Selects the type of EC2 EBS volume to use for image creation')
+    parser.add_argument('--vol_type', metavar='<standard|gp2>', type=str, default='standard', choices=['standard', 'gp2'], help='Selects the type of EC2 EBS volume to use for image creation')
     parser.add_argument('--disk_zero', metavar='<never|normal|always>', type=str, default='normal', choices=['never', 'normal', 'always'], help='When to zero free filesystem areas, default only when bundling instance AMIs')
 
     subparser = parser.add_subparsers(help='sub commands')
