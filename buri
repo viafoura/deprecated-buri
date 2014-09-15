@@ -360,12 +360,12 @@ def get_config():
     # foundation
     parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
     parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
-    parser_foundation.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
+    parser_foundation.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='flat', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
     parser_foundation.set_defaults(func=foundation)
 
     # resnap
     parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
-    parser_resnap.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
+    parser_resnap.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='flat', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
     parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
     parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
     parser_resnap.set_defaults(func=resnap)
