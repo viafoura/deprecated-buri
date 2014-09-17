@@ -13,7 +13,7 @@
     - include: tasks/ec2/instance/facts.yml
     - include: tasks/ec2/iam/lookup.yml
     - include: tasks/ec2/ami/lookup.yml
-    - include: tasks/ec2/vol/create_and_attach.yml
+    - include: tasks/ec2/vol/create_from_snap.yml
     - include: tasks/image/Ubuntu/grow_filesystem.yml
       when: ami_root_resize and buri_disk_type != "flat" 
     - include: tasks/chroot/mount.yml

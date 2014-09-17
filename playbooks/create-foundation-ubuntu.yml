@@ -16,7 +16,7 @@
     - include: tasks/ec2/instance/facts.yml
     - include: tasks/ec2/iam/lookup.yml
     - include: tasks/image/Ubuntu/find_aki.yml
-    - include: tasks/ec2/vol/create_and_attach.yml
+    - include: tasks/ec2/vol/create_new.yml
     - include: tasks/image/Ubuntu/create_from_tarball.yml
       when: buri_disk_type == "flat"
     - include: tasks/image/Ubuntu/write_qcow_from_url.yml
