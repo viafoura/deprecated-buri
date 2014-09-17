@@ -14,7 +14,7 @@
   register: result
   until: result.stdout.find("pending") == -1
   retries: 60
-  delay: 3
+  delay: 5
 
 - name: Tagging snapshot
   command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"Name\",\"Value\":\"{{ buri_ami_full_name }} {{ buri_disk_type }} EBS AMI\"}]"'
