@@ -7,6 +7,9 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
+options = {}
+options[:role_name] = ENV['ROLE'] || 'all_in_one_flux'
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.network :private_network, ip: "192.168.33.10"
@@ -15,6 +18,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "3072"]
   end
   config.vm.provision :host_shell do |host_shell|
-    host_shell.inline = 'export ANSIBLE_HOST_KEY_CHECKING=False && ssh-keygen -f ~/.ssh/known_hosts -R 192.168.33.10 && ssh-add ~/.vagrant.d/insecure_private_key && ./buri --cluster-name dev_vm -v -u vagrant --environment development fluxdemo 192.168.33.10'
+    host_shell.inline = 'export ANSIBLE_HOST_KEY_CHECKING=False && ssh-keygen -f ~/.ssh/known_hosts -R 192.168.33.10 && ssh-add ~/.vagrant.d/insecure_private_key && ./buri --cluster-name dev_vm -v -u vagrant --environment development apply  192.168.33.10 ' + options[:role_name]
   end
 end
