@@ -6,3 +6,5 @@
   when: ansible_distribution == 'Ubuntu'
 - include: install-other.yml
 - include: setup-services.yml
+- include: monitoring-clodwatch.yml
+  when: cloud_target == 'amazon'
