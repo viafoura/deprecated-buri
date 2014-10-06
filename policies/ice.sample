@@ -65,6 +65,15 @@
         "arn:aws:s3:::example-ice-working/*"
       ],
       "Effect": "Allow"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:*",
+        "sns:*",
+        "autoscaling:Describe*"
+      ],
+      "Resource": "*"
     }
   ]
 }
