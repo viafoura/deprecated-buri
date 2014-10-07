@@ -1,4 +1,7 @@
 ---
+- name: Update APT repo information
+  apt: update-cache=yes
+
 - name: Install packages
   apt: pkg={{ item }} state=latest
   with_items:
