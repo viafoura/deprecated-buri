@@ -1,4 +1,10 @@
 ---
+
+- name: Remove root .ssh folder
+  file:
+    path: '{{ buri_ami_mount_point }}/root/.ssh'
+    state: absent
+
 - name: Unmount /proc filesystem from chroot
   command: 'chroot {{ buri_ami_mount_point }} umount /proc'
 
