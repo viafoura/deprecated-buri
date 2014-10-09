@@ -65,7 +65,16 @@ def gen_ansible_command(args, playbook, cli_vars):
     local_group_vars_path = '{0}/local/inventory/group_vars/{1}'.format(args.BURI_BASE, args.environment)
     if os.path.exists(local_inventory_path) and os.path.isfile(local_inventory_path) and os.path.exists(local_group_vars_path) and os.path.isfile(local_group_vars_path):
         inventory_path = local_inventory_path
-    gen_vars = ''
+    deploy_key = 'NONE'
+    local_deploy_key_path = '{0}/local/env/{1}/deploy.key'.format(args.BURI_BASE, args.environment)
+    if os.path.exists(local_deploy_key_path) and os.path.isfile(local_deploy_key_path):
+        logging.info("Found a deploy key")
+        # check if key is DSA/RSA. Set as appropriate.
+        fline = open(local_deploy_key_path).readline().rstrip()
+        m = re.search(r"BEGIN ([RD]SA) PRIVATE KEY", fline)
+        if m:
+            deploy_key = m.group(1)
+    gen_vars = " buri_deploy_key='{0}' ".format(deploy_key)
     # user param
     if args.buri_remote_user != None:
         gen_vars += " buri_remote_user='{0}'".format(args.buri_remote_user)
