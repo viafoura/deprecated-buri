@@ -15,7 +15,7 @@
   vars: 
     image_build: false
   tasks:
-    - include: tasks/hosts/add_deploy_keys.yml
+    - include: tasks/host/add_deploy_keys.yml
 
 
 - name: Provisioning role against host
@@ -34,5 +34,5 @@
   vars: 
     image_build: false
   tasks:
-    - include: tasks/hosts/rm_deploy_keys.yml
+    - include: tasks/host/rm_deploy_keys.yml
 
