@@ -52,7 +52,7 @@
     dest: '{{ buri_ami_mount_point }}/root/.ssh/id_rsa'
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
   when: buri_deploy_key == 'RSA'
 
 - name: Copy in deployment key (DSA)
@@ -61,7 +61,7 @@
     dest: '{{ buri_ami_mount_point }}/root/.ssh/id_dsa'
     owner: root
     group: root
-    mode: 0755
+    mode: 0600
   when: buri_deploy_key == 'DSA'
 
 
