@@ -55,6 +55,7 @@ put_record("PriamProperties", "priam.vpc", "{{ priam_vpc }}")
 {% endif %}
 put_record("PriamProperties", "priam.backup.hour", "{{ priam_backup_hour }}")
 put_record("PriamProperties", "priam.compaction.throughput", "{{ priam_compaction_throughput }}")
+# Not used in 2.1, but we'll set it for those on 2.0.x or less
 put_record("PriamProperties", "priam.memory.compaction.limit", "{{ priam_compaction_limit }}")
 # These are not tunable from Ansible, probably no reason to.
 # i2.xlarge
