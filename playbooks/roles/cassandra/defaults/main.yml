@@ -1,13 +1,12 @@
 ---
 cassandra_nameprefix: "apache-cassandra"
-cassandra_version: "2.0.10"
+cassandra_version: "2.1.0"
 #cassandra_mirror: "http://downloads.datastax.com/community/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
 cassandra_build_url: "http://apache.mirror.iweb.ca/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
-cassandra_checksum: "962ab35b1767ed4c56eb9a2a6b9df374097dc48d4f1c718945cab3a977e5d9fa"
+cassandra_checksum: "da99c4ebc8de925dc6b493443b70d2183cf3090b1aad6b6b918efa9565f264dd"
 
 cassandra_build_source: False
 # this one's really slow? also a mirror
-#cassandra_git_repo: https://github.com/apache/cassandra.git
 cassandra_git_repo: http://git-wip-us.apache.org/repos/asf/cassandra.git
 cassandra_git_ref: cassandra-2.0
 

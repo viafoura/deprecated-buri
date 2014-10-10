@@ -75,7 +75,11 @@
 
 - name: Install initial cassandra.yaml (2.0)
   template: src=cassandra-2.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
-  when: cassandra_version|truncate(2, True, end="") == "2."
+  when: cassandra_version|truncate(4, True, end="") == "2.0."
+
+- name: Install initial cassandra.yaml (2.1)
+  template: src=cassandra-21.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+  when: cassandra_version|truncate(4, True, end="") == "2.1."
 
 - name: Install cassandra init script
   template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
