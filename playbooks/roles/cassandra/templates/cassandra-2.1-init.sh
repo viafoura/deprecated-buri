@@ -23,7 +23,6 @@ CASSANDRA_HOME={{ cassandra_home }}
 CONFDIR="${CASSANDRA_HOME}/conf"
 FD_LIMIT=100000
 
-[ -e /usr/share/cassandra/apache-cassandra.jar ] || exit 0
 [ -e ${CONFDIR}/cassandra.yaml ] || exit 0
 [ -e ${CONFDIR}/cassandra-env.sh ] || exit 0
 
