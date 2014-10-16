@@ -18,7 +18,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "3072"]
   end
   config.vm.provision :host_shell do |host_shell|
+    # Try 1
     #host_shell.inline = 'export ANSIBLE_HOST_KEY_CHECKING=False && ssh-keygen -f ~/.ssh/known_hosts -R 192.168.33.10 && ssh-add ~/.vagrant.d/insecure_private_key && ./buri --cluster-name dev_vm -v -u vagrant --environment development apply  192.168.33.10 ' + options[:role_name]
-    host_shell.inline = 'export ANSIBLE_HOST_KEY_CHECKING=False && ./buri --cluster-name dev_vm -v -u vagrant --environment development apply  192.168.33.10 ' + options[:role_name]
+    # Try 2
+    #host_shell.inline = 'export ANSIBLE_HOST_KEY_CHECKING=False && ./buri --cluster-name dev_vm -v -u vagrant --environment development apply  192.168.33.10 ' + options[:role_name]
+    # Try 3
+    #host_shell.inline = 'export ANSIBLE_SSH_ARGS="-i ~/.vagrant.d/insecure_private_key -o StrictHostKeyChecking=no" && ./buri --cluster-name dev_vm -v -u vagrant --environment development apply 192.168.33.10 ' + options[:role_name]
+    # Try 4
+    host_shell.inline = 'export ANSIBLE_HOST_KEY_CHECKING="False" && export ANSIBLE_PRIVATE_KEY_FILE="~/.vagrant.d/insecure_private_key" && ./buri --cluster-name dev_vm -v -u vagrant --environment development apply  192.168.33.10 ' + options[:role_name]
   end
 end
