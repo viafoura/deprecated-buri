@@ -92,6 +92,7 @@
 - name: Bump up stack size in cassandra launch scripts
   lineinfile: dest={{ cassandra_home }}/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
 
+# FIXME: this seems off, needs non cloud version
 - name: Setup RMI for remote JMX
   lineinfile:
     dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
@@ -99,6 +100,9 @@
     regexp: ^JVM_OPTS="\$JVM_OPTS -Djava.rmi.server.hostname=\$(ec2metadata --public-hostname)"
     line: JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(ec2metadata --public-hostname)"
   when: cloud_target == "amazon"
+
+- include: stargate_core.yml
+  when: cassandra_stargate
 
 - name: Disable Cassanda service on boot (Priam managed)
   command: update-rc.d cassandra disable
