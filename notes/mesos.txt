@@ -1,0 +1,134 @@
+
+We will build/define two main roles
+
+mesos-master
+mesos-slave
+
+Both with depend on a common "mesos" role.
+
+Current ansible playbooks assume prior knowledge of IPs, etc. This will need to be adapted to be more cloud friendly.
+
+On-boot setup needs of:
+
+  common: 
+    - locate, configure zoo information
+    - locate, configure master info
+      - how to accomplish this without predefinition? (we can't)
+
+  master:
+
+
+  slave:
+
+    - set hostname in /etc/mesos-slave/hostname
+
+---------------
+
+How the mesos-ec2 script deploys:
+
+SECTION 1: From the mesos-ec2 script:
+
+1) Adds 3 security groups for cluster
+     - group for mesos masters
+     - group for mesos slaves
+     - group for zookeepers
+
+2) Sanity check to see if anything is running within the security groups
+
+3) Finds it's AMI metadata
+
+4) Launch:
+
+   - (optionally) map an EBS volume to sdv
+
+   - launch slaves, capture the instances info
+
+   - launch masters, from same image, capture info
+
+   - if > 1 master, launch 3 zk nodes, again, from same image
+
+5) Waits for completion of nodes to launch
+
+6) Runs "setup cluster"
+
+   a) Copy deploy.* files to first master (which deploys to the rest), templating as they are transfered.
+
+      i) calculates # of ephemeral disks on slave nodes, creates list of ephemeral hdfs and map reduce folders.
+      ii) creates list of zk instances, generates a cluster URL (depends on zk config)
+      iii) completes templated vars hash, master list, active master, slave list, zoo list, cluster url, hdfs dirs, mapred dirs.
+      iv) iterates through the templates to render to a temp location
+      v) uses rsync to transfer rendered files, and removes local copy
+
+   b) Copies SSH key to first master
+
+   c) Chmod +x and run mesos-ec2/setup, passing in following options:
+        - opts.os		(IE: amazon64)
+        - opts.download         (IE: git or none, controls source build of mesos)
+        - opts.branch           (IE: git branch if download set to git)
+        - opts.swap             (swap space in MB, 1024 default)
+
+7) Reports as complete
+
+
+SECTION 2: From the first master's setup script:
+
+1) Sets up hostname based on local-hostname (not public)
+
+2) Collects inputs from SECTION 1. (masters/slaves/zoo lists, os, download/branch, swap params)
+
+3) Determine # of zookeepers
+
+4) Ensure +x on scripts to be called
+
+5) Runs slave setup w/ swap param on the master
+
+   a) mostly concerned with setting up mount points / ephemeral files, etc. More detail in slave setup breakdown below.
+
+6) SSHes to all other masters, and self over both localhost and hostname, to effectively accept SSH host keys
+
+7) Same as #6, but to the zookeeper instances, also dropping an ID number into /tmp/zookeeper/myid for later pickup
+
+8) Same as #6, but to slave nozes (also zoos, other masters), with retries.
+
+9) Rsyncs the /root/mesos-ec2 folder and copies ssh key to all other nodes.
+
+10) Remotely runs the setup-slave script across all other nodes.
+
+11) Rsyncs the HDFS config files to all other nodes
+
+12) Download / build mesos if specified to do so
+
+    a) Builds spark and hadoop here...
+
+13) Setup framework config files for hadoop, haproxy+apache, and spark
+
+14) Calls "redeploy-mesos"
+
+    a) just rsyncs /root/mesos (build mesos) to all other masters, slaves
+
+15) Setups up /mnt/nfs as an NFS export, starts up portmap and nfsd
+
+16) Have all slaves mount the NFS volume
+
+17) "Format" ephemeral HDFS namenode, and start it up.
+
+18) "Format" persistent HDFS namenode, and start it up.
+
+19) Launch ZK on respective nodes
+
+20) "stop" and "start" the mesos cluster
+
+    a) stop logs into every node and runs pkill mesos-slave or mesos-master as needed
+
+    b) start does:
+
+       i) Launches all the "other" masters
+       ii) Launches active master
+       iii) Delays 5, then launches all slaves
+
+
+
+
+
+
+     
