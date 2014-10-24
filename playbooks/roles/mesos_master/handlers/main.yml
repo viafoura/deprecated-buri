@@ -1,0 +1,4 @@
+---
+- name: Restart mesos-master
+  shell: start mesos-master || restart mesos-master
+

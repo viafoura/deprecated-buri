@@ -1,0 +1,11 @@
+---
+- name: Add mesosphere repo
+  yum: name=http://repos.mesosphere.io/el/6/noarch/RPMS/mesosphere-el-repo-6-2.noarch.rpm state=present
+
+- name: Install Mesos RedHat OS package
+  yum: name=mesos-{{mesos_version}} state=present
+
+- name: Install Docker
+  yum: pkg=docker.io state=present
+  when: mesos_docker_support == "yes"
+

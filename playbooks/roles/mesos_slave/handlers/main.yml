@@ -1,0 +1,4 @@
+---
+- name: Restart mesos-slave
+  shell: start mesos-slave || restart mesos-slave
+

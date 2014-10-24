@@ -1,0 +1,15 @@
+---
+# Here we are using the debian package if debian
+- include: Debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: RedHat.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Mesos default config file
+  template: src=mesos.j2 dest=/etc/default/mesos
+
+- name: Overwrite Zookeeper file
+  template: src=zk.j2 dest=/etc/mesos/zk
+
+

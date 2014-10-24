@@ -1,0 +1,10 @@
+---
+# == Delete to force template creation
+- name: Delete master script
+  file: path=/etc/init/mesos-master.conf state=absent
+
+- name: Overwrite mesos-master int script
+  template: src=mesos-master.j2 dest=/etc/init/mesos-master.conf
+  notify:
+    - Restart mesos-master
+
