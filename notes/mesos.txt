@@ -127,8 +127,29 @@ SECTION 2: From the first master's setup script:
        iii) Delays 5, then launches all slaves
 
 
+Analysis of the mesos-init-wrapper
+----------------------------------
 
+The mesosphere packaging, adds a wrapper for launching mesos, with a simple mechanism to configure the nodes.
+This is breakdown of it's function/features:
 
+Two main paths, one for master, one for slave:
 
+1) Master
+
+ - Loads defaults from /etc/defaults, first general "mesos" then the "mesos-master" file
+   - general shell include, so they can contain logic, external shelling for info
+ - Sets up ulimit if specified
+ - Translates environment variables into command line arguments
+ - Scan /etc/mesos-master directory for files, named for parameters, and containing the values
+   - translates these to argument strings
+   - special convention for flag params, leading them with a question mark
+ - launches the master with a logging wrapper, using the generated arguments
+
+2) Slave
+
+ - mostly the same as the master but additionally, before launching:
+   - scans /etc/mesos-slave/attributes to build attributes param string
+   - scans /etc/mesos-slace/resources to build resources param string
 
      

@@ -3,18 +3,18 @@ mesos_version: "0.20.1"
 
 # conf file settings
 mesos_cluster_name: "{{ buri_cluster_name|default('default') }}"
+mesos_log_location: "/var/log/mesos"
+mesos_ulimit: "-n 8192"
 
 # enable Docker support
 mesos_docker_support: "no"
 
-
 # Not yet converted:
 
+# Needs to be evaluated at runtime
 mesos_ip: "{{ansible_default_ipv4.address}}"
-mesos_log_location: "/var/log/mesos"
-mesos_ulimit: "-n 8192"
+# ZK info will come via an environment configuration
 mesos_zookeepers: "zk://{{ansible_fqdn}}:2181/mesos" # used by masters to find zookeeper
 mesos_masters: "zk://{{ansible_fqdn}}:2181/mesos" # used by slaves
-mesos_options: "--log_dir=$LOGS"
 
 
