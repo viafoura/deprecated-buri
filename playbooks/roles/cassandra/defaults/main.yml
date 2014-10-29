@@ -28,9 +28,15 @@ cassandra_cache_location: "/mnt/cassandra/saved_caches"
 cassandra_commitlog_location: "/mnt/cassandra/commitlog"
 
 cassandra_partitioner: "org.apache.cassandra.dht.RandomPartitioner"
-cassandra_rpc_server_type: "hsha"
 cassandra_stream_throughput: 400
 cassandra_index_interval: 256
+
+# Thrift RPC settings:
+cassandra_rpc_enable: "True"
+cassandra_rpc_min_threads: 4
+cassandra_rpc_max_threads: 16
+cassandra_rpc_frame_size: 15
+cassandra_rpc_server_type: "hsha"
 
 # overridden by priam to add extension
 cassandra_jvm_opts: ""
