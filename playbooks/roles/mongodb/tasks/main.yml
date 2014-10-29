@@ -6,9 +6,9 @@
     - mongodb
 
 - name: Starting MongoDB service
-  service: name=mongodb state=started
+  command: service mongodb start
   when: not image_build
 
 - name: Stopping MongoDB service
-  service: name=mongodb state=stopped
+  command: service mongodb stop
   when: image_build

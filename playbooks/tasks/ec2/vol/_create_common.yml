@@ -1,0 +1,28 @@
+---
+- name: Saving volume ID as a fact for later use (standard)
+  set_fact:
+    ebs_volume_id: '{{ item.split("\t")[6] }}'
+  with_items: amivol.stdout
+  when: buri_volume_type|default('standard') == 'standard'
+
+- name: Saving volume ID as a fact for later use (gp2)
+  set_fact:
+    ebs_volume_id: '{{ item.split("\t")[7] }}'
+  with_items: amivol.stdout
+  when: buri_volume_type|default('standard') == 'gp2'
+
+- name: Waiting for volume availability
+  command: 'aws ec2 describe-volumes --region {{ ansible_ec2_placement_region }} --volume-ids {{ ebs_volume_id }} --output text'
+  register: result
+  until: result.stdout.find("available") != -1
+  retries: 30
+  delay: 3
+
+- name: Attaching EBS work volume
+  command: "aws ec2 attach-volume --region {{ ansible_ec2_placement_region }} --device {{ buri_disk_device.replace('/dev/xvd', '/dev/sd') }} --instance-id '{{ ansible_ec2_instance_id }}' --volume-id '{{ ebs_volume_id }}'"
+
+- name: Waiting for EBS work volume attachment to complete
+  wait_for:
+    delay: 5
+    path: '{{ buri_disk_device }}'
+

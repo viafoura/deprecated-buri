@@ -1,0 +1,9 @@
+---
+- name: Generate build report
+  template: src={{ BURI_BASE }}/playbooks/templates/report.j2 dest=/mnt/{{ buri_ami_full_name }}-report.txt owner=root group=root mode=0644
+
+# Put report in a known place for Buri to pick up
+# FIXME: this is ugly/racy, but until the buri_ami_full_name is driven top down, we need something like it
+- name: Copy build report to known location
+  command: cp /mnt/{{ buri_ami_full_name }}-report.txt /mnt/latest-report.txt
+ 

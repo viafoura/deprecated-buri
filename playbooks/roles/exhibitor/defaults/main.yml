@@ -2,7 +2,7 @@
 exhibitor_instance_port: 8401
 exhibitor_instance_jmx_port: 7401
 exhibitor_jvm_xmx: '512m'
-exhibitor_cluster_name: 'default'
+exhibitor_cluster_name: "{{ buri_cluster_name|default('default') }}"
 exhibitor_s3_bucket: 'exhibitor'
 exhibitor_opts_configtype: 's3'
 exhibitor_opts_s3region: 'us-east-1' # i.e. us-east-1
@@ -15,13 +15,12 @@ exhibitor_opts_s3backup: True
 
 # required for any jetty9_instance
 exhibitor_instance_name: exhibitor
-exhibitor_jvm_extra_opts: -Darchaius.deployment.applicationId=exhibitor -Dexhibitor-hostname=$([ -e /usr/bin/ec2metadata ] && ec2metadata --public-hostname || hostname)
+exhibitor_jvm_extra_opts: -Darchaius.deployment.applicationId=exhibitor -Dexhibitor-hostname=$(curl -s -m 2 http://169.254.169.254 2>&1 > /dev/null && ec2metadata --public-hostname || hostname)
 exhibitor_webapps_root: "{{ jetty_apps }}/{{ exhibitor_instance_name }}/webapps"
-
 
 zookeeper_version: '3.4.6'
 zookeeper_basename: 'zookeeper-{{ zookeeper_version }}'
-zookeeper_mirror: 'http://mirror.csclub.uwaterloo.ca/apache/zookeeper/{{ zookeeper_basename }}/{{ zookeeper_basename }}.tar.gz'
+zookeeper_mirror: 'http://apache.mirror.rafal.ca/zookeeper/{{ zookeeper_basename }}/{{ zookeeper_basename }}.tar.gz'
 zookeeper_checksum: '01b3938547cd620dc4c93efe07c0360411f4a66962a70500b163b59014046994'
 zookeeper_install_dir: '/opt/zookeeper'
 
@@ -79,5 +78,3 @@ exhibitor_defaultconfig_auto_manage_instances_settling_period_ms: '0'
 exhibitor_defaultconfig_auto_manage_instances: '1'
 exhibitor_defaultconfig_servers_spec: ''
 
-# For multiple clusters, apply cluster name
-buri_cluster_name: "{{ exhibitor_cluster_name }}"

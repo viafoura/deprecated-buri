@@ -3,28 +3,26 @@
   hosts: localhost
   connection: local
   sudo: True
-  vars_files:
-    - roles/{{ ami_role }}/defaults/main.yml
-    - [ "{{ BURI_BASE }}/local/env/{{ buri_environment }}/overrides.yml", "vars/dummy.yml" ]
   vars:
     image_build: true
     cloud_target: amazon
   tasks:
-    - include: tasks/ec2_get_facts.yml
-    - include: tasks/chroot_clean_and_unmount.yml
-    - include: tasks/image_bundle_to_s3.yml
-      when: ami_build_pvm_instance or ami_build_hvm_instance
-    - include: tasks/ec2_ami_tag_s3_pvm.yml
-      when: ami_build_pvm_instance
-    - include: tasks/ec2_ami_tag_s3_hvm.yml
-      when: ami_build_hvm_instance
-    - include: tasks/ec2_detach_vol.yml
-    - include: tasks/ec2_snapshot_vol.yml
-      when: ami_build_pvm_ebs or ami_build_hvm_ebs
-    - include: tasks/ec2_delete_vol.yml
-    - include: tasks/ec2_ami_tag_ebs_pvm.yml
-      when: ami_build_pvm_ebs
-    - include: tasks/ec2_ami_tag_ebs_hvm.yml
-      when: ami_build_hvm_ebs
-    - include: tasks/report.yml
+    - include: tasks/ec2/instance/facts.yml
+    - include: tasks/buri/ami_set_build_info_post_build.yml
+    - include: tasks/chroot/unmount.yml
+    - include: tasks/ec2/bundle/create_and_upload.yml
+      when: buri_ami_build_pvm_instance|bool or buri_ami_build_hvm_instance|bool
+    - include: tasks/ec2/ami/register/s3_pvm.yml
+      when: buri_ami_build_pvm_instance|bool
+    - include: tasks/ec2/ami/register/s3_hvm.yml
+      when: buri_ami_build_hvm_instance|bool
+    - include: tasks/ec2/vol/detach.yml
+    - include: tasks/ec2/vol/snapshot.yml
+      when: buri_ami_build_pvm_ebs|bool or buri_ami_build_hvm_ebs|bool
+    - include: tasks/ec2/vol/delete.yml
+    - include: tasks/ec2/ami/register/ebs_pvm.yml
+      when: buri_ami_build_pvm_ebs|bool
+    - include: tasks/ec2/ami/register/ebs_hvm.yml
+      when: buri_ami_build_hvm_ebs|bool
+    - include: tasks/buri/report.yml
 

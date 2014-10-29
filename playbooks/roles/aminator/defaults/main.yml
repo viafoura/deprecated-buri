@@ -9,3 +9,6 @@ aminator_buri_git_ref: develop
 buri_git_repo: https://github.com/viafoura/buri.git
 buri_git_ref: develop
 
+# Set these to checkout a local/ into your buri folder
+#buri_local_git_repo: https://github.com/your-org/your-PRIVATE-repo-for-config.git
+#buri_local_git_ref: develop

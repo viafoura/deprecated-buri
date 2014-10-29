@@ -50,6 +50,15 @@
         "arn:aws:sdb:*:*:domain/PriamProperties",
         "arn:aws:sdb:*:*:domain/InstanceIdentity"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:*",
+        "sns:*",
+        "autoscaling:Describe*"
+      ],
+      "Resource": "*"
     }
   ]
 }

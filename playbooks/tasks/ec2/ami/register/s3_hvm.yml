@@ -1,0 +1,15 @@
+---
+- name: Registering Instance HVM AMI to snapshot
+  # FIXME: check if we override bundle re: volumes here, if so, rely on it for consistency.
+  shell: 'aws ec2 register-image --output text --image-location {{ ami_bundle_bucket_path }}/{{ buri_ami_full_name }}/{{ buri_ami_full_name }}.img.manifest.xml  --name "{{ buri_ami_full_name }}-HVM-S3-{{ buri_disk_type }}" --description "{{ buri_ami_description }}" --region {{ ansible_ec2_placement_region }} --virtualization-type hvm'
+  register: amihvminstance
+
+- name: Saving Instance HVM AMI ID as a fact for later use
+  set_fact:
+    ami_id_hvm_instance: '{{ amihvminstance.stdout }}'
+
+- include: ../tag/common.yml
+  vars:
+    tag_ami_id: '{{ ami_id_hvm_instance }}'
+    tag_ami_name: '{{ buri_ami_full_name }}-HVM-S3-{{ buri_disk_type }}'
+

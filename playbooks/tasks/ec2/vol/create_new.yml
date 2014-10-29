@@ -1,0 +1,9 @@
+---
+# FIXME: maybe parameterize the region/zone one day
+- name: Creating new EBS volume (empty)
+  command: 'aws ec2 create-volume --region {{ ansible_ec2_placement_region }} --availability-zone {{ ansible_ec2_placement_availability_zone  }} --size {{ buri_ami_root_size|default(10) }} --volume-type {{ buri_volume_type|default("standard") }} --output text'
+  register: amivol
+  when: ebs_parent_id is not defined or ebs_parent_id == ''
+
+- include: _create_common.yml
+

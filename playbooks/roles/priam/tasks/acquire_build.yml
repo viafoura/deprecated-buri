@@ -8,9 +8,11 @@
   get_url: url={{ priam_ext_mirror }} dest={{ cassandra_home }}/lib/priam-cass-extensions.jar sha256sum={{ priam_ext_checksum }} owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
   when: not priam_build_source
 
-#- name: Setting up source build
-#  file: path=/tmp/priam_build state=directory owner=root group=root mode=0755
-#  when: priam_build_source
+- name: Set build version (binary)
+  set_fact:
+    buri_build_version: "{{ priam_version }}"
+    buri_build_release: "bin"
+  when: not priam_build_source
 
 - name: Checkout code from Git
   git: repo={{ priam_git_repo }}
@@ -63,6 +65,9 @@
   command: chdir=/tmp/priam_build ./gradlew --stop
   when: priam_build_source and git_clone.changed
 
-#- name: Removing source build
-#  file: path=/tmp/priam_build state=absent
-#  when: priam_build_source
+- name: Set build version (source)
+  set_fact:
+    buri_build_version: "{{ priam_version_out.stdout }}"
+    buri_build_release: "{{ git_clone.after }}"
+  when: priam_build_source
+

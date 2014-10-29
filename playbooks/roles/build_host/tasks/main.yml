@@ -26,4 +26,9 @@
 - name: Install Ansible via pip
   pip: name=ansible state=present version=1.6.10
 
+- name: Copying in swap-pigs script
+  copy: src=swap-pigz-in.sh dest=/tmp/swap-pigz-in.sh owner=root group=root mode=0755
+
+- name: Swapping pigz in for gzip, for parallel compression
+  command: /tmp/swap-pigz-in.sh
 

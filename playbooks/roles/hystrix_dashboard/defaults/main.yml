@@ -14,5 +14,5 @@ hystrix_dashboard_build_url: http://search.maven.org/remotecontent?filepath=com/
 
 hystrix_dashboard_build_source: False
 hystrix_dashboard_git_repo: https://github.com/Netflix/Hystrix.git
-hystrix_dashboard_git_ref: master
+hystrix_dashboard_git_ref: 1.3.x
 

@@ -1,0 +1,25 @@
+---
+# Playbook to create a foundation snapshot/AMI from ubuntu's source images
+- name: Mounting EBS snapshot to work from
+  hosts: localhost
+  connection: local
+  sudo: True
+  vars:
+    image_build: true
+    cloud_target: amazon
+    ami_root_resize: false
+  tasks:
+    - include: tasks/buri/ami_set_build_info_initial.yml
+    - include: tasks/ec2/instance/facts.yml
+    - include: tasks/ec2/iam/lookup.yml
+    - include: tasks/ec2/ami/lookup.yml
+    - include: tasks/ec2/vol/create_from_snap.yml
+    - include: tasks/image/Ubuntu/grow_filesystem.yml
+      when: ami_root_resize and buri_disk_type != "flat" 
+    - include: tasks/chroot/mount.yml
+    - name: Register chroot target in ansible inventory
+      add_host: hostname={{ buri_ami_mount_point }} groups={{ buri_role }},chroots
+
+- include: _image_apply_role.yml
+- include: _image_finalize.yml
+

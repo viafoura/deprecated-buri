@@ -2,7 +2,7 @@
 # Graphite only available in 14.04 it looks
 - name: Checking sanity of play...
   fail: msg="Graphite role requires Ubuntu 14.04 or later"
-  when: ansible_distribution_version|float < 14.04
+  when: ansible_distribution_version|version_compare('14.04', '<')
 
 - name: Install packages
   apt: pkg={{ item }} state=latest
@@ -23,6 +23,12 @@
 - name: Setup apache to serve graphite UI
   command: cp /usr/share/graphite-web/apache2-graphite.conf /etc/apache2/sites-available/000-default.conf
 
+- name: Change graphite vhost to port 7070
+  lineinfile: dest=/etc/apache2/sites-available/000-default.conf regexp="^<VirtualHost" line="<VirtualHost *:7070>"
+
+- name: Change apache2 listen to port 7070
+  lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen" line="Listen 7070"
+
 - name: Enable startup of carbon cache
   lineinfile: dest=/etc/default/graphite-carbon regexp="CARBON_CACHE_ENABLED" line="CARBON_CACHE_ENABLED=true"
 
@@ -36,19 +42,25 @@
 - name: correct permissions of carbon database
   command: chown _graphite:_graphite /var/lib/graphite/graphite.db
 
-- name: Enable and stop carbon cache service
-  service: name=carbon-cache enabled=yes state=stopped
+- name: Enable carbon cache service
+  command: update-rc.d carbon-cache enable
+
+- name: Stop carbon cache service
+  command: service carbon-cache stop
   when: image_build
   
-- name: Enable and start carbon cache service
-  service: name=carbon-cache enabled=yes state=restarted
+- name: Start carbon cache service
+  command: service carbon-cache start
   when: not image_build
 
-- name: Enable and stop apache2 service
-  service: name=apache2 enabled=yes state=stopped
+- name: Enable apache2 service
+  command: update-rc.d apache2 enable
+
+- name: Stop apache2 service
+  command: service apache2 stop
   when: image_build
   
-- name: Enable and start apache2 service
-  service: name=apache2 enabled=yes state=restarted
+- name: Start apache2 service
+  command: service apache2 start
   when: not image_build
 

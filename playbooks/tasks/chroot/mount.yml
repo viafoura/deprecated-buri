@@ -1,0 +1,67 @@
+---
+# Don't use ansible module 'mount', as this is a transient thing
+- name: Creating mount point for EBS volume
+  file:
+    path: '{{ buri_ami_mount_point }}'
+    state: directory
+    owner: root
+    group: root
+    mode: 0444
+
+- name: Mount EBS volume for chroot (flat)
+  command: 'mount {{ buri_disk_device }} {{ buri_ami_mount_point }}'
+  when: buri_disk_type == "flat"
+
+- name: Mount EBS volume for chroot (partitioned)
+  command: 'mount {{ buri_disk_device }}1 {{ buri_ami_mount_point }}'
+  when: buri_disk_type != "flat"
+
+- name: Mount /proc filesystem into chroot
+  command: 'chroot {{ buri_ami_mount_point }} mount -t proc none /proc'
+
+- name: Mount (bind) /dev filesystem into chroot
+  command: 'mount -o bind /dev {{ buri_ami_mount_point }}/dev'
+
+# Don't use copy action, just command cp on remote
+- name: Remove resolv.conf (maybe link) from chroot environment
+  command: 'rm -f {{ buri_ami_mount_point }}/etc/resolv.conf'
+
+- name: Add working resolv.conf to chroot environment
+  command: 'cp /etc/resolv.conf {{ buri_ami_mount_point }}/etc/resolv.conf'
+
+- name: Disable rc.d for rest of the process.
+  copy:
+    src: files/policy-rc.d
+    dest: '{{ buri_ami_mount_point }}/usr/sbin/policy-rc.d'
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Ensure root .ssh exists
+  file:
+    path: '{{ buri_ami_mount_point }}/root/.ssh'
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+  when: buri_deploy_key != 'NONE'
+
+- name: Copy in deployment key (RSA)
+  copy:
+    src: '{{ BURI_BASE }}/local/env/{{ buri_environment }}/deploy.key'
+    dest: '{{ buri_ami_mount_point }}/root/.ssh/id_rsa'
+    owner: root
+    group: root
+    mode: 0600
+  when: buri_deploy_key == 'RSA'
+
+- name: Copy in deployment key (DSA)
+  copy:
+    src: '{{ BURI_BASE }}/local/env/{{ buri_environment }}/deploy.key'
+    dest: '{{ buri_ami_mount_point }}/root/.ssh/id_dsa'
+    owner: root
+    group: root
+    mode: 0600
+  when: buri_deploy_key == 'DSA'
+
+

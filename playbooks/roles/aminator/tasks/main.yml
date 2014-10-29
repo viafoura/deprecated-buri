@@ -16,6 +16,17 @@
   git: repo={{ aminator_git_repo }}
        dest=/tmp/aminator_build
        version={{ aminator_git_ref }}
+  register: git_clone
+
+- name: Find build version
+  shell: chdir=/tmp/aminator_build cat aminator/__init__.py | grep ^__version__ | sed -E "s/^__version__ = '(.*)'/\1/"
+  register: aminator_version_out
+
+# Only source builds for Aminator
+- name: Set build version
+  set_fact:
+    buri_build_version: "{{ aminator_version_out.stdout }}"
+    buri_build_release: "{{ git_clone.after }}"
 
 - name: Install Aminator
   command: python setup.py install chdir=/tmp/aminator_build
@@ -52,4 +63,9 @@
 - name: Create buri configuration
   template: src=buri.cfg dest=/opt/buri/etc/buri.cfg owner=root group=root mode=0644  
 
-
+- name: Checkout local Buri configuration from Git
+  git: repo={{ buri_local_git_repo }}
+       dest=/opt/buri/local
+       version={{ buri_local_git_ref }}
+  when: buri_local_git_repo is defined and buri_local_git_ref is defined
+  

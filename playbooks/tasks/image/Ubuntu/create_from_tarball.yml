@@ -1,0 +1,48 @@
+---
+# called when creating foundation of type flat
+
+- name: Fetch distribution hard disk image files
+  get_url:
+    url: '{{ distro_tarball_url }}'
+    dest: '{{ distro_tarball_path }}'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+
+- name: Create location for extracted flat install files
+  file: path={{ distro_tarball_extract }} state=directory owner=root group=root mode=0644
+
+- name: Extract flat install files
+  command: tar zxf {{ distro_tarball_path }} -C {{ distro_tarball_extract }}
+
+- name: Create location for loopback mount
+  file: path={{ distro_tarball_loopback }} state=directory owner=root group=root mode=0644
+
+- name: Mount flat distro image as loopback
+  command: 'mount -o loop {{ distro_tarball_extract }}/{{ distro_image_name }}.img {{ distro_tarball_loopback }}'
+
+- name: Create filesystem for new flat foundation
+  #command: mkfs.ext4 -L uec-rootfs {{ buri_disk_device }}
+  command: mkfs.ext4 -L cloudimg-rootfs {{ buri_disk_device }}
+
+- name: Creating mount point for foundation build
+  file:
+    path: '{{ buri_ami_mount_point }}'
+    state: directory
+    owner: root
+    group: root
+    mode: 0444
+
+- name: Mount volume for foundation extraction
+  command: 'mount {{ buri_disk_device }} {{ buri_ami_mount_point }}'
+
+- name: Copy files from loopback to ebs volume
+  command: 'rsync -axHAX {{ distro_tarball_loopback }}/ {{ buri_ami_mount_point }}/'
+
+- name: Unmount flat distro image as loopback
+  command: 'umount {{ distro_tarball_loopback }}'
+
+# Silly, as it will be remounted, but the expectation is there is an unmounted volume at the end
+- name: Unmount volume for foundation extraction
+  command: 'umount {{ buri_disk_device }}'
+

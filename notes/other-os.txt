@@ -1,0 +1,13 @@
+
+Info on usernames for other os: http://alestic.com/2014/01/ec2-ssh-username
+
+Collections of possible other OSes to support for foundation phase, and pointers to guide on their creation
+
+Centos: 
+
+http://jonathanhui.com/create-centos-55-ec2-ami-through-loopback-file
+
+Debian:
+
+http://linuxconfig.org/howto-create-bundle-upload-and-access-custom-debian-ami-using-ubuntu
+

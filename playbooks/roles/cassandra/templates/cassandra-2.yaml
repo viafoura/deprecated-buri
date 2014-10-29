@@ -7,8 +7,8 @@
 
 # The name of the cluster. This is mainly used to prevent machines in
 # one logical cluster from joining another.
-{% if cloud_target == "amazon" and priam_clustername is defined %}
-cluster_name: '{{ priam_clustername }}'
+{% if cloud_target == "amazon" and priam_cluster_name is defined %}
+cluster_name: '{{ priam_cluster_name }}'
 {% else %}
 cluster_name: 'DEV_LOCAL'
 {% endif %}
@@ -325,7 +325,7 @@ native_transport_port: 9042
 # native_transport_max_frame_size_in_mb: 256
 
 # Whether to start the thrift rpc server.
-start_rpc: true
+start_rpc: {{ cassandra_rpc_enable }}
 
 # The address to bind the Thrift RPC service and native transport
 # server -- clients connect here.
@@ -372,8 +372,8 @@ rpc_server_type: {{ cassandra_rpc_server_type }}
 # encouraged to set a maximum that makes sense for you in production, but do keep in mind that
 # rpc_max_threads represents the maximum number of client requests this server may execute concurrently.
 #
-# rpc_min_threads: 16
-# rpc_max_threads: 2048
+rpc_min_threads: {{ cassandra_rpc_min_threads }}
+rpc_max_threads: {{ cassandra_rpc_max_threads }}
 
 # uncomment to set socket buffer sizes on rpc connections
 # rpc_send_buff_size_in_bytes:
@@ -392,7 +392,7 @@ rpc_server_type: {{ cassandra_rpc_server_type }}
 # internode_recv_buff_size_in_bytes:
 
 # Frame size for thrift (maximum message length).
-thrift_framed_transport_size_in_mb: 15
+thrift_framed_transport_size_in_mb: {{ cassandra_rpc_frame_size }}
 
 # Set to true to have Cassandra create a hard link to each sstable
 # flushed or streamed locally in a backups/ subdirectory of the

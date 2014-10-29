@@ -1,0 +1,52 @@
+---
+# FIXME: the same thing gets queried and filtered over and over. query once and grep within
+- name: Find AKI ID for parent image.
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^IMAGES'
+  register: aki
+
+- name: Saving AKI ID as a fact for later use
+  set_fact:
+    ami_aki_id: '{{ item.split("\t")[7] }}'
+  with_items: aki.stdout
+
+- name: Checking validity of AKI ID
+  fail: msg="Did not get AKI id, ensure a PVM AMI is supplied for resnap operations"
+  when: not (ami_aki_id | match("aki-.*"))
+
+- name: Find EBS Snapshot ID for parent image.
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^EBS'
+  register: ebsparent
+
+- name: Saving ebs_parent_id as a fact for later use
+  set_fact:
+    ebs_parent_id: '{{ item.split("\t")[3] }}'
+  with_items: ebsparent.stdout
+
+- name: Find ancestor image name
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^IMAGES'
+  register: ancestor_name_out
+
+- name: Saving buri_ami_ancestor_name value
+  set_fact:
+    buri_ami_ancestor_name: '{{ item.split("\t")[8]|default("") }}'
+  with_items: ancestor_name_out.stdout
+
+- name: Find ancestor image appversion tag
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^TAGS | grep appversion'
+  register: ancestor_appversion_out
+
+- name: Saving buri_ami_ancestor_appversion value
+  set_fact:
+    buri_ami_ancestor_appversion: '{{ item.split("\t")[2]|default("") }}'
+  with_items: ancestor_appversion_out.stdout
+
+- name: Find ancestor image base_ami_version tag
+  shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^TAGS | grep base_ami_version'
+  register: ancestor_base_ami_version_out
+
+- name: Saving buri_ami_ancestor_version value
+  set_fact:
+    buri_ami_ancestor_version: '{{ item.split("\t")[2]|default("") }}'
+  with_items: ancestor_base_ami_version_out.stdout
+
+

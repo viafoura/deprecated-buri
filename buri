@@ -53,16 +53,48 @@ def ensure_local_env(args):
 
 # generates an ansible commandline
 def gen_ansible_command(args, playbook, cli_vars):
+    # check for and include local roles. this does not link to the local inventory inclusion, and each can run on it's own
+    # however, new top-level roles you wish to image/push will need to be included in the inventory file
     roles_param = ''
     roles_path = '%s/local/roles' % args.BURI_BASE
     if os.path.exists(roles_path) and not os.path.isfile(roles_path):
         roles_param = 'ANSIBLE_ROLES_PATH=%s ' % roles_path
-    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {1}/playbooks/{3} -e "BURI_BASE=\'{1}\' buri_environment=\'{3}\' {4} {5}" -vv'.format(roles_param, args.BURI_BASE, playbook, args.environment, cli_vars, args.extravars)
+    # check for local inventory, needs local group_vars as well, else fall back to one in the base of buri
+    inventory_path = '{0}/etc/inventory/{1}'.format(args.BURI_BASE, args.environment)
+    local_inventory_path = '{0}/local/inventory/{1}'.format(args.BURI_BASE, args.environment)
+    local_group_vars_path = '{0}/local/inventory/group_vars/{1}'.format(args.BURI_BASE, args.environment)
+    if os.path.exists(local_inventory_path) and os.path.isfile(local_inventory_path) and os.path.exists(local_group_vars_path) and os.path.isfile(local_group_vars_path):
+        inventory_path = local_inventory_path
+    deploy_key = 'NONE'
+    local_deploy_key_path = '{0}/local/env/{1}/deploy.key'.format(args.BURI_BASE, args.environment)
+    if os.path.exists(local_deploy_key_path) and os.path.isfile(local_deploy_key_path):
+        logging.info("Found a deploy key")
+        # check if key is DSA/RSA. Set as appropriate.
+        fline = open(local_deploy_key_path).readline().rstrip()
+        m = re.search(r"BEGIN ([RD]SA) PRIVATE KEY", fline)
+        if m:
+            deploy_key = m.group(1)
+    gen_vars = " buri_deploy_key='{0}' ".format(deploy_key)
+    # user param
+    if args.buri_remote_user != None:
+        gen_vars += " buri_remote_user='{0}'".format(args.buri_remote_user)
+    # cluster param
+    if args.buri_cluster_name != None:
+        gen_vars += " buri_cluster_name='{0}'".format(args.buri_cluster_name)
+    # zeroing param
+    if args.disk_zero != 'normal':
+        gen_vars += " buri_disk_zerofree='{0}'".format(args.disk_zero)
+    # volume type
+    if args.vol_type != 'standard':
+        gen_vars += " buri_volume_type='{0}'".format(args.vol_type)
+    # commandify
+    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {3} -e "BURI_BASE=\'{1}\' buri_environment=\'{4}\' {5} {6}{7}" -vv'.format(roles_param, args.BURI_BASE, playbook, inventory_path, args.environment, cli_vars, args.extravars, gen_vars)
     return cmd
 
 # Returns an array with as many elements as plays, each element the count of tasks for the play
 def estimate_ansible_run(cmd):
     cmd += ' --list-tasks'
+    logging.info("Estimating ansible run using: " + cmd)
     ret = []
     play_no = 0
     current_count = 0
@@ -174,7 +206,7 @@ def run_ansible_playbook(args, playbook, cli_vars):
                 logging.error(e)
         return 1
 
-    reporting_playbooks = ['create-foundation-ubuntu', 'resnap-via-playbook']
+    reporting_playbooks = ['create-foundation-ubuntu', 'resnap-from-buri']
     if playbook in reporting_playbooks:
         fh = open('/mnt/latest-report.txt')
         while 1:
@@ -193,35 +225,35 @@ def fluxdemo(args):
     args.alias="cassandra"
     keys_cassandra(args)
     logging.info('Pushing all-in-one plus flux capacitor to: %s' % args.host)
-    return run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one_flux'" % args.host)
+    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' buri_role='all_in_one_flux'" % args.host)
 
 def rssdemo(args):
     args.alias="cassandra"
     keys_cassandra(args)
     logging.info('Pushing all-in-one plus Netflix recipes-rss to: %s' % args.host)
-    return run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='all_in_one_rss'" % args.host)
+    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' buri_role='all_in_one_rss'" % args.host)
 
 def apply(args):
     logging.info('Pushing %s role to: %s' % (args.role, args.host))
-    return run_ansible_playbook(args, "run-role-live", "machine_target='%s' ami_role='%s'" % (args.host, args.role))
+    return run_ansible_playbook(args, "apply-role-to-host", "machine_target='%s' buri_role='%s'" % (args.host, args.role))
 
 def buildhost(args):
     logging.info('Pushing a build host to: %s' % args.host)
-    return run_ansible_playbook(args, "setup-build-host", "machine_target='%s'" % args.host)
+    return run_ansible_playbook(args, "bootstrap-build-host", "machine_target='%s'" % args.host)
 
 def foundation(args):
     dev = get_device_node(args.disk_type)
     logging.info('Creating foundation AMI for env {0} on device {1}'.format(args.environment, dev))
-    return run_ansible_playbook(args, "create-foundation-ubuntu", "ami_role='foundation' buri_disk_device='{0}' buri_disk_type='{1}'".format(dev, args.disk_type))
+    return run_ansible_playbook(args, "create-foundation-ubuntu", "buri_role='foundation' buri_disk_device='{0}' buri_disk_type='{1}'".format(dev, args.disk_type))
 
 def resnap(args):
     dev = get_device_node(args.disk_type)
     logging.info('Resnapshotting AMI for env {0} on device {1}'.format(args.environment, dev))
-    return run_ansible_playbook(args, "resnap-via-playbook", "ami_parent='{0}' ami_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
+    return run_ansible_playbook(args, "resnap-from-buri", "buri_ami_ancestor_id='{0}' buri_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
 
 def aminator(args):
     logging.info('Aminator Resnapshotting AMI for env {0} on mounted chroot: {1}'.format(args.environment, args.directory))
-    return run_ansible_playbook(args, "resnap-from-aminator", "ami_image_mount='{0}' ami_role='{1}'".format(args.directory, args.role))
+    return run_ansible_playbook(args, "resnap-from-aminator", "buri_ami_mount_point='{0}' buri_role='{1}'".format(args.directory, args.role))
 
 def cleanup_fail(args):
     logging.info('Cleaning up failed AMI resnap from: %s' % args.device)
@@ -313,6 +345,10 @@ def get_config():
     parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
     parser.add_argument('--environment', metavar='<env_name>', type=str, default='development', choices=['development', 'test', 'staging', 'production'], help='Set the environment context')
     parser.add_argument('--extra-vars', dest='extravars', metavar='<varstr="foo" varnum=123>', type=str, default='', help='Extra variables to pass to Ansible playbooks')
+    parser.add_argument('-u', '--user', dest='buri_remote_user', metavar='<remote username>', type=str, help='User Ansible will user to remote ssh to a host as')
+    parser.add_argument('--cluster-name', dest='buri_cluster_name', metavar='<name>', type=str, help='Cluster name, required by some roles, can be used by any to differentiate configurations')
+    parser.add_argument('--vol_type', metavar='<standard|gp2>', type=str, default='standard', choices=['standard', 'gp2'], help='Selects the type of EC2 EBS volume to use for image creation')
+    parser.add_argument('--disk_zero', metavar='<never|normal|always>', type=str, default='normal', choices=['never', 'normal', 'always'], help='When to zero free filesystem areas, default only when bundling instance AMIs')
 
     subparser = parser.add_subparsers(help='sub commands')
 
@@ -340,12 +376,12 @@ def get_config():
     # foundation
     parser_foundation = subparser.add_parser('foundation', help="Create foundation AMI image", add_help=False)
     parser_foundation.add_argument('--size', metavar='<size_in_gb>', default=10, type=int, help='Size of OS image in GB')
-    parser_foundation.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
+    parser_foundation.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='flat', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
     parser_foundation.set_defaults(func=foundation)
 
     # resnap
     parser_resnap = subparser.add_parser('resnap', help="Resnap new AMI from existing AMI image", add_help=False)
-    parser_resnap.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='partition', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
+    parser_resnap.add_argument('--disk_type', metavar='<flat|partition>', type=str, default='flat', choices=['flat', 'partition'], help='Set the disk format, flat or partitioned')
     parser_resnap.add_argument('parent', metavar='<parent_ami_id>', type=str, help='AMI ID of parent image')
     parser_resnap.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
     parser_resnap.set_defaults(func=resnap)

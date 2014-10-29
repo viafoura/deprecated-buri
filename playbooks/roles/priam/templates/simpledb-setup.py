@@ -8,7 +8,7 @@ import boto.sdb
 import sys
 from pprint import pprint
 
-appId = "{{ priam_clustername }}"
+appId = "{{ priam_cluster_name }}"
 
 def put_record(domain, prop, val):
   print "Inserting into %s: %s -> %s" % (domain, prop, val)
@@ -30,7 +30,7 @@ if pp is None:
 
 put_record("PriamProperties", "priam.s3.bucket", "{{ priam_s3_bucket }}")
 put_record("PriamProperties", "priam.s3.base_dir", "{{ priam_s3_base_dir }}")
-put_record("PriamProperties", "priam.clustername", "{{ priam_clustername }}")
+put_record("PriamProperties", "priam.clustername", "{{ priam_cluster_name }}")
 put_record("PriamProperties", "priam.data.location", "{{ cassandra_data_location }}")
 put_record("PriamProperties", "priam.cache.location", "{{ cassandra_cache_location }}")
 put_record("PriamProperties", "priam.commitlog.location", "{{ cassandra_commitlog_location }}")
@@ -55,6 +55,7 @@ put_record("PriamProperties", "priam.vpc", "{{ priam_vpc }}")
 {% endif %}
 put_record("PriamProperties", "priam.backup.hour", "{{ priam_backup_hour }}")
 put_record("PriamProperties", "priam.compaction.throughput", "{{ priam_compaction_throughput }}")
+# Not used in 2.1, but we'll set it for those on 2.0.x or less
 put_record("PriamProperties", "priam.memory.compaction.limit", "{{ priam_compaction_limit }}")
 # These are not tunable from Ansible, probably no reason to.
 # i2.xlarge
@@ -86,7 +87,7 @@ put_record("PriamProperties", "priam.heap.size.m1.xlarge", "4G")
 put_record("PriamProperties", "priam.heap.newgen.size.m1.xlarge", "1G")
 put_record("PriamProperties", "priam.direct.memory.size.m1.xlarge", "10G")
 # m1.medium
-put_record("PriamProperties", "priam.heap.size.m1.medium.", "1G")
+put_record("PriamProperties", "priam.heap.size.m1.medium", "1G")
 put_record("PriamProperties", "priam.heap.newgen.size.m1.medium", "256M")
 put_record("PriamProperties", "priam.direct.memory.size.m1.medium", "2G")
 

@@ -1,0 +1,16 @@
+---
+
+# Ephemeral RAID
+- name: Add first-boot ephemeral raid setup script
+  copy: src=ephemeral-raid.conf dest=/etc/init owner=root mode=0644
+  
+# Ephemeral Directories 
+- name: Add ephemeral mkdir script
+  copy: src=ephemeral-mkdirs.conf dest=/etc/init owner=root mode=0644
+  
+# Necessary else cloud-init will interfere with us
+- name: Telling cloud-init not to perform disk setup
+  lineinfile: dest=/etc/cloud/cloud.cfg regexp="^ - disk_setup$" state=absent
+
+- name: Telling cloud-init not to perform disk setup
+  lineinfile: dest=/etc/cloud/cloud.cfg regexp="^ - mounts$" state=absent

@@ -1,47 +1,19 @@
 ---
 
 - name: Make sure rsync is not running as a service
-  service: name=rsync enabled=off
+  command: update-rc.d rsync disable
   when: ansible_distribution == 'Ubuntu'
   
 - name: Enable NTP service
-  service: name=ntp enabled=yes
+  command: update-rc.d ntp enable
 
 - name: Starting NTP
-  service: name=ntp state=started
+  command: service ntp start
   when: not image_build
 
 - name: Stopping NTP
-  service: name=ntp state=stopped
+  command: service ntp stop
   when: image_build
-  
-# SSH settings
-- name: Set SSH config
-  copy: src={{ ansible_distribution }}/ssh_config dest=/etc/ssh/ssh_config owner=root mode=0440
-    
-- name: Set SSHd config
-  copy: src={{ ansible_distribution }}/sshd_config dest=/etc/ssh/sshd_config owner=root mode=0440
-    
-- name: Enable SSH service
-  service: name=ssh enabled=yes
-  
-- name: Starting SSH service
-  service: name=ssh state=started
-  when: not image_build
-  
-- name: Stopping SSH service
-  service: name=ssh state=stopped
-  when: image_build
-
-# Ephemeral RAID
-- name: Add first-boot ephemeral raid setup script
-  copy: src=ephemeral-raid.conf dest=/etc/init owner=root mode=0644
-  when: cloud_target == "amazon"
-  
-# Ephemeral Directories 
-- name: Add ephemeral mkdir script
-  copy: src=ephemeral-mkdirs.conf dest=/etc/init owner=root mode=0644
-  when: cloud_target == "amazon"
   
 - name: Add motd additions
   template: src=motd-20-sysinfo dest=/etc/update-motd.d/20-sysinfo mode=0755 owner=root

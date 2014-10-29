@@ -17,6 +17,15 @@
       ],
       "Effect": "Allow",
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:*",
+        "sns:*",
+        "autoscaling:Describe*"
+      ],
+      "Resource": "*"
     }
   ]
 }

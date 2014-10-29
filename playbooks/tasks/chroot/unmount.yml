@@ -1,0 +1,33 @@
+---
+
+- name: Remove deployment keys
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - '{{ buri_ami_mount_point }}/root/.ssh/id_dsa'
+    - '{{ buri_ami_mount_point }}/root/.ssh/id_rsa'
+
+- name: Unmount /proc filesystem from chroot
+  command: 'chroot {{ buri_ami_mount_point }} umount /proc'
+
+- name: Unmount /dev filesystem from chroot
+  command: 'umount {{ buri_ami_mount_point }}/dev'
+
+- name: Re-enable rc.d before snapshot
+  file:
+    path: '{{ buri_ami_mount_point }}/usr/sbin/policy-rc.d'
+    state: absent
+
+- name: Unmount EBS volume for chroot
+  command: 'umount {{ buri_ami_mount_point }}'
+
+- name: Removing mount point for EBS volume
+  file:
+    path: '{{ buri_ami_mount_point }}'
+    state: absent
+
+# If not specified, or not equal to never, and we're doing instance images, OR we specified always... do it.
+- name: Zero out unused portions of filesystem
+  command: zerofree {{ buri_disk_device }}
+  when: ((buri_disk_zerofree is not defined or buri_disk_zerofree != "never") and (buri_ami_build_pvm_instance|bool or buri_ami_build_hvm_instance|bool)) or (buri_disk_zerofree is defined and buri_disk_zerofree == "always")

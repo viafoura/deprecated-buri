@@ -1,0 +1,38 @@
+---
+- name: Adding host to inventory
+  hosts: localhost
+  connection: local
+  vars:
+    image_build: false
+  tasks:
+    - name: Register host target in ansible inventory
+      add_host: hostname={{ machine_target }} groups={{ buri_role }},anshost
+
+- name: Adding deployment keys to host
+  hosts: anshost
+  user: "{{ buri_remote_user|default('dev') }}"
+  sudo: True
+  vars: 
+    image_build: false
+  tasks:
+    - include: tasks/host/add_deploy_keys.yml
+
+
+- name: Provisioning role against host
+  hosts: anshost
+  user: "{{ buri_remote_user|default('dev') }}"
+  sudo: True
+  vars: 
+    image_build: false
+  roles:
+    - '{{ buri_role }}'
+
+- name: Removing deployment keys from host
+  hosts: anshost
+  user: "{{ buri_remote_user|default('dev') }}"
+  sudo: True
+  vars: 
+    image_build: false
+  tasks:
+    - include: tasks/host/rm_deploy_keys.yml
+

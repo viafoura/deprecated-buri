@@ -1,0 +1,46 @@
+---
+- name: Registering HVM AMI to snapshot (flat)
+  command: |
+    aws ec2 register-image
+      --output text
+      --region {{ ansible_ec2_placement_region }}
+      --name "{{ buri_ami_full_name }}-HVM-EBS-{{ buri_disk_type }}"
+      --description "{{ buri_ami_description }}"
+      --architecture "x86_64"
+      --root-device-name /dev/sda1
+      --virtualization-type hvm
+      --block-device-mappings
+        '[{"DeviceName": "/dev/sda1","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
+  register: amihvm
+  when: buri_disk_type == "flat"
+
+- name: Saving HVM AMI ID as a fact for later use
+  set_fact:
+    ami_id_hvm: '{{ amihvm.stdout }}'
+  when: buri_disk_type == "flat"
+
+- name: Registering HVM AMI to snapshot (partitioned)
+  command: |
+    aws ec2 register-image
+      --output text
+      --region {{ ansible_ec2_placement_region }}
+      --name "{{ buri_ami_full_name }}-HVM-EBS-{{ buri_disk_type }}"
+      --description "{{ buri_ami_description }}"
+      --architecture "x86_64"
+      --root-device-name /dev/sda1
+      --virtualization-type hvm
+      --block-device-mappings
+        '[{"DeviceName": "/dev/sda1","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
+  register: amihvm
+  when: buri_disk_type != "flat"
+
+- name: Saving HVM AMI ID as a fact for later use
+  set_fact:
+    ami_id_hvm: '{{ amihvm.stdout }}'
+  when: buri_disk_type != "flat"
+
+- include: ../tag/common.yml
+  vars:
+    tag_ami_id: '{{ ami_id_hvm }}'
+    tag_ami_name: '{{ buri_ami_full_name }}-HVM-EBS-{{ buri_disk_type }}'
+
