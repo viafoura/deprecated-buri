@@ -14,6 +14,9 @@ mesos_docker_support: "no"
 # Needs to be evaluated at runtime
 mesos_ip: "{{ansible_default_ipv4.address}}"
 # ZK info will come via an environment configuration
+# Both of these are redundant.... the masters/slaves both reach out to the ZK nodes, not a master....
+# The init wrapper splits these for some reason... if we can confirm all of this, then
+# we can externalize all cluster co-ordination into dedicated ZK nodes
 mesos_zookeepers: "zk://{{ansible_fqdn}}:2181/mesos" # used by masters to find zookeeper
 mesos_masters: "zk://{{ansible_fqdn}}:2181/mesos" # used by slaves
 
