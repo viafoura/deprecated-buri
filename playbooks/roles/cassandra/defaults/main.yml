@@ -10,7 +10,7 @@ cassandra_build_source: False
 cassandra_git_repo: http://git-wip-us.apache.org/repos/asf/cassandra.git
 cassandra_git_ref: cassandra-2.0
 
-cassandra_stargate: False
+cassandra_stargate: True
 cassandra_stargate_build_url: "http://downloads.tuplejump.com/stargate-core-0.9.5.tar.gz"
 cassandra_stargate_checksum: "fb15882eedab70907bdc1e97c2e520cc4c9d368fc0e45d4e49f43a7e0aaba868"
 cassandra_stargate_build_source: True
