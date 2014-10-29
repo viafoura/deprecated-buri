@@ -81,11 +81,15 @@
   template: src=cassandra-2.1.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
   when: cassandra_version|truncate(4, True, end="") == "2.1."
 
-- name: Install cassandra init script (pre 2.1)
+- name: Install cassandra init script (1.2.x)
   template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
-  when: cassandra_version|truncate(4, True, end="") != "2.1."
+  when: cassandra_version|truncate(2, True, end="") != "1."
 
-- name: Install cassandra init script (2.1+)
+- name: Install cassandra init script (2.0.x)
+  template: src=cassandra-2.0-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
+  when: cassandra_version|truncate(4, True, end="") == "2.0."
+
+- name: Install cassandra init script (2.1.x)
   template: src=cassandra-2.1-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
   when: cassandra_version|truncate(4, True, end="") == "2.1."
 
