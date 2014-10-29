@@ -47,7 +47,7 @@ priam_ext_checksum: "2c845fd10d957ef631e87a6944b9009174dea2d69b948552280267b754a
 
 priam_build_source: True
 priam_git_repo: https://github.com/jhohertz/Priam.git
-priam_git_ref: staging_2.1
+priam_git_ref: staging_2.0
 
 priam_cass_startscript: "/etc/init.d/cassandra start"
 priam_cass_stopscript: "/etc/init.d/cassandra stop"
