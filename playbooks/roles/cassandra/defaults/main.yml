@@ -2,7 +2,7 @@
 cassandra_nameprefix: "apache-cassandra"
 cassandra_version: "2.0.11"
 #cassandra_mirror: "http://downloads.datastax.com/community/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
-cassandra_build_url: "http://apache.mirror.iweb.ca/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
+cassandra_build_url: "http://archive.apache.org/dist/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
 cassandra_checksum: "f74c94e63c9dcb0cef6b627ea80ee0ad86da46ad7e7318bc6adf6821861d286b"
 
 cassandra_build_source: False
