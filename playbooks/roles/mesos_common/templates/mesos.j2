@@ -1,8 +1,14 @@
 # {{ansible_managed}}
 
 CLUSTER="{{mesos_cluster_name}}"
-IP={{mesos_ip}}
-LOGS={{mesos_log_location}}
+{% if cloud_target == "amazon" %}
+IP=$(ec2metadata --local-ipv4)
+{% elsif cloud_target == "vagrant" %}
+IP="192.168.33.10"
+{% else %}
+IP=$(ip addr show | grep -E '^\s*inet' | grep -m1 global | awk '{ print $2 }' | sed 's|/.*||')
+{% endif %}
+LOGS="{{mesos_log_location}}"
 ULIMIT="{{mesos_ulimit}}"
 ZK="{{mesos_zookeepers}}"
-MASTER="{{mesos_masters}}"
+MASTER="{{mesos_zookeepers}}"
