@@ -15,7 +15,7 @@ cassandra_stargate_build_url: "http://downloads.tuplejump.com/stargate-core-0.9.
 cassandra_stargate_checksum: "fb15882eedab70907bdc1e97c2e520cc4c9d368fc0e45d4e49f43a7e0aaba868"
 cassandra_stargate_build_source: True
 cassandra_stargate_git_repo: https://github.com/tuplejump/stargate-core.git
-cassandra_stargate_git_ref: master
+cassandra_stargate_git_ref: develop
 
 cassandra_user: "cassandra"
 cassandra_group: "cassandra"
