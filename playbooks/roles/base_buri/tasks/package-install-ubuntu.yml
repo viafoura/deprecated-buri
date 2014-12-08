@@ -10,6 +10,9 @@
     - dnsutils
     - git-core
     - less
+    - linux-tools-common
+    - linux-tools-generic
+    - linux-cloud-tools-generic
     - lynx
     - make
     - mdadm

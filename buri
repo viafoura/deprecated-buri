@@ -88,7 +88,7 @@ def gen_ansible_command(args, playbook, cli_vars):
     if args.vol_type != 'standard':
         gen_vars += " buri_volume_type='{0}'".format(args.vol_type)
     # commandify
-    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {3} -e "BURI_BASE=\'{1}\' buri_environment=\'{4}\' {5} {6}{7}" -vv'.format(roles_param, args.BURI_BASE, playbook, inventory_path, args.environment, cli_vars, args.extravars, gen_vars)
+    cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {3} -e "BURI_BASE=\'{1}\' buri_environment=\'{4}\' {5} {6}{7}" -vvvv'.format(roles_param, args.BURI_BASE, playbook, inventory_path, args.environment, cli_vars, args.extravars, gen_vars)
     return cmd
 
 # Returns an array with as many elements as plays, each element the count of tasks for the play
