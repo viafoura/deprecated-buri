@@ -1,9 +1,9 @@
 ---
-jetty_version: '9.1.5.v20140505'
+jetty_version: '9.2.6.v20141205'
 jetty_basename: 'jetty-distribution-{{ jetty_version }}'
 jetty_filename: '{{ jetty_basename }}.tar.gz'
 jetty_mirror: 'http://mirror.csclub.uwaterloo.ca/eclipse/jetty/{{ jetty_version }}/dist/{{ jetty_filename }}'
-jetty_checksum: '3fbce5530d8d9a66f43034782b0f249df3d98e3e97ef849e7f740eab612b963f'
+jetty_checksum: '94dc77852f07bee06ac97c7ea845e5ecf175d55eb55bc02a8b0b80529285994d'
 jetty_root: '/opt/jetty'
 jetty_temp: '{{ jetty_root }}/temp'
 jetty_apps: '{{ jetty_root }}/apps'
