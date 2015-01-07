@@ -37,3 +37,31 @@
     group: root
     mode: 0755
 
+- name: Ensure root .ssh exists
+  file:
+    path: '{{ buri_ami_mount_point }}/root/.ssh'
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+  when: buri_deploy_key != 'NONE'
+
+- name: Copy in deployment key (RSA)
+  copy:
+    src: '{{ BURI_BASE }}/local/env/{{ buri_environment }}/deploy.key'
+    dest: '{{ buri_ami_mount_point }}/root/.ssh/id_rsa'
+    owner: root
+    group: root
+    mode: 0600
+  when: buri_deploy_key == 'RSA'
+
+- name: Copy in deployment key (DSA)
+  copy:
+    src: '{{ BURI_BASE }}/local/env/{{ buri_environment }}/deploy.key'
+    dest: '{{ buri_ami_mount_point }}/root/.ssh/id_dsa'
+    owner: root
+    group: root
+    mode: 0600
+  when: buri_deploy_key == 'DSA'
+
+

@@ -1,15 +1,21 @@
 ---
 cassandra_nameprefix: "apache-cassandra"
-cassandra_version: "2.0.10"
+cassandra_version: "2.0.11"
 #cassandra_mirror: "http://downloads.datastax.com/community/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
-cassandra_build_url: "http://apache.mirror.iweb.ca/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
-cassandra_checksum: "962ab35b1767ed4c56eb9a2a6b9df374097dc48d4f1c718945cab3a977e5d9fa"
+cassandra_build_url: "http://archive.apache.org/dist/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
+cassandra_checksum: "f74c94e63c9dcb0cef6b627ea80ee0ad86da46ad7e7318bc6adf6821861d286b"
 
 cassandra_build_source: False
 # this one's really slow? also a mirror
-#cassandra_git_repo: https://github.com/apache/cassandra.git
 cassandra_git_repo: http://git-wip-us.apache.org/repos/asf/cassandra.git
 cassandra_git_ref: cassandra-2.0
+
+cassandra_stargate: True
+cassandra_stargate_build_url: "http://downloads.tuplejump.com/stargate-core-0.9.5.tar.gz"
+cassandra_stargate_checksum: "fb15882eedab70907bdc1e97c2e520cc4c9d368fc0e45d4e49f43a7e0aaba868"
+cassandra_stargate_build_source: True
+cassandra_stargate_git_repo: https://github.com/tuplejump/stargate-core.git
+cassandra_stargate_git_ref: develop
 
 cassandra_user: "cassandra"
 cassandra_group: "cassandra"
@@ -22,9 +28,15 @@ cassandra_cache_location: "/mnt/cassandra/saved_caches"
 cassandra_commitlog_location: "/mnt/cassandra/commitlog"
 
 cassandra_partitioner: "org.apache.cassandra.dht.RandomPartitioner"
-cassandra_rpc_server_type: "hsha"
 cassandra_stream_throughput: 400
 cassandra_index_interval: 256
+
+# Thrift RPC settings:
+cassandra_rpc_enable: "True"
+cassandra_rpc_min_threads: 4
+cassandra_rpc_max_threads: 16
+cassandra_rpc_frame_size: 15
+cassandra_rpc_server_type: "hsha"
 
 # overridden by priam to add extension
 cassandra_jvm_opts: ""

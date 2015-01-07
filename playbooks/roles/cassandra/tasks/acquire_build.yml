@@ -4,10 +4,6 @@
   get_url: url={{ cassandra_build_url }} dest=/tmp/cassandra.tar.gz
   when: not cassandra_build_source
 
-#- name: Setting up source build
-#  file: path=/tmp/cassandra_build state=directory owner=root group=root mode=0755
-#  when: cassandra_build_source
-
 - name: Checkout code from Git
   git: repo={{ cassandra_git_repo }}
        dest=/tmp/cassandra_build
@@ -35,10 +31,7 @@
     cassandra_version: '{{ cassandra_version_out.stdout }}-SNAPSHOT'
   when: cassandra_build_source
 
-- name: Copy cassandra war to expected location
+- name: Copy cassandra tar to expected location
   command: cp /tmp/cassandra_build/build/apache-cassandra-{{ cassandra_version }}-bin.tar.gz /tmp/cassandra.tar.gz
   when: cassandra_build_source
 
-#- name: Removing source build
-#  file: path=/tmp/cassandra_build state=absent
-#  when: cassandra_build_source

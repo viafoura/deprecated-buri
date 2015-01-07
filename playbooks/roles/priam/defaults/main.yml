@@ -5,7 +5,9 @@ priam_jvm_xmx: '1024m'
 priam_backup_hour: "4"
 # The recommended Value is 16 to 32 times the rate of write throughput (in MB/s)
 # This is a throttle, 0 means do not throttle
+# NOT USED in C* 2.1
 priam_compaction_throughput: 0
+
 # The recommended value is 5 to 10 percent of the available Java heap size
 priam_compaction_limit: 256
 # Disable if you like, not used in classic NetflixOSS setups

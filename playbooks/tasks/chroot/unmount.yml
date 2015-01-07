@@ -1,4 +1,13 @@
 ---
+
+- name: Remove deployment keys
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - '{{ buri_ami_mount_point }}/root/.ssh/id_dsa'
+    - '{{ buri_ami_mount_point }}/root/.ssh/id_rsa'
+
 - name: Unmount /proc filesystem from chroot
   command: 'chroot {{ buri_ami_mount_point }} umount /proc'
 

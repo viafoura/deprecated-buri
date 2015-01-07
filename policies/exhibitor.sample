@@ -20,6 +20,15 @@
         "arn:aws:s3:::exhibitor/*",
         "arn:aws:s3:::exhibitor"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:*",
+        "sns:*",
+        "autoscaling:Describe*"
+      ],
+      "Resource": "*"
     }
   ]
 }

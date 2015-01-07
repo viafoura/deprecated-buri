@@ -75,14 +75,28 @@
 
 - name: Install initial cassandra.yaml (2.0)
   template: src=cassandra-2.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
-  when: cassandra_version|truncate(2, True, end="") == "2."
+  when: cassandra_version|truncate(4, True, end="") == "2.0."
 
-- name: Install cassandra init script
+- name: Install initial cassandra.yaml (2.1)
+  template: src=cassandra-2.1.yaml dest={{ cassandra_home }}/conf/cassandra.yaml owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+  when: cassandra_version|truncate(4, True, end="") == "2.1."
+
+- name: Install cassandra init script (1.2.x)
   template: src=cassandra-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
+  when: cassandra_version|truncate(2, True, end="") != "1."
+
+- name: Install cassandra init script (2.0.x)
+  template: src=cassandra-2.0-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
+  when: cassandra_version|truncate(4, True, end="") == "2.0."
+
+- name: Install cassandra init script (2.1.x)
+  template: src=cassandra-2.1-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
+  when: cassandra_version|truncate(4, True, end="") == "2.1."
 
 - name: Bump up stack size in cassandra launch scripts
   lineinfile: dest={{ cassandra_home }}/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
 
+# FIXME: this seems off, needs non cloud version
 - name: Setup RMI for remote JMX
   lineinfile:
     dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
@@ -90,6 +104,9 @@
     regexp: ^JVM_OPTS="\$JVM_OPTS -Djava.rmi.server.hostname=\$(ec2metadata --public-hostname)"
     line: JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(ec2metadata --public-hostname)"
   when: cloud_target == "amazon"
+
+- include: stargate_core.yml
+  when: cassandra_stargate
 
 - name: Disable Cassanda service on boot (Priam managed)
   command: update-rc.d cassandra disable

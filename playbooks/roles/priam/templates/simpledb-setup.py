@@ -55,6 +55,7 @@ put_record("PriamProperties", "priam.vpc", "{{ priam_vpc }}")
 {% endif %}
 put_record("PriamProperties", "priam.backup.hour", "{{ priam_backup_hour }}")
 put_record("PriamProperties", "priam.compaction.throughput", "{{ priam_compaction_throughput }}")
+# Not used in 2.1, but we'll set it for those on 2.0.x or less
 put_record("PriamProperties", "priam.memory.compaction.limit", "{{ priam_compaction_limit }}")
 # These are not tunable from Ansible, probably no reason to.
 # i2.xlarge
@@ -86,7 +87,7 @@ put_record("PriamProperties", "priam.heap.size.m1.xlarge", "4G")
 put_record("PriamProperties", "priam.heap.newgen.size.m1.xlarge", "1G")
 put_record("PriamProperties", "priam.direct.memory.size.m1.xlarge", "10G")
 # m1.medium
-put_record("PriamProperties", "priam.heap.size.m1.medium.", "1G")
+put_record("PriamProperties", "priam.heap.size.m1.medium", "1G")
 put_record("PriamProperties", "priam.heap.newgen.size.m1.medium", "256M")
 put_record("PriamProperties", "priam.direct.memory.size.m1.medium", "2G")
 

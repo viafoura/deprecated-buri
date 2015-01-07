@@ -20,7 +20,7 @@ exhibitor_webapps_root: "{{ jetty_apps }}/{{ exhibitor_instance_name }}/webapps"
 
 zookeeper_version: '3.4.6'
 zookeeper_basename: 'zookeeper-{{ zookeeper_version }}'
-zookeeper_mirror: 'http://mirror.csclub.uwaterloo.ca/apache/zookeeper/{{ zookeeper_basename }}/{{ zookeeper_basename }}.tar.gz'
+zookeeper_mirror: 'http://apache.mirror.rafal.ca/zookeeper/{{ zookeeper_basename }}/{{ zookeeper_basename }}.tar.gz'
 zookeeper_checksum: '01b3938547cd620dc4c93efe07c0360411f4a66962a70500b163b59014046994'
 zookeeper_install_dir: '/opt/zookeeper'
 
