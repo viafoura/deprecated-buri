@@ -1,0 +1,19 @@
+---
+# Playbook to resnap and launch the resulting ami
+
+- name: Launching resnapped ami
+  tasks:
+    - include: resnap-from-buri.yml
+
+    - name: Launch ami {{ ami_id_pvm }} in {{ launch_subnet_id }} with role {{ launch_iam_role }}
+      command: |
+        aws ec2 run-instances
+        --output text
+        --region {{ ansible_ec2_placement_region }}
+        --image-id {{ ami_id_pvm }}
+        --key-name {{ launch_key_name }}
+        --security-group-ids {{ launch_sec_groups }}
+        --instance-type {{ launch_instance_type }}
+        --subnet-id {{ launch_subnet_id }}
+        --iam-instance-profile {{ launch_iam_role }}
+        --associate-public-ip-address
