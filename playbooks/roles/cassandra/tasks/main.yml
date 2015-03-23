@@ -101,12 +101,15 @@
   lineinfile:
     dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
     insertafter: ^JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
-    regexp: ^JVM_OPTS="\$JVM_OPTS -Djava.rmi.server.hostname=\$(ec2metadata --public-hostname)"
-    line: JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(ec2metadata --public-hostname)"
+    regexp: ^JVM_OPTS="\$JVM_OPTS -Djava.rmi.server.hostname=\$(ec2metadata --local-hostname)"
+    line: JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(ec2metadata --local-hostname)"
   when: cloud_target == "amazon"
 
 - include: stargate_core.yml
   when: cassandra_stargate
+
+- include: riemann_report.yml
+  when: cassandra_enable_riemann_report
 
 - name: Disable Cassanda service on boot (Priam managed)
   command: update-rc.d cassandra disable

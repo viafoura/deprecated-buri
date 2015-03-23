@@ -1,0 +1,11 @@
+riemann:
+  -
+    period: {{ cassandra_riemann_seconds }}
+    timeunit: 'SECONDS'
+    hosts: {{ cassandra_riemann_hosts }}
+    predicate:
+      color: "white"
+      useQualifiedName: true
+      patterns:
+        - "^org.apache.cassandra.metrics.ThreadPools.+"
+        - "^org.apache.cassandra.metrics.ClientRequest.+"

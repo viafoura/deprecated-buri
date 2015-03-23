@@ -1,0 +1,19 @@
+---
+- name: Copy required jars to cassandra libs
+  copy: src=protobuf-java-2.5.0.jar dest={{ cassandra_home }}/lib
+- name: Copy required jars to cassandra libs
+  copy: src=reporter-config-2.3.1.jar dest={{ cassandra_home }}/lib
+- name: Copy required jars to cassandra libs
+  copy: src=riemann-java-client-0.3.1.jar dest={{ cassandra_home }}/lib
+- name: Delete old reporter config that doesn't support riemann
+  file: path={{ cassandra_home }}/lib/reporter-config-2.2.0.jar
+
+- name: Add riemann reporter configuration
+  template: src=riemann-report.yaml dest={{ cassandra_home }}/conf
+
+- name: Setup metric reporting to riemann
+  lineinfile:
+    dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
+    insertafter: ^JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
+    regexp: ^JVM_OPTS="\$JVM_OPTS -Dcassandra.metricsReporterConfigFile=riemann-report.yaml"
+    line: JVM_OPTS="$JVM_OPTS -Dcassandra.metricsReporterConfigFile=riemann-report.yaml"

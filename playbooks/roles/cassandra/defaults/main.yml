@@ -41,3 +41,8 @@ cassandra_rpc_server_type: "hsha"
 # overridden by priam to add extension
 cassandra_jvm_opts: ""
 
+cassandra_enable_riemann_report: True
+cassandra_riemann_seconds: 1
+cassandra_riemann_hosts: >-
+    - host: 'localhost'
+      port: 5555
