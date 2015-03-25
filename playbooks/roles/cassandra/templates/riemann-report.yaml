@@ -2,10 +2,17 @@ riemann:
   -
     period: {{ cassandra_riemann_seconds }}
     timeunit: 'SECONDS'
-    hosts: {{ cassandra_riemann_hosts }}
+    tags:
+{% for tag in cassandra_riemann_tags %}
+      - {{ tag }}
+{% endfor %}
+    hosts:
+      - host: {{ cassandra_riemann_hostname }}
+        port: {{ cassandra_riemann_port }}
     predicate:
       color: "white"
       useQualifiedName: true
       patterns:
+        - "^java.lang.OperatingSystem.+"
         - "^org.apache.cassandra.metrics.ThreadPools.+"
         - "^org.apache.cassandra.metrics.ClientRequest.+"
