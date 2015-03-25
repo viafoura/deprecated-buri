@@ -1,9 +1,9 @@
 ---
-jetty_version: '9.2.6.v20141205'
+jetty_version: '9.2.10.v20150310'
 jetty_basename: 'jetty-distribution-{{ jetty_version }}'
 jetty_filename: '{{ jetty_basename }}.tar.gz'
 jetty_mirror: 'http://eclipse.mirror.rafal.ca/jetty/{{ jetty_version }}/dist/{{ jetty_filename }}'
-jetty_checksum: '94dc77852f07bee06ac97c7ea845e5ecf175d55eb55bc02a8b0b80529285994d'
+jetty_checksum: '0034587a3dcfdab23fca28291e5e22ae7ff6e80f9f4c7a67f5b2b7777a84b40e'
 jetty_root: '/opt/jetty'
 jetty_temp: '{{ jetty_root }}/temp'
 jetty_apps: '{{ jetty_root }}/apps'
