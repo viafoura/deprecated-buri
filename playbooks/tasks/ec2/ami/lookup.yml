@@ -6,7 +6,7 @@
 
 - name: Saving AKI ID as a fact for later use
   set_fact:
-    ami_aki_id: '{{ item.split("\t")[7] }}'
+    ami_aki_id: '{{ item.split("\t")[8] }}'
   with_items: aki.stdout
 
 - name: Checking validity of AKI ID

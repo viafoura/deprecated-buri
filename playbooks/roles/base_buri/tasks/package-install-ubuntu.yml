@@ -9,6 +9,7 @@
     - curl
     - dnsutils
     - git-core
+    - htop
     - less
     - linux-tools-common
     - linux-tools-generic

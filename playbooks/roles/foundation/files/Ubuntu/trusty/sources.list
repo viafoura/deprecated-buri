@@ -9,31 +9,31 @@
 
 # See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
 # newer versions of the distribution.
-deb http://mirrors.us.kernel.org/ubuntu/ trusty main
-deb-src http://mirrors.us.kernel.org/ubuntu/ trusty main
+deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty main
+deb-src http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty main
 
 ## Major bug fix updates produced after the final release of the
 ## distribution.
-deb http://mirrors.us.kernel.org/ubuntu/ trusty-updates main
-deb-src http://mirrors.us.kernel.org/ubuntu/ trusty-updates main
+deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty-updates main
+deb-src http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty-updates main
 
 ## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
 ## team. Also, please note that software in universe WILL NOT receive any
 ## review or updates from the Ubuntu security team.
-deb http://mirrors.us.kernel.org/ubuntu/ trusty universe
-deb-src http://mirrors.us.kernel.org/ubuntu/ trusty universe
-deb http://mirrors.us.kernel.org/ubuntu/ trusty-updates universe
-deb-src http://mirrors.us.kernel.org/ubuntu/ trusty-updates universe
+deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty universe
+deb-src http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty universe
+deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty-updates universe
+deb-src http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty-updates universe
 
 ## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu 
 ## team, and may not be under a free licence. Please satisfy yourself as to
 ## your rights to use the software. Also, please note that software in 
 ## multiverse WILL NOT receive any review or updates from the Ubuntu
 ## security team.
-deb http://mirrors.us.kernel.org/ubuntu/ trusty multiverse
-deb-src http://mirrors.us.kernel.org/ubuntu/ trusty multiverse
-deb http://mirrors.us.kernel.org/ubuntu/ trusty-updates multiverse
-deb-src http://mirrors.us.kernel.org/ubuntu/ trusty-updates multiverse
+deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty multiverse
+deb-src http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty multiverse
+deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
+deb-src http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty-updates multiverse
 
 ## Uncomment the following two lines to add software from the 'backports'
 ## repository.
@@ -42,8 +42,8 @@ deb-src http://mirrors.us.kernel.org/ubuntu/ trusty-updates multiverse
 ## newer versions of some applications which may provide useful features.
 ## Also, please note that software in backports WILL NOT receive any review
 ## or updates from the Ubuntu security team.
-deb http://mirrors.us.kernel.org/ubuntu/ trusty-backports main restricted universe multiverse
-deb-src http://mirrors.us.kernel.org/ubuntu/ trusty-backports main restricted universe multiverse
+deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
+deb-src http://us-east-1.ec2.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse
 
 ## Uncomment the following two lines to add software from Canonical's
 ## 'partner' repository.
