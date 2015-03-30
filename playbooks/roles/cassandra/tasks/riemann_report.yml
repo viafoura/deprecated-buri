@@ -6,7 +6,7 @@
 - name: Copy required jars to cassandra libs
   copy: src=riemann-java-client-0.3.1.jar dest={{ cassandra_home }}/lib
 - name: Delete old reporter config that doesn't support riemann
-  file: path={{ cassandra_home }}/lib/reporter-config-2.2.0.jar
+  command: rm {{ cassandra_home }}/lib/reporter-config-2.1.0.jar
 
 - name: Add riemann reporter configuration
   template: src=riemann-report.yaml dest={{ cassandra_home }}/conf

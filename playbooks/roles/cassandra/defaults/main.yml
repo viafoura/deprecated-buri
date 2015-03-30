@@ -43,6 +43,6 @@ cassandra_jvm_opts: ""
 
 cassandra_enable_riemann_report: True
 cassandra_riemann_seconds: 1
-cassandra_riemann_hosts: >-
-    - host: 'localhost'
-      port: 5555
+cassandra_riemann_tags:
+  - 'cassandra'
+  - "{{ buri_cluster_name }}"
