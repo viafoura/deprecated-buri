@@ -1,0 +1,8 @@
+---
+# Install a riemann agent [goshin] for machine metric reporting
+
+- name: Get riemann agent binary
+  get_url: url={{ riemann_agent_build_url }} dest=/usr/bin/goshin sha256={{ riemann_agent_checksum }}
+
+- name: Add riemann reporting service
+  template: src=goshin.conf dest=/etc/init/goshin.conf
