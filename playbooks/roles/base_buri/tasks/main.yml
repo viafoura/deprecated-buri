@@ -10,5 +10,3 @@
   when: cloud_target == 'amazon' and monitoring_cloudwatch
 - include: monitoring-clodwatch.yml
   when: cloud_target == 'amazon' and monitoring_cloudwatch
-- include: monitoring-riemann.yml
-  when: monitoring_riemann

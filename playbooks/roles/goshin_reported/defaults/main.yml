@@ -1,0 +1,7 @@
+---
+riemann_checks:
+    - 'cpu'
+    - 'load'
+    - 'memory'
+    - 'net'
+    - 'disk'
