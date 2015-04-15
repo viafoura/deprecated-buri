@@ -88,4 +88,5 @@ turbine_clusters:
     connect: :8398/hystrix.stream
     instances: 127.0.0.1
 
-
+monitoring_riemann: False
+monitoring_cloudwatch: False

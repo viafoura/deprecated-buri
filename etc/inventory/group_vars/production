@@ -175,3 +175,5 @@ turbine_app_config:
   - EDGE
   - MIDDLETIER
 
+monitoring_riemann: False
+monitoring_cloudwatch: False

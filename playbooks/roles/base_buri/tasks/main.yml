@@ -9,4 +9,4 @@
 - include: setup-ephemeral.yml
   when: cloud_target == 'amazon'
 - include: monitoring-clodwatch.yml
-  when: cloud_target == 'amazon'
+  when: cloud_target == 'amazon' and monitoring_cloudwatch

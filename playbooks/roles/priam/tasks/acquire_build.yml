@@ -46,6 +46,8 @@
 
 - name: Run build
   command: chdir=/tmp/priam_build ./gradlew clean assemble
+  environment:
+    JAVA_HOME: '/usr/lib/jvm/java-8-oracle'
   when: priam_build_source and git_clone.changed
 
 - name: Find build version
