@@ -1,10 +1,15 @@
 ---
 # Playbook to resnap and launch the resulting ami
-
+- include: resnap-from-buri.yml
 - name: Launching resnapped ami
+  hosts: localhost
+  connection: local
+  sudo: True
+  vars:
+    image_build: true
+    cloud_target: amazon
+    ami_root_resize: false
   tasks:
-    - include: resnap-from-buri.yml
-
     - name: Launch ami {{ ami_id_pvm }} in {{ launch_subnet_id }} with role {{ launch_iam_role }}
       command: |
         aws ec2 run-instances
@@ -15,5 +20,5 @@
         --security-group-ids {{ launch_sec_groups }}
         --instance-type {{ launch_instance_type }}
         --subnet-id {{ launch_subnet_id }}
-        --iam-instance-profile {{ launch_iam_role }}
+        --iam-instance-profile Name={{ launch_iam_role_name }}
         --associate-public-ip-address

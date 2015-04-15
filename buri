@@ -20,7 +20,7 @@ device_numbers = xrange(1, 16)
 # Does not lock or anything else... there is a race here if two runs happen, which should error on the mount if they collide
 # But does do a trivial test for exisistence of the device node randomly generated
 # If we do any kind of lock at all, it's working w/ Aminator to have a common concept of what's locked
-def get_device_node(mode="flat"):
+def get_device_node(mode="notflat"):
     exists = True
     while 1:
         dev = get_random_device_node(mode)
@@ -126,7 +126,7 @@ def estimate_ansible_run(cmd):
             current_count += 1
     ret.append(current_count)
     return handle.returncode, ret
- 
+
 # Run a playbook, first taking an estimation, and monitoring/filtering output. Ensures all text since the last successful task is included on error output
 def run_ansible_playbook(args, playbook, cli_vars):
     cmd = gen_ansible_command(args, playbook, cli_vars)
@@ -206,7 +206,7 @@ def run_ansible_playbook(args, playbook, cli_vars):
                 logging.error(e)
         return 1
 
-    reporting_playbooks = ['create-foundation-ubuntu', 'resnap-from-buri']
+    reporting_playbooks = ['create-foundation-ubuntu', 'resnap-from-buri', 'resnap-and-launch']
     if playbook in reporting_playbooks:
         fh = open('/mnt/latest-report.txt')
         while 1:
@@ -407,7 +407,7 @@ def get_config():
     parser_aminator.add_argument('role', metavar='<role>', type=str, help='Role to provision to parent AMI')
     parser_aminator.set_defaults(func=aminator)
 
-    
+
     # Now apply ones from config
     parser.set_defaults(**defaults)
 

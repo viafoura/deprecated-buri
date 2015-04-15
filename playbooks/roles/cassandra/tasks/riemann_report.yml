@@ -5,6 +5,9 @@
   copy: src=reporter-config-2.3.1.jar dest={{ cassandra_home }}/lib
 - name: Copy required jars to cassandra libs
   copy: src=riemann-java-client-0.3.1.jar dest={{ cassandra_home }}/lib
+- name: Copy required jars to cassandra libs
+  copy: src=netty-3.10.1.Final.jar dest={{ cassandra_home }}/lib
+
 - name: Delete old reporter config that doesn't support riemann
   command: rm {{ cassandra_home }}/lib/reporter-config-2.1.0.jar
 
@@ -14,6 +17,6 @@
 - name: Setup metric reporting to riemann
   lineinfile:
     dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
-    insertafter: ^JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
+    insertbefore: ^JVM_OPTS="\$JVM_OPTS \$MX4J_ADDRESS"
     regexp: ^JVM_OPTS="\$JVM_OPTS -Dcassandra.metricsReporterConfigFile=riemann-report.yaml"
     line: JVM_OPTS="$JVM_OPTS -Dcassandra.metricsReporterConfigFile=riemann-report.yaml"

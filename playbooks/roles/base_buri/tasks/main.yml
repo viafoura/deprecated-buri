@@ -7,6 +7,6 @@
 - include: install-other.yml
 - include: setup-services.yml
 - include: setup-ephemeral.yml
-  when: cloud_target == 'amazon' and monitoring_cloudwatch
+  when: cloud_target == 'amazon'
 - include: monitoring-clodwatch.yml
   when: cloud_target == 'amazon' and monitoring_cloudwatch

@@ -1,9 +1,9 @@
 ---
 cassandra_nameprefix: "apache-cassandra"
-cassandra_version: "2.0.12"
+cassandra_version: "2.1.4"
 #cassandra_mirror: "http://downloads.datastax.com/community/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
 cassandra_build_url: "http://archive.apache.org/dist/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
-cassandra_checksum: "af6f59e7b187d5c9744fd791156d24fd6cef8b3f65bf3dcbe5ae9400817abe88"
+cassandra_checksum: "fb5debada72905f169866ca43c21ade4782f9c036b160894e42b9072190cb7f1"
 
 cassandra_build_source: False
 # this one's really slow? also a mirror
@@ -46,3 +46,6 @@ cassandra_riemann_seconds: 1
 cassandra_riemann_tags:
   - 'cassandra'
   - "{{ buri_cluster_name }}"
+
+riemann_extra_tags:
+  - cassandra

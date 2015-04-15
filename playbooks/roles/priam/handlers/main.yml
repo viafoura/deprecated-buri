@@ -1,5 +1,5 @@
 ---
 - name: restart priam
-  shell: ( status jetty-instance INAME={{ priam_instance_name }} && stop jetty-instance INAME={{ priam_instance_name }} ) ; start jetty-instance INAME={{ priam_instance_name }}
+  shell: '( status jetty-instance INAME={{ priam_instance_name }} && stop jetty-instance INAME={{ priam_instance_name }} ) ; start jetty-instance INAME={{ priam_instance_name }}'
   when: not image_build
 
