@@ -13,6 +13,6 @@ riemann:
       color: "white"
       useQualifiedName: true
       patterns:
-        - "^java.lang.OperatingSystem.+"
-        - "^org.apache.cassandra.metrics.ThreadPools.+"
-        - "^org.apache.cassandra.metrics.ClientRequest.+"
+        - "^java.lang.OperatingSystem.*?HeapUsage.*"
+        - "^org.apache.cassandra.metrics.ThreadPools.*?Compaction.*?Pending.*"
+        - '^org.apache.cassandra.metrics.ClientRequest.*?\.(Read|Write)\.Latency.*'
