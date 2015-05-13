@@ -1,0 +1,4 @@
+---
+- name: restart goshin
+  shell: '( status goshin && stop goshin ) ; start goshin'
+  when: not image_build

@@ -5,4 +5,5 @@
   get_url: url={{ riemann_agent_build_url }} dest=/usr/bin/goshin sha256sum={{ riemann_agent_checksum }} mode=0755
 
 - name: Add riemann reporting service
-  template: src=goshin.conf dest=/etc/init/goshin.conf
+  template: src=goshin.conf dest=/etc/init/goshin.conf 
+  notify: restart goshin

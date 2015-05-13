@@ -50,5 +50,6 @@
   
 - name: Run Priam SimpleDB initializer
   command: /usr/local/bin/simpledb-setup.py
+  when: priam_populate_sdb
 
 
