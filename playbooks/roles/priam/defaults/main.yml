@@ -58,4 +58,4 @@ priam_cass_stopscript: "/etc/init.d/cassandra stop"
 # priam_cluster_name is effectively the reference to the correct set of SimpleDB Configuration
 priam_acl_groupname: "priam-{{ priam_cluster_name }}"
 priam_s3_base_dir: "{{ priam_cluster_name }}_backups"
-
+priam_populate_sdb: False

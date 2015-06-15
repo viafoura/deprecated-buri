@@ -3,7 +3,9 @@ cassandra_nameprefix: "apache-cassandra"
 cassandra_version: "2.1.4"
 #cassandra_mirror: "http://downloads.datastax.com/community/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
 cassandra_build_url: "http://archive.apache.org/dist/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
-cassandra_checksum: "fb5debada72905f169866ca43c21ade4782f9c036b160894e42b9072190cb7f1"
+cassandra_checksums:
+    "2.1.4": "fb5debada72905f169866ca43c21ade4782f9c036b160894e42b9072190cb7f1"
+    "2.0.14": "5396cda7a66929e9c9ea0a2eeb9f2b54327df1a42f407bc82fb1cc1648d87a1b"
 
 cassandra_build_source: False
 # this one's really slow? also a mirror

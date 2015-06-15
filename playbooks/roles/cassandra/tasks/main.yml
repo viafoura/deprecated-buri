@@ -111,19 +111,27 @@
 - include: riemann_report.yml
   when: cassandra_enable_riemann_report
 
-- name: Disable Cassanda service on boot (Priam managed)
+- name: Disable Cassandra service on boot (Priam managed)
   command: update-rc.d cassandra disable
   when: image_build
 
-- name: Stop Cassanda service
+- name: If cassandra is running drain
+  shell: '(netstat -tunlp|grep ":9042" && {{ cassandra_home }}/bin/nodetool drain) || true'
+  when: not image_build
+
+- name: Stop Cassandra service
   command: service cassandra stop
-  when: image_build
-  
-- name: Enable Cassanda service on boot (Not Priam managed)
-  command: update-rc.d cassandra disable
   when: not image_build
+  
+#- name: Start Cassandra service
+#  command: service cassandra start
+#  when: not image_build
+ 
+#- name: Wait for cassandra to be up
+#  wait_for: port=7199 delay=20 timeout=120
+#  when: not image_build
 
-- name: Start Cassanda service
-  command: service cassandra start
-  when: not image_build
-  
+# if sstables don't need upgrading this will do nothing
+#- name: Upgrade sstables
+#  command: '{{ cassandra_home }}/bin/nodetool upgradesstables'
+#  when: not image_build
