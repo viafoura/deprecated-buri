@@ -1,0 +1,27 @@
+---
+
+- name: Download ixgbevf source
+  get_url: url={{ ixgbevf_build_url }} dest=/tmp/ixgbevf.tar.gz
+
+- name: Make ixgbevf dir
+  file: path=/tmp/ixgbevf state=directory
+
+- name: Untar ixgbevf
+  command: chdir=/tmp tar --strip-components 1 -xzf /tmp/ixgbevf.tar.gz
+
+- name: Apply patch to ixgbevf
+  patch: >
+    src=ixgbevf_14.04.patch
+    basedir=/tmp/ixgbevf/src
+
+- name: Install ixgbevf
+  command: chdir=/tmp/ixgbevf/src make install
+
+- name: Remove ixgbevf workdir
+  file: path=/tmp/ixgbevf state=absent
+
+- name: Remove ixgbevf source
+  file: path=/tmp/ixgbevf.tar.gz state=absent
+
+- name: Use dynamic interrupt rates by default
+  lineinfile: create=yes dest=/etc/modprobe.d/ixgbevf.conf line="options ixgbevf InterruptThrottleRate=1,1,1,1,1,1,1,1"
