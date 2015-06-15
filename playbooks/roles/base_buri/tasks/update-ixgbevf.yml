@@ -15,7 +15,7 @@
     dest=/tmp/ixgbevf/src
 
 - name: Apply patch to ixgbevf
-  shell: chdir=/tmp/ixgbevf/src 'patch -p0 < ixgbevf_14.04.patch' 
+  shell: 'cd /tmp/ixgbevf/src ; cat ixgbevf_14.04.patch | patch -p0'
 
 - name: Install ixgbevf
   command: chdir=/tmp/ixgbevf/src make install
