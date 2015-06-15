@@ -7,12 +7,15 @@
   file: path=/tmp/ixgbevf state=directory
 
 - name: Untar ixgbevf
-  command: chdir=/tmp tar --strip-components 1 -xzf /tmp/ixgbevf.tar.gz
+  command: chdir=/tmp/ixgbevf tar --strip-components 1 -xzf /tmp/ixgbevf.tar.gz
+
+- name: Copy patch to ixgbevf
+  copy: >
+    src=ixgbevf_14.04.patch
+    dest=/tmp/ixgbevf/src
 
 - name: Apply patch to ixgbevf
-  patch: >
-    src=ixgbevf_14.04.patch
-    basedir=/tmp/ixgbevf/src
+  shell: chdir=/tmp/ixgbevf/src 'patch -p0 < ixgbevf_14.04.patch' 
 
 - name: Install ixgbevf
   command: chdir=/tmp/ixgbevf/src make install
