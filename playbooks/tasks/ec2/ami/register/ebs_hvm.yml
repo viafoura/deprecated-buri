@@ -11,6 +11,7 @@
       --virtualization-type hvm
       --block-device-mappings
         '[{"DeviceName": "/dev/sda1","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
+      --sriov-net-support simple
   register: amihvm
   when: buri_disk_type == "flat"
 
@@ -31,6 +32,7 @@
       --virtualization-type hvm
       --block-device-mappings
         '[{"DeviceName": "/dev/sda1","Ebs":{"SnapshotId":"{{ ebs_snapshot_id }}","DeleteOnTermination":true} },{"DeviceName":"/dev/sdb","VirtualName":"ephemeral0"},{"DeviceName":"/dev/sdc","VirtualName":"ephemeral1"},{"DeviceName":"/dev/sdd","VirtualName":"ephemeral2"},{"DeviceName":"/dev/sde","VirtualName":"ephemeral3"}]'
+      --sriov-net-support simple
   register: amihvm
   when: buri_disk_type != "flat"
 
