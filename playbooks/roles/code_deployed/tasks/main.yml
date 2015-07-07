@@ -1,0 +1,11 @@
+---
+# Install a riemann agent [goshin] for machine metric reporting
+
+- name: Get codedeploy agent
+  get_url: url={{ codedeploy_agent_deb }} dest=/tmp/codedeploy.deb sha256sum={{ codedeploy_agent_checksum }} mode=0755
+
+- name: Install codedeploy agent
+  apt: deb=/tmp/codedeploy.deb
+
+- name: Remove codedeploy agent
+  file: path=/tmp/codedeploy.deb state=absent
