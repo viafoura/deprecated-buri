@@ -5,6 +5,7 @@
 # Attempt to create and initialize.
 
 import boto.sdb
+from boto.sts import STSConnection
 import sys
 from pprint import pprint
 
@@ -16,7 +17,14 @@ def put_record(domain, prop, val):
   sdb.put_attributes(domain, itemname, {"appId" : appId, "property" : prop, "value" : val})
   return
 
-sdb = boto.sdb.connect_to_region("us-east-1")
+roleArn = '{{ priam_assume_role_arn|default('None') }}'
+
+if roleArn == 'None':
+    sdb = boto.sdb.connect_to_region("us-east-1")
+else:
+    sts = STSConnection()
+    assumed = sts.assume_role(roleArn, 'sdb_script')
+    sdb = boto.sdb.connect_to_region('us-east-1', aws_access_key_id=assumed.credentials.access_key, aws_secret_access_key=assumed.credentials.secret_key, security_token=assumed.credentials.session_token)
 
 ii = sdb.lookup("InstanceIdentity", validate=True)
 if ii is None:
