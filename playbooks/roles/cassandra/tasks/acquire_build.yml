@@ -1,5 +1,8 @@
 ---
 
+- name: Remove any old cassandra builds
+  file: path=/tmp/cassandra.tar.gz state=absent
+
 - name: Download binary build of cassandra
   get_url: url={{ cassandra_build_url }} dest=/tmp/cassandra.tar.gz sha256sum={{ cassandra_checksums.get(cassandra_version) }}
   when: not cassandra_build_source
