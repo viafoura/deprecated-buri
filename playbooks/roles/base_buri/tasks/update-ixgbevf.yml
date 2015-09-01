@@ -1,0 +1,31 @@
+---
+
+- name: Download ixgbevf source
+  get_url: url={{ ixgbevf_build_url }} dest=/tmp/ixgbevf.tar.gz
+
+- name: Make ixgbevf dir
+  file: path=/tmp/ixgbevf state=directory
+
+- name: Untar ixgbevf
+  command: chdir=/tmp/ixgbevf tar --strip-components 1 -xzf /tmp/ixgbevf.tar.gz
+
+- name: Copy patch to ixgbevf
+  copy: src=ixgbevf_14.04.patch dest=/tmp/ixgbevf/src
+
+- name: Apply patch to ixgbevf
+  shell: 'cd /tmp/ixgbevf/src ; cat ixgbevf_14.04.patch | patch -p0'
+
+- name: Install ixgbevf
+  shell: 'cd /tmp/ixgbevf/src; BUILD_KERNEL=`dpkg -l | awk ''/^.i +linux-he/ && $2~/[0-9]/ {print $2}'' | awk -F- ''{printf "%s-%s-%s\n", $3, $4, $5}'' | sort | tail -n1` make install'
+
+- name: Remove ixgbevf workdir
+  file: path=/tmp/ixgbevf state=absent
+
+- name: Remove ixgbevf source
+  file: path=/tmp/ixgbevf.tar.gz state=absent
+
+- name: Update initramfs
+  command: update-initramfs -c -k all
+
+- name: Use dynamic interrupt rates by default
+  lineinfile: create=yes dest=/etc/modprobe.d/ixgbevf.conf line='options ixgbevf InterruptThrottleRate=1,1,1,1,1,1,1,1'
