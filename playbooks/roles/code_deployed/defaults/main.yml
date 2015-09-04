@@ -1,0 +1,4 @@
+---
+codedeploy_agent_version: '1.0-1.751'
+codedeploy_agent_deb: 'http://aws-codedeploy-us-east-1.s3.amazonaws.com/releases/codedeploy-agent_{{ codedeploy_agent_version }}_all.deb'
+codedeploy_agent_checksum: '2edba4528217f5575987776e476027c1260daaf8def81d110bc4e2ea8fc9b3b5'
