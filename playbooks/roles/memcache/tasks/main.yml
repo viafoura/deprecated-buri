@@ -1,0 +1,7 @@
+---
+
+- name: Install memcache
+  apt: pkg=memcached state=latest
+
+- name: Change memcache max memory
+lineinfile: dest=/etc/memcached.conf line='-m {{ memcache_max_memory }}' 
