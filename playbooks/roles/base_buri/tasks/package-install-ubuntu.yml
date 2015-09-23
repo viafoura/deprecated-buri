@@ -16,6 +16,7 @@
     - linux-cloud-tools-generic
     - lynx
     - make
+    - mailutils
     - mdadm
     - nano
     - ngrep

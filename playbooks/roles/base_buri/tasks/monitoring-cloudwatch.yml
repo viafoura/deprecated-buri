@@ -1,0 +1,21 @@
+---
+# Install monitoring scripts and cronjobs for cloudwatch instance monitoring
+#
+- name: Install aws cloudwatch monitoring script deps
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - libwww-perl
+    - libswitch-perl
+    - liburi-perl
+
+- name: Download and Unarchive CloudWatch Monitoring Scripts Archive
+  unarchive: src=CloudWatchMonitoringScripts-1.2.1.zip dest=/home/ubuntu/
+
+- name: Set Ownership On aws-scripts-mon
+  file: path=/home/ubuntu/aws-scripts-mon owner=ubuntu group=ubuntu recurse=yes
+
+- name: Create Crontab Entry for Cloudwatch Monitoring
+  cron: name="Run aws-scripts-mon"
+        job="home/ubuntu/aws-scripts-mon/mon-put-instance-data.pl --from-cron --mem-used --mem-avail --swap-used  $(mount | grep ^/dev/ | awk '{print "--disk-space-util " $3}' | sed 'N;s/\n/ /')"
+        user=ubuntu
+
