@@ -1,9 +1,9 @@
 ---
-jetty_version: '9.3.2.v20150730'
+jetty_version: '9.3.3.v20150827'
 jetty_basename: 'jetty-distribution-{{ jetty_version }}'
 jetty_filename: '{{ jetty_basename }}.tar.gz'
 jetty_mirror: 'http://ftp.acc.umu.se/mirror/eclipse.org/jetty/stable-9/dist/{{ jetty_filename }}'
-jetty_checksum: 'c9d51e6e09c710cd084adb694149acfa93b90ba6a979cbaccc41e191bc4c14da'
+jetty_checksum: 'decd6788232646f9a2980c15aa076ecbd919e61867913d056ddb3251ac31415c'
 jetty_root: '/opt/jetty'
 jetty_temp: '{{ jetty_root }}/temp'
 jetty_apps: '{{ jetty_root }}/apps'
