@@ -18,6 +18,6 @@
 
 "r3-8xlarge": {
   "mem": 166570
-  },
+  }
 
-memcache_max_memory: "{{ {{ instance_type }}.mem }}"
+memcache_max_memory: {{ instance_type["mem"] }}
