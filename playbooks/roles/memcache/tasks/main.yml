@@ -4,4 +4,8 @@
   apt: pkg=memcached state=latest
 
 - name: Change memcache max memory
-lineinfile: dest=/etc/memcached.conf line='-m {{ memcache_max_memory }}' 
+  lineinfile: dest=/etc/memcached.conf line='-m {{ memcache_max_memory }}' 
+
+- name: Create /etc/default/memcached
+  shell: echo "ENABLE_MEMCACHED=yes" > /etc/default/memcached
+
