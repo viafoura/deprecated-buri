@@ -20,7 +20,11 @@ logfile /var/log/memcached.log
 # Start with a cap of 64 megs of memory. It's reasonable, and the daemon default
 # Note that the daemon will grow to this size, but does not start out holding this much
 # memory
--m 64
+{% for instance in instance_types %}
+{% if instance_type == instance %}
+-m {{ instance_types[instance]['memory_size'] }}
+{% endif %}
+{% endfor %}
 
 # Default connection port is 11211
 -p 11211 
