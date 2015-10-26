@@ -4,24 +4,7 @@
   apt: pkg=memcached state=latest
 
 - name: Change memcache max memory
-  lineinfile: dest=/etc/memcached.conf regexp='m 64' line='-m 10410'
-  when: instance_type == 'r3-large' 
-
-- name: Change memcache max memory
-  lineinfile: dest=/etc/memcached.conf regexp='m 64' line='-m 20821'
-  when: instance_type == 'r3-xlarge' 
-
-- name: Change memcache max memory
-  lineinfile: dest=/etc/memcached.conf regexp='m 64' line='-m 41642'
-  when: instance_type == 'r3-2xlarge' 
-
-- name: Change memcache max memory
-  lineinfile: dest=/etc/memcached.conf regexp='m 64' line='-m 83285'
-  when: instance_type == 'r3-4xlarge' 
-
-- name: Change memcache max memory
-  lineinfile: dest=/etc/memcached.conf regexp='m 64' line='-m 166570'
-  when: instance_type == 'r3-8xlarge' 
+  template: src=memcached.conf.j2 dest=/etc/memcached.conf owner=root group=root mode=0644
 
 - name: Create /etc/default/memcached
   shell: echo "ENABLE_MEMCACHED=yes" > /etc/default/memcached

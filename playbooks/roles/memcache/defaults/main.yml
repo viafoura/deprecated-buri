@@ -1,0 +1,14 @@
+---
+
+instance_types: 
+  r3-large: 
+    memory_size: 10410
+  r3-xlarge: 
+    memory_size: 20821
+  r3-2xlarge: 
+    memory_size: 41642
+  r3-4xlarge: 
+    memory_size: 83285
+  r3-8xlarge:
+    memory_size: 166570
+
