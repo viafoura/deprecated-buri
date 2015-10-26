@@ -6,6 +6,9 @@
 - name: Change memcache max memory
   template: src=memcached.conf.j2 dest=/etc/memcached.conf owner=root group=root mode=0644
 
+- name: Create memcache file in /etc/security/limits.d
+  file: src=memcache.conf dest=/etc/security/limits.d/memcache.conf owner=root group=root mode=0644
+
 - name: Create /etc/default/memcached
   shell: echo "ENABLE_MEMCACHED=yes" > /etc/default/memcached
 
