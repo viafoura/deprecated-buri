@@ -8,7 +8,7 @@
 - include: setup-services.yml
 - include: setup-ephemeral.yml
   when: cloud_target == 'amazon'
-- include: monitoring-clodwatch.yml
+- include: monitoring-cloudwatch.yml
   when: cloud_target == 'amazon' and monitoring_cloudwatch
 - include: update-ixgbevf.yml
   when: cloud_target == 'amazon'
