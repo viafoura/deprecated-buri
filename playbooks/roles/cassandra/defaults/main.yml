@@ -2,11 +2,12 @@
 cassandra_nameprefix: "apache-cassandra"
 cassandra_version: "2.1.8"
 #cassandra_mirror: "http://downloads.datastax.com/community/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
-cassandra_build_url: "http://archive.apache.org/dist/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
+cassandra_build_url: "http://apache.mirror.rafal.ca/cassandra/{{ cassandra_version }}/{{ cassandra_nameprefix }}-{{ cassandra_version }}-bin.tar.gz"
 cassandra_checksums:
     "2.1.4": "fb5debada72905f169866ca43c21ade4782f9c036b160894e42b9072190cb7f1"
     "2.1.7":  "add1a34b8e07dacb16df6b8dbe50c66d77cb46b89f66424103e2fd4459b79089"
     "2.1.8": "3a0cc64efd529ffdc1600f6b3ad1946af85cc01544e2b469499aa81b10b722f5"
+    "2.1.11": "52c863797a6e3dd57182aa7b927ee588959019fb5509c0fb10d07b28ed9f31ca"
     "2.0.14": "5396cda7a66929e9c9ea0a2eeb9f2b54327df1a42f407bc82fb1cc1648d87a1b"
 
 cassandra_build_source: False
