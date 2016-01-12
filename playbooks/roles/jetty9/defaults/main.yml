@@ -1,5 +1,5 @@
 ---
-jetty_version: '9.3.3.v20150827'
+jetty_version: '9.3.6.v20151106'
 jetty_basename: 'jetty-distribution-{{ jetty_version }}'
 jetty_filename: '{{ jetty_basename }}.tar.gz'
 jetty_mirror: 'http://ftp.acc.umu.se/mirror/eclipse.org/jetty/stable-9/dist/{{ jetty_filename }}'
