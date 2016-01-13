@@ -24,5 +24,7 @@
       when: buri_ami_build_pvm_ebs|bool
     - include: tasks/ec2/ami/register/ebs_hvm.yml
       when: buri_ami_build_hvm_ebs|bool
+    - include: tasks/ec2/vol/tagsnapshot.yml
+      when: buri_ami_build_pvm_ebs|bool or buri_ami_build_hvm_ebs|bool
     - include: tasks/buri/report.yml
 
