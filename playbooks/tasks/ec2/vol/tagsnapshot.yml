@@ -1,0 +1,3 @@
+---
+- name: Tagging snapshot
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"HVM_AMI_ID\",\"Value\":\"{{ ami_id_hvm }}\"}, {\"Key\":\"PVM_AMI_ID\",\"Value\":\"{{ ami_id_pvm }}\"}]"'
