@@ -1,5 +1,4 @@
 ---
 - name: Registering cross-account permission for HVM AMI
-  command: aws ec2 modify-image-attribute --image-id '{{ perm_ami_id }}'
-    --launch-permission "{\"Add\":[{\"UserId\":\"{{ asgard_accounts.test.account_no }}\"}]}"
+  command: aws ec2 modify-image-attribute --region us-east-1 --image-id '{{ perm_ami_id }}' --launch-permission "{\"Add\":[{\"UserId\":\"{{ asgard_accounts.test.account_no }}\"}]}"
 
