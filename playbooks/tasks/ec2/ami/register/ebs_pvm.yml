@@ -44,3 +44,7 @@
     tag_ami_id: '{{ ami_id_pvm }}'
     tag_ami_name: '{{ buri_ami_full_name }}-PVM-EBS-{{ buri_disk_type }}'
 
+- include: ../cross_account/common.yml
+  vars:
+    perm_ami_id: '{{ ami_id_pvm }}'
+
