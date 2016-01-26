@@ -1,7 +1,7 @@
 ---
 
 - name: Copy ixgbevf source
-  file: src=ixgbevf-2.16.1.tar.gz dest=/tmp/ixgbevf.tar.gz
+  copy: src=ixgbevf-2.16.1.tar.gz dest=/tmp/ixgbevf.tar.gz
 
 - name: Make ixgbevf dir
   file: path=/tmp/ixgbevf state=directory
