@@ -1,7 +1,7 @@
 ---
-- name: Fix menu.lst for pvgrub hd00 boot (partitioned disk)
-  command: "perl -pi -e 's/\\(hd0\\)/(hd0,0)/g' /boot/grub/menu.lst"
-  when: image_build and ansible_distribution == "Ubuntu" and cloud_target == "amazon" and buri_disk_type != "flat"
+#- name: Fix menu.lst for pvgrub hd00 boot (partitioned disk)
+#  command: "perl -pi -e 's/\\(hd0\\)/(hd0,0)/g' /boot/grub/menu.lst"
+#  when: image_build and ansible_distribution == "Ubuntu" and cloud_target == "amazon" and buri_disk_type != "flat"
 
 - name: Install alternative bootloader extlinux from apt (flat disk)
   apt: pkg={{ item }} state=latest install_recommends=no
