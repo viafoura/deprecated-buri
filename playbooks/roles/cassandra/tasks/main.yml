@@ -23,18 +23,21 @@
   user: name={{ cassandra_user }} group={{ cassandra_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
   when: cassandra_user == "cassandra"
 
+- name: Add Cassandra storage boot configuration script
+  template: src=cassandra-storage.conf dest=/etc/init/cassandra-storage.conf owner=root mode=0644
+
 - name: Add ephemeral mkdir spec for cassandra role
   template: src=ephemeral-dirs dest=/etc owner=root mode=0644
   when: image_build
 
-- name: Create cassandra runtime directories
-  file: path={{ item }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+- name: Create cassandra runtime symlinks
+  file: path={{ item }} dest=/mnt{ item }} state=link
   with_items:
     - "{{ cassandra_base_location }}"
     - "{{ cassandra_data_location }}"
     - "{{ cassandra_cache_location }}"
     - "{{ cassandra_commitlog_location }}"
-  when: not image_build
+  when: image_build
 
 # FIXME: should this be a part of above directory creations?
 - name: Create cassandra log directory
@@ -122,11 +125,11 @@
 - name: Stop Cassandra service
   command: service cassandra stop
   when: not image_build
-  
+
 #- name: Start Cassandra service
 #  command: service cassandra start
 #  when: not image_build
- 
+
 #- name: Wait for cassandra to be up
 #  wait_for: port=7199 delay=20 timeout=120
 #  when: not image_build

@@ -1,4 +1,4 @@
-{{ cassandra_base_location }},{{ cassandra_user }},{{ cassandra_group }},0770
-{{ cassandra_data_location }},{{ cassandra_user }},{{ cassandra_group }},0770
-{{ cassandra_cache_location }},{{ cassandra_user }},{{ cassandra_group }},0770
-{{ cassandra_commitlog_location }},{{ cassandra_user }},{{ cassandra_group }},0770
+/mnt{{ cassandra_base_location }},{{ cassandra_user }},{{ cassandra_group }},0770
+/mnt{{ cassandra_data_location }},{{ cassandra_user }},{{ cassandra_group }},0770
+/mnt{{ cassandra_cache_location }},{{ cassandra_user }},{{ cassandra_group }},0770
+/mnt{{ cassandra_commitlog_location }},{{ cassandra_user }},{{ cassandra_group }},0770
