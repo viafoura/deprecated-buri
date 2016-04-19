@@ -13,7 +13,7 @@
   command: 'aws ec2 describe-snapshots --region {{ ansible_ec2_placement_region }} --snapshot-ids {{ ebs_snapshot_id }} --output text'
   register: result
   until: result.stdout.find("pending") == -1
-  retries: 60
+  retries: 300
   delay: 5
 
 - name: Tagging snapshot
