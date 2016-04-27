@@ -15,7 +15,7 @@
     - priam_set_property.py
     - priam_cluster_remove_identities.py
     - priam_cluster_remove_props.py
- 
+
 - name: Adding script for initializing SimpleDB tables
   template: src=simpledb-setup.py dest=/usr/local/bin owner=root group=root mode=0755
 
@@ -27,16 +27,19 @@
 - name: Remove any old version
   file: path={{ priam_webapps_root }}/Priam state=absent
   notify: restart priam
-  
+
 - name: Create Priam deployment directory
   file: path={{ priam_webapps_root }}/Priam state=directory
 
 - name: Decompress Priam WAR file
   command: chdir={{ priam_webapps_root }}/Priam jar xf /tmp/Priam.war
   notify: restart priam
-  
+
 - name: Remove source WAR file
   file: path=/tmp/Priam.war state=absent
+
+- name: Create /opt/jetty/apps/heimdall/lib/ext Directory
+  file: path=/opt/jetty/apps/priam/lib/ext state=directory owner=jetty group=jetty mode=0755
 
 - name: Move snappy libary to parent classpath (jetty fix)
   command: mv {{ priam_webapps_root }}/Priam/WEB-INF/lib/snappy-java-1.0.5.jar {{ jetty_install_dir }}/lib/ext/
@@ -47,7 +50,7 @@
 
 - name: Copy replacement log4j.properties file
   template: src=log4j.properties dest={{ priam_webapps_root }}/Priam/WEB-INF/classes/log4j.properties owner={{ servlet_container_user }} group={{ servlet_container_group }} mode=0644
-  
+
 - name: Run Priam SimpleDB initializer
   command: /usr/local/bin/simpledb-setup.py
   when: priam_populate_sdb
