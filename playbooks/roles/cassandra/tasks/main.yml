@@ -31,7 +31,7 @@
   when: image_build
 
 - name: Create cassandra runtime symlinks
-  file: path={{ item }} dest=/mnt{ item }} state=link
+  file: path={{ item }} dest=/mnt{{ item }} state=link
   with_items:
     - "{{ cassandra_base_location }}"
     - "{{ cassandra_data_location }}"
