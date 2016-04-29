@@ -90,11 +90,11 @@ ice_billing_s3_bucket_names: example-billing
 ice_billing_s3_bucket_prefix:
 # Your company's name
 ice_company_name: Your Company Name
-# The S3 bucket Ice can use as it's workspace (needs read and write access)
+# The S3 bucket Ice can use as its workspace (needs read and write access)
 ice_work_s3_bucket_name: example-ice-work
 ice_admin_password: "password"
 # change the follow account settings in your site.yml w/ an override
-# At least one account with it's account_no set is required. The
+# At least one account with its account_no set is required. The
 # rest is optional for more complex setups
 ice_accounts:
   # label used to reference account in UI and elsewhere
@@ -107,7 +107,7 @@ ice_accounts:
     # if reservation capacity poller needs to use IAM role to access ec2 API, set the assumed role here for each reservation owner account
     #owner_role: Ice
     # if reservation capacity poller needs to use IAM role to access ec2 API and external id is used, set the external id here for each reservation owner account. otherwise you can leave it unset.
-    #owner_ext_id: 
+    #owner_ext_id:
   # Repeat for all your accounts
   staging:
     account_no: 123456789
@@ -156,7 +156,7 @@ priam_upload_throttle: "5242880"
 
 turbine_instance_port: 8402
 turbine_instance_jmx_port: 7402
-turbine_jvm_xmx: '1024m' 
+turbine_jvm_xmx: '1024m'
 #turbine_discovery_impl: com.netflix.turbine.discovery.EurekaInstanceDiscovery
 # Use if the cluster list below does not specify a path
 #turbine_default_connect: :80/hystrix.stream

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app 
-   xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+<web-app
+   xmlns="http://xmlns.jcp.org/xml/ns/javaee"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
    metadata-complete="false"
-   version="3.1"> 
+   version="3.1">
 
   <!-- ===================================================================== -->
   <!-- This file contains the default descriptor for web applications.       -->
   <!-- ===================================================================== -->
 
   <description>
-    Default web.xml file.  
-    This file is applied to a Web application before it's own WEB_INF/web.xml file
+    Default web.xml file.
+    This file is applied to a Web application before its own WEB_INF/web.xml file
   </description>
 
   <!-- ==================================================================== -->
@@ -24,15 +24,15 @@
   <listener>
    <listener-class>org.eclipse.jetty.servlet.listener.IntrospectorCleaner</listener-class>
   </listener>
-  
+
   <!-- ==================================================================== -->
   <!-- Context params to control Session Cookies                            -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  -->
-  <!-- UNCOMMENT TO ACTIVATE 
-    <context-param> 
-      <param-name>org.eclipse.jetty.servlet.SessionDomain</param-name> 
-      <param-value>127.0.0.1</param-value> 
-    </context-param> 
+  <!-- UNCOMMENT TO ACTIVATE
+    <context-param>
+      <param-name>org.eclipse.jetty.servlet.SessionDomain</param-name>
+      <param-value>127.0.0.1</param-value>
+    </context-param>
     <context-param>
       <param-name>org.eclipse.jetty.servlet.SessionPath</param-name>
       <param-value>/</param-value>
@@ -134,7 +134,7 @@
       <param-name>compilerSourceVM</param-name>
       <param-value>1.7</param-value>
     </init-param>
-    <!--  
+    <!--
     <init-param>
         <param-name>classpath</param-name>
         <param-value>?</param-value>

@@ -98,7 +98,7 @@ Change the IP below to the the one you provisioned. All examples use the IP the 
    http://192.168.33.10:8401
    ```
 
-3. Pull up the Hystrix dashboard and use the turbine URL following for the stream on it's page. Keep it visible as you run edge tests.
+3. Pull up the Hystrix dashboard and use the turbine URL following for the stream on its page. Keep it visible as you run edge tests.
 
    ```
    http://192.168.33.10:8403/hystrix-dashboard
@@ -129,8 +129,8 @@ Change the IP below to the the one you provisioned. All examples use the IP the 
 
 ### Status
 
-Buri is approaching an initial beta release. The overall structure for configuration to the end user, allowing localization of configuration, extending with local roles, and managing that as a seperate entity, and has met all current goals. We have most of the mechanisms we need, and a fairly complete set of role templates for provisioning a good base of the NetflixOSS component stack, both to a VM and EC2. It has also reached the goal of integrating back to Aminator vs. supplanting it, and going forward, aims to become a supplementary tool, compatible to Aminator to the greatest extent possible in terms of it's own internal AMI handling. This is not currently the case, mostly around metadata concerns.
+Buri is approaching an initial beta release. The overall structure for configuration to the end user, allowing localization of configuration, extending with local roles, and managing that as a seperate entity, and has met all current goals. We have most of the mechanisms we need, and a fairly complete set of role templates for provisioning a good base of the NetflixOSS component stack, both to a VM and EC2. It has also reached the goal of integrating back to Aminator vs. supplanting it, and going forward, aims to become a supplementary tool, compatible to Aminator to the greatest extent possible in terms of its own internal AMI handling. This is not currently the case, mostly around metadata concerns.
 
 The core is not expected to change much from this point, and we should mostly be focusing on component integration and implementations as roles going forward, with the following exceptions:
-- Names of variables may yet change, but not dramatically, and only for specific areas. 
-- Non-role plays/tasks are to be re-organized, but no major functional changes planned. 
+- Names of variables may yet change, but not dramatically, and only for specific areas.
+- Non-role plays/tasks are to be re-organized, but no major functional changes planned.

@@ -7,7 +7,7 @@ Here are the main points:
 
 - foundation remains as-is, the bare image
 - what is now the base, becomes "buri_base"
-  - it's scope is everything not in the foundation, that buri itself wants, or are commonly useful at a basic level. (vim, tcpdump, etc)
+  - its scope is everything not in the foundation, that buri itself wants, or are commonly useful at a basic level. (vim, tcpdump, etc)
 - major "platform" things, that you'd not want to install every resnap, but should be optional, or switchable
   - the only one of this class for now is "oracle-java", which I would like to see switchable with openjdk, as it *would* be a better default...
 - a local base layer, would run atop all the above, almost like a platform item that runs last (or maybe exactly like)

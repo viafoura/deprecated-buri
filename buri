@@ -53,7 +53,7 @@ def ensure_local_env(args):
 
 # generates an ansible commandline
 def gen_ansible_command(args, playbook, cli_vars):
-    # check for and include local roles. this does not link to the local inventory inclusion, and each can run on it's own
+    # check for and include local roles. this does not link to the local inventory inclusion, and each can run on its own
     # however, new top-level roles you wish to image/push will need to be included in the inventory file
     roles_param = ''
     roles_path = '%s/local/roles' % args.BURI_BASE
@@ -337,7 +337,7 @@ def get_config():
 
     config = ConfigParser.SafeConfigParser()
     config.read([args.conf_file])
-    # Gets applied after all the argparse setup w/ it's defaults
+    # Gets applied after all the argparse setup w/ its defaults
     defaults = dict(config.items("Defaults"))
 
     parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help

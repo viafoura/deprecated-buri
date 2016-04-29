@@ -27,7 +27,7 @@ Initially, this describes what is happening in the netflixoss-ansible foundation
 	f) apt-get install a number of packages
 	g) modify fstab/grub (replace cloudimg w/ euc)
 
-10) create an EBS volume with the size specified in #1, recording it's ID, and confirming success
+10) create an EBS volume with the size specified in #1, recording its ID, and confirming success
 
 11) determine local instance ID
 

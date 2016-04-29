@@ -9,7 +9,7 @@ EUREKA
 eureka.asgName
 
   - One EIP per Eureka Node
-  - Eureka will take care of binding it's EIP
+  - Eureka will take care of binding its EIP
   - DNS model strongly recommended
     - Region records point to Zone records
 

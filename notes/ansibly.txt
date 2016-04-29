@@ -5,7 +5,7 @@ Plan for "Ansibly"
 
 This approach will be much more driven by the inventory file, which, we've mostly ignored so far. AMI stuff uses a dynamic insert (for now... can't if inventory file driven), and the dev VM did too, just for convenience at the time.
 
-The main thing is that the mount point has to be static for this to work. AND Ansible has to not test for it's existence at the start of some plays, maybe, depends how much we can unwrap the AMI stuff from the role stuff.
+The main thing is that the mount point has to be static for this to work. AND Ansible has to not test for its existence at the start of some plays, maybe, depends how much we can unwrap the AMI stuff from the role stuff.
 
 And.. Ansible does test for a valid chroot target... that's ok, as we can still split up the run.
 

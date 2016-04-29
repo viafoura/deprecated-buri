@@ -15,25 +15,25 @@ detected.
   <Set name="contextPath">/</Set>
   <Set name="war"><Property name="jetty.webapps" default="."/>/root</Set>
   <!--
-    Exhibitor seems to have it's own resource handlers
+    Exhibitor seems to have its own resource handlers
     <Set name="defaultsDescriptor"><Property name="jetty.base" default="."/>/etc/webdefault.xml</Set>
   -->
 
   <Set name="extractWAR">false</Set>
   <Set name="copyWebDir">false</Set>
-  
+
   <!-- Enable WebSocket container -->
   <Call name="setAttribute">
     <Arg>org.eclipse.jetty.websocket.jsr356</Arg>
     <Arg type="Boolean">true</Arg>
   </Call>
-  
-  <!-- Enable symlinks 
+
+  <!-- Enable symlinks
   <Call name="addAliasCheck">
     <Arg><New class="org.eclipse.jetty.server.handler.AllowSymLinkAliasChecker"/></Arg>
   </Call>
   -->
-  
+
   <!-- virtual hosts
   <Set name="virtualHosts">
     <Array type="String">
