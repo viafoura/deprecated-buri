@@ -63,7 +63,7 @@ def gen_ansible_command(args, playbook, cli_vars):
     inventory_path = '{0}/etc/inventory/{1}'.format(args.BURI_BASE, args.environment)
     local_inventory_path = '{0}/local/inventory/{1}'.format(args.BURI_BASE, args.environment)
     local_group_vars_path = '{0}/local/inventory/group_vars/{1}'.format(args.BURI_BASE, args.environment)
-    if os.path.exists(local_inventory_path) and os.path.isfile(local_inventory_path) and os.path.exists(local_group_vars_path) and os.path.isfile(local_group_vars_path):
+    if os.path.exists(local_inventory_path) and os.path.exists(local_group_vars_path):
         inventory_path = local_inventory_path
     deploy_key = 'NONE'
     local_deploy_key_path = '{0}/local/env/{1}/deploy.key'.format(args.BURI_BASE, args.environment)
