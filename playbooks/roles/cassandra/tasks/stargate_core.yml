@@ -17,7 +17,7 @@
   when: cassandra_stargate_build_source
 
 - name: Add gradle wrapper to stargate-core sources
-  copy: src=files/gradle-wrapper/ dest=/tmp/stargate_core_build 
+  copy: src=files/gradle-wrapper/ dest=/tmp/stargate_core_build
   when: cassandra_stargate_build_source and git_clone.changed
 
 #- name: Set dummy username for maven publish
@@ -25,7 +25,7 @@
 #  when: cassandra_stargate_build_source and git_clone.changed
 
 - name: Fix build file
-  replace: dest=/tmp/stargate_core_build/build.gradle regexp="(.*?)ossrh(Username|Password)(.*?)" replace="\1\"ossrh\2\"\3" 
+  replace: dest=/tmp/stargate_core_build/build.gradle regexp="(.*?)ossrh(Username|Password)(.*?)" replace="\1\"ossrh\2\"\3"
   when: cassandra_stargate_build_source and git_clone.changed
 
 - name: Set permissions on gradlew script
@@ -36,9 +36,9 @@
   command: chdir=/tmp/stargate_core_build ./gradlew clean jar
   when: cassandra_stargate_build_source and git_clone.changed
 
-- name: Copy stargate-core dependencies to cassandra libs
-  shell: cp /tmp/stargate_core_build/build/dist/stargate/libs/* {{ cassandra_home }}/lib
-  when: cassandra_stargate_build_source and git_clone.changed
+#- name: Copy stargate-core dependencies to cassandra libs
+#  shell: cp /tmp/stargate_core_build/build/dist/stargate/libs/* {{ cassandra_home }}/lib
+#  when: cassandra_stargate_build_source and git_clone.changed
 
 - name: Copy built stargate-core to cassandra libs
   shell: cp /tmp/stargate_core_build/build/libs/* {{ cassandra_home }}/lib

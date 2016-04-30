@@ -30,18 +30,28 @@
   template: src=ephemeral-dirs dest=/etc owner=root mode=0644
   when: image_build
 
-- name: Create cassandra runtime symlinks
-  file: path={{ item }} dest=/mnt{{ item }} state=link
+- name: Create cassandra base directory
+  file: path={{ cassandra_base_location }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+  when: image_build
+
+- name: Create cassandra log directory
+  file: path={{ cassandra_log_location }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+
+- name: Create destination directories under /mnt
+  file: path=/mnt{{ item }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
   with_items:
-    - "{{ cassandra_base_location }}"
     - "{{ cassandra_data_location }}"
     - "{{ cassandra_cache_location }}"
     - "{{ cassandra_commitlog_location }}"
   when: image_build
 
-# FIXME: should this be a part of above directory creations?
-- name: Create cassandra log directory
-  file: path={{ cassandra_log_location }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
+- name: Create cassandra runtime symlinks
+  file: src={{ item }} dest=/mnt{{ item }} state=link force=yes
+  with_items:
+    - "{{ cassandra_data_location }}"
+    - "{{ cassandra_cache_location }}"
+    - "{{ cassandra_commitlog_location }}"
+  when: image_build
 
 - include: acquire_build.yml
 
