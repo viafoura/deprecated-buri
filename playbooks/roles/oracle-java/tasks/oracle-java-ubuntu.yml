@@ -36,4 +36,3 @@
   lineinfile: dest=/usr/lib/jvm/java-{{ java_version }}-oracle/jre/lib/security/java.security
               insertafter="^#networkaddress.cache.ttl=-1"
               line="networkaddress.cache.ttl=60"
-#              regexp="^networkaddress.cache.ttl="
