@@ -34,6 +34,6 @@
 
 - name: Make java use a 60s ttl for names
   lineinfile: dest=/usr/lib/jvm/java-{{ java_version }}-oracle/jre/lib/security/java.security
-              regexp="^networkaddress.cache.ttl="
               insertafter="^#networkaddress.cache.ttl=-1"
               line="networkaddress.cache.ttl=60"
+#              regexp="^networkaddress.cache.ttl="
