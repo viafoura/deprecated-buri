@@ -27,7 +27,12 @@
   file: src=/usr/lib/jvm/java-{{ java_version }}-oracle dest=/usr/lib/jvm/default-java state=link
 
 - name: Explicitly set JAVA_HOME in system-wide environment
-  lineinfile: dest=/etc/environment regexp="JAVA_HOME=" line="JAVA_HOME=\"/usr/lib/jvm/java-{{ java_version }}-oracle\"" insertafter="EOF"
+  lineinfile: dest=/etc/environment
+              regexp="JAVA_HOME="
+              insertafter="EOF"
+              line="JAVA_HOME=\"/usr/lib/jvm/java-{{ java_version }}-oracle\""
 
 - name: Make java use a 60s ttl for names
-  lineinfile: dest=/usr/lib/jvm/java-{{ java_version }}-oracle/jre/lib/security/java.security line="networkaddress.cache.ttl=60"
+  lineinfile: dest=/usr/lib/jvm/java-{{ java_version }}-oracle/jre/lib/security/java.security
+              insertafter="^#networkaddress.cache.ttl=-1"
+              line="networkaddress.cache.ttl=60"
