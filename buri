@@ -85,7 +85,7 @@ def gen_ansible_command(args, playbook, cli_vars):
     if args.disk_zero != 'normal':
         gen_vars += " buri_disk_zerofree='{0}'".format(args.disk_zero)
     # volume type
-    if args.vol_type != 'standard':
+    if args.vol_type != 'gp2':
         gen_vars += " buri_volume_type='{0}'".format(args.vol_type)
     # commandify
     cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {3} -e "BURI_BASE=\'{1}\' buri_environment=\'{4}\' {5} {6}{7}" -vvvv'.format(roles_param, args.BURI_BASE, playbook, inventory_path, args.environment, cli_vars, args.extravars, gen_vars)
@@ -347,7 +347,7 @@ def get_config():
     parser.add_argument('--extra-vars', dest='extravars', metavar='<varstr="foo" varnum=123>', type=str, default='', help='Extra variables to pass to Ansible playbooks')
     parser.add_argument('-u', '--user', dest='buri_remote_user', metavar='<remote username>', type=str, help='User Ansible will user to remote ssh to a host as')
     parser.add_argument('--cluster-name', dest='buri_cluster_name', metavar='<name>', type=str, help='Cluster name, required by some roles, can be used by any to differentiate configurations')
-    parser.add_argument('--vol_type', metavar='<standard|gp2>', type=str, default='standard', choices=['standard', 'gp2'], help='Selects the type of EC2 EBS volume to use for image creation')
+    parser.add_argument('--vol_type', metavar='<standard|gp2>', type=str, default='gp2', choices=['standard', 'gp2'], help='Selects the type of EC2 EBS volume to use for image creation')
     parser.add_argument('--disk_zero', metavar='<never|normal|always>', type=str, default='normal', choices=['never', 'normal', 'always'], help='When to zero free filesystem areas, default only when bundling instance AMIs')
 
     subparser = parser.add_subparsers(help='sub commands')
