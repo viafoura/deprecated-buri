@@ -23,12 +23,14 @@
   user: name={{ cassandra_user }} group={{ cassandra_group }} shell="/bin/sh" home={{ cassandra_home }} system=yes
   when: cassandra_user == "cassandra"
 
-- name: Add Cassandra storage boot configuration script
-  template: src=cassandra-storage.conf dest=/etc/init/cassandra-storage.conf owner=root mode=0644
-
-- name: Add ephemeral mkdir spec for cassandra role
+- name: Add ephemeral mkdir spec for cassandra role, used when no additional volumes present
   template: src=ephemeral-dirs dest=/etc owner=root mode=0644
   when: image_build
+
+- name: Copy default buri device maps
+  copy: src={{ item }} dest=/etc owner=root mode=0644
+  with_fileglob:
+    - files/buri-device-map-*
 
 - name: Create cassandra base directory
   file: path={{ cassandra_base_location }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755

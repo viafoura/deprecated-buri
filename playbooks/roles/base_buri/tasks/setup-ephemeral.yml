@@ -1,13 +1,21 @@
 ---
 
 # Ephemeral RAID
-- name: Add first-boot ephemeral raid setup script
+- name: Add first-boot disk setup script
   copy: src=ephemeral-raid.conf dest=/etc/init owner=root mode=0644
-  
-# Ephemeral Directories 
+
+- name: Add disk, raid, and directory main script
+  copy: src=buri-drives.sh dest=/usr/local/bin/buri-drives.sh owner=root mode=0644
+
+- name: Copy default buri device maps
+  copy: src={{ item }} dest=/etc owner=root mode=0644
+  with_fileglob:
+    - files/buri-device-map-*
+
+# Keep support for legacy ephemeral-mkdirs.conf script
 - name: Add ephemeral mkdir script
   copy: src=ephemeral-mkdirs.conf dest=/etc/init owner=root mode=0644
-  
+
 # Necessary else cloud-init will interfere with us
 - name: Telling cloud-init not to perform disk setup
   lineinfile: dest=/etc/cloud/cloud.cfg regexp="^ - disk_setup$" state=absent
