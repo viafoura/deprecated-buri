@@ -207,7 +207,7 @@ function find_relevant_lines {
     frl_found_lines=$(grep $frl_device_type$frl_device_count $frl_device_map)
 
     if [ "x$frl_found_lines" = "x" ]; then
-        frl_found_lines=$(grep ${frl_device_type}\* $frl_device_map)
+        frl_found_lines=$(grep ${frl_device_type}\\* $frl_device_map)
     fi
 
     eval "$1='$frl_found_lines'"
