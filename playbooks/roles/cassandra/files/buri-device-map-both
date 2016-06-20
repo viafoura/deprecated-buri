@@ -1,2 +1,2 @@
-ephemeral* /mnt1 0 0 /cassandra/commitlog=/mnt1/commitlog:jetty:jetty
+ephemeral* /mnt1 0 * /cassandra/commitlog=/mnt1/commitlog:jetty:jetty
 ebs* /mnt2 0 * /cassandra/data=/mnt2/data:jetty:jetty,/cassandra/saved_caches=/mnt2/saved_caches:jetty:jetty
