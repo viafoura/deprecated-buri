@@ -28,9 +28,9 @@
   when: image_build
 
 - name: Copy default buri device maps
-  copy: src={{ item }} dest=/etc owner=root mode=0644
+  copy: src={{ item }} dest=/etc/ owner=root mode=0644
   with_fileglob:
-    - files/buri-device-map-*
+    - buri-device-map-*
 
 - name: Create cassandra base directory
   file: path={{ cassandra_base_location }} state=directory owner={{ cassandra_user }} group={{ cassandra_group }} mode=0755
