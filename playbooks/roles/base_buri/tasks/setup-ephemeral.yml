@@ -5,12 +5,12 @@
   copy: src=ephemeral-raid.conf dest=/etc/init owner=root mode=0644
 
 - name: Add disk, raid, and directory main script
-  copy: src=buri-drives.sh dest=/usr/local/bin/buri-drives.sh owner=root mode=0644
+  copy: src=buri-drives.sh dest=/usr/local/bin/buri-drives.sh owner=root mode=0774
 
 - name: Copy default buri device maps
-  copy: src={{ item }} dest=/etc owner=root mode=0644
+  copy: src={{ item }} dest=/etc/ owner=root mode=0644
   with_fileglob:
-    - files/buri-device-map-*
+    - buri-device-map-*
 
 # Keep support for legacy ephemeral-mkdirs.conf script
 - name: Add ephemeral mkdir script
