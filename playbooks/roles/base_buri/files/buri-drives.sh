@@ -125,7 +125,7 @@ function make_raid {
     mr_raid_devices=$4
 
     mylog "Making RAID $mr_device_path level $mr_raid_level with devices $mr_raid_devices"
-    yes | mdadm --create --force $mr_device_path --level=$mr_raid_level --raid-devices=$mr_device_count $mr_raid_devices
+    yes | mdadm --create --force $mr_device_path --level=$mr_raid_level --chunk=256 --raid-devices=$mr_device_count $mr_raid_devices
     echo DEVICE $mr_raid_devices | tee -a /etc/mdadm/mdadm.conf
 }
 
@@ -165,7 +165,7 @@ function configure_disks {
 
         # count the number of device used
         IFS="," read -r -a cd_use_devices_array <<< $cd_use_devices
-        cd_use_devices_count=${#cd_use_devices_array[@]}
+        cd_use_devices_count=${#cd_use_devices_array[*]}
 
         if [ $cd_use_devices_count -gt 1 ] ; then
 
@@ -173,11 +173,11 @@ function configure_disks {
 
             # make a list of raid devices
             cd_raid_devices=""
-            for cd_device_index in ${cd_use_devices_array[@]} ; do
+            for cd_device_index in ${cd_use_devices_array[*]} ; do
 
                 eval cd_new_raid_device=\${$cd_device_array_name[$cd_device_index]}
                 cd_raid_devices="$cd_raid_devices $cd_new_raid_device"
-                eval $cd_device_array_unused_name[\$cd_device_index]=''
+                eval unset \$cd_device_array_unused_name[$cd_device_index]
 
             done
 
@@ -186,11 +186,11 @@ function configure_disks {
             make_filesystem $cd_device_path $cd_mount_point
 
         elif [ $cd_use_devices_count = 1 ] ; then
-            cd_device_index=${cd_use_devices_array[0]}
+            cd_device_index=${cd_use_devices_array[*]}
             eval cd_device_path=\${$cd_device_array_name[$cd_device_index]}
             make_filesystem $cd_device_path $cd_mount_point
 
-            eval $cd_device_array_unused_name[\$cd_device_index]=''
+            eval unset \$cd_device_array_unused_name[$cd_device_index]
 
         fi
 
@@ -207,7 +207,7 @@ function find_relevant_lines {
     frl_found_lines=$(grep $frl_device_type$frl_device_count $frl_device_map)
 
     if [ "x$frl_found_lines" = "x" ]; then
-        frl_found_lines=$(grep ${frl_device_type}* $frl_device_map)
+        frl_found_lines=$(grep ${frl_device_type}\* $frl_device_map)
     fi
 
     eval "$1='$frl_found_lines'"
