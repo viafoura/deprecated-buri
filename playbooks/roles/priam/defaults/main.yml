@@ -1,7 +1,7 @@
 ---
 priam_instance_port: 8080
 priam_instance_jmx_port: 1099
-priam_jvm_xmx: '1024m'
+priam_jvm_xmx: '384m'
 priam_backup_hour: "4"
 # The recommended Value is 16 to 32 times the rate of write throughput (in MB/s)
 # This is a throttle, 0 means do not throttle
@@ -53,7 +53,7 @@ priam_cass_startscript: "/etc/init.d/cassandra start"
 priam_cass_stopscript: "/etc/init.d/cassandra stop"
 
 # You *can* override these, but better to use a convention here
-# priam_cluster_name MUST match the autoscaling group name (before the dash) in order to be used 
+# priam_cluster_name MUST match the autoscaling group name (before the dash) in order to be used
 # i.e. project_stage_db-useast1 == cluster_name-ec2region
 # priam_cluster_name is effectively the reference to the correct set of SimpleDB Configuration
 priam_acl_groupname: "priam-{{ priam_cluster_name }}"
