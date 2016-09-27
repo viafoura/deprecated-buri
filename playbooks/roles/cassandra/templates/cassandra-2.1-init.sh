@@ -19,8 +19,8 @@ NAME=cassandra
 PIDFILE=/var/run/$NAME/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 WAIT_FOR_START=10
-CASSANDRA_HOME={{ cassandra_home }}
-CONFDIR="${CASSANDRA_HOME}/conf"
+export CASSANDRA_HOME={{ cassandra_home }}
+export CONFDIR="${CASSANDRA_HOME}/conf"
 FD_LIMIT=100000
 
 [ -e ${CONFDIR}/cassandra.yaml ] || exit 0

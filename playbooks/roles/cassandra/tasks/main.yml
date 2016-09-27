@@ -130,6 +130,16 @@
   command: update-rc.d cassandra disable
   when: image_build
 
+- name: Run sed_lines.sh on cassandra machine
+  script: sed_lines.sh  
+
+- name: Copy cassandra_status.py to its directory
+  copy: src=cassandra_status.py dest={{ cassandra_home }} owner=jetty group=jetty mode=0755
+
+- name: Create cronjob for Cassandra status script
+  cron: name="Cassandra cluster status metric to AWS"
+        user=jetty job={{ cassandra_home }}/cassandra_status.py
+
 - name: If cassandra is running drain
   shell: '(netstat -tunlp|grep ":9042" && {{ cassandra_home }}/bin/nodetool drain) || true'
   when: not image_build
