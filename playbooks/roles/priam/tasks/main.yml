@@ -13,6 +13,7 @@
     - dump_sdb_InstanceIdentity.py
     - dump_sdb_PriamProperties.py
     - priam_set_property.py
+    - priam_cluster_remove_hostname.py
     - priam_cluster_remove_identities.py
     - priam_cluster_remove_props.py
 
