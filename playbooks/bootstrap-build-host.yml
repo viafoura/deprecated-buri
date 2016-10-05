@@ -12,7 +12,7 @@
 - name: Provisioning role against host
   hosts: anshost
   user: "{{ buri_remote_user|default('ubuntu') }}"
-  sudo: True
+  become: true
   vars: 
     image_build: false
     cloud_target: amazon

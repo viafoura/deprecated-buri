@@ -2,7 +2,7 @@
 - name: Disconnect, snapshot, and register newly formed AMI
   hosts: localhost
   connection: local
-  sudo: True
+  become: true
   vars:
     image_build: true
     cloud_target: amazon
