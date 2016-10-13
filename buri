@@ -305,6 +305,18 @@ def keys_bundle(args):
         logging.info("Found existing bundle_cert.pem")
     return 0
 
+def get_environment_set(buri_base):
+    environments = set()
+
+    for inventory_dir in ['etc', 'local']:
+        inventory_path = buri_base + "/" + inventory_dir + "/inventory/"
+        if os.path.isdir(inventory_path):
+            for inventory_item in os.listdir(inventory_path):
+                if os.path.isfile(inventory_path + inventory_item):
+                    environments.add(inventory_item)
+
+    return sorted(environments)
+
 # ARG PARSER STUFF BELOW HERE
 
 class _HelpAction(argparse._HelpAction):
@@ -326,10 +338,12 @@ class _HelpAction(argparse._HelpAction):
         parser.exit()
 
 def get_config():
-    parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
-
     # where we at?
     BURI_BASE = os.path.dirname(os.path.realpath(__file__))
+
+    environments = get_environment_set(BURI_BASE)
+
+    parser = argparse.ArgumentParser(prog='buri', description='Buri system/image builder front-end', add_help=False)
 
     # Process this first
     parser.add_argument('-c', '--conf_file', metavar='<FILE>', help='specify config file location', default='{0}/etc/buri.cfg'.format(BURI_BASE))
@@ -343,7 +357,7 @@ def get_config():
     parser.add_argument('--help', action=_HelpAction, help='detailed help')  # add custom help
     parser.add_argument('-v', '--verbose', action='store_true', help='Be verbose with ansible output')
     parser.add_argument('--loglevel', metavar='<level>', type=str, default='info', help='Set the log level')
-    parser.add_argument('--environment', metavar='<env_name>', type=str, default='development', choices=['development', 'test', 'staging', 'production'], help='Set the environment context')
+    parser.add_argument('--environment', metavar='<env_name>', type=str, default='development', choices=environments, help='Set the environment context')
     parser.add_argument('--extra-vars', dest='extravars', metavar='<varstr="foo" varnum=123>', type=str, default='', help='Extra variables to pass to Ansible playbooks')
     parser.add_argument('-u', '--user', dest='buri_remote_user', metavar='<remote username>', type=str, help='User Ansible will user to remote ssh to a host as')
     parser.add_argument('--cluster-name', dest='buri_cluster_name', metavar='<name>', type=str, help='Cluster name, required by some roles, can be used by any to differentiate configurations')
