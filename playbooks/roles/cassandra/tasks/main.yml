@@ -108,16 +108,32 @@
   template: src=cassandra-2.1-init.sh dest=/etc/init.d/cassandra owner=root group=root mode=0755
   when: cassandra_version|truncate(4, True, end="") == "2.1."
 
+# 256k is the default used in 2.1.16, but replace it for older verisons, too
 - name: Bump up stack size in cassandra launch scripts
-  lineinfile: dest={{ cassandra_home }}/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss228k\3' backrefs=yes
+  lineinfile: dest={{ cassandra_home }}/conf/cassandra-env.sh regexp='^(.*)Xss(\d+)k(.*)$' line='\1Xss256k\3' backrefs=yes
 
 # FIXME: this seems off, needs non cloud version
-- name: Setup RMI for remote JMX
+- name: Make sure jmxremote authentication is false
+  replace:
+    dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
+    regexp: '.*JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=true"$'
+    replace: '  JVM_OPTS="$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"'
+  when: cloud_target == "amazon"
+
+- name: Remove jmxremote password
   lineinfile:
     dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
-    insertafter: ^JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
-    regexp: ^JVM_OPTS="\$JVM_OPTS -Djava.rmi.server.hostname=\$(ec2metadata --local-hostname)"
-    line: JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(ec2metadata --local-hostname)"
+    regexp: '^  JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmxremote.password.file=/etc/cassandra/jmxremote.password"'
+    state: absent
+  when: cloud_target == "amazon"
+
+- name: Setup RMI hostname for remote JMX
+  lineinfile:
+    dest: '{{ cassandra_home }}/conf/cassandra-env.sh'
+    line: '  JVM_OPTS="$JVM_OPTS -Djava.rmi.server.hostname=$(curl -s http://169.254.169.254/latest/meta-data/local-hostname)"'
+    insertafter: '^  JVM_OPTS="\$JVM_OPTS -Dcom.sun.management.jmxremote.authenticate=false"$'
+    regexp: '^  JVM_OPTS="\$JVM_OPTS -Djava.rmi.server.hostname=\$(curl -s http://169.254.169.254/latest/meta-data/local-hostname)"'
+    state: present
   when: cloud_target == "amazon"
 
 - include: stargate_core.yml
@@ -130,11 +146,8 @@
   command: update-rc.d cassandra disable
   when: image_build
 
-- name: Run sed_lines.sh on cassandra machine
-  script: sed_lines.sh  
-
 - name: Copy cassandra_status.py to its directory
-  copy: src=cassandra_status.py dest={{ cassandra_home }} owner=jetty group=jetty mode=0755
+  copy: src=cassandra_status.py dest={{ cassandra_home }}/cassandra_status.py owner=jetty group=jetty mode=0755 force=yes
 
 - name: Create cronjob for Cassandra status script
   cron: name="Cassandra cluster status metric to AWS"

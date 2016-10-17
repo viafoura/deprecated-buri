@@ -1,3 +1,4 @@
 CASSANDRA_HOME={{ cassandra_home }}
 CASSANDRA_CONF="${CASSANDRA_HOME}/conf"
 JVM_OPTS="{{ cassandra_jvm_opts }}"
+LOCAL_JMX=no
