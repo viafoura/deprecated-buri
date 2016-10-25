@@ -2,7 +2,7 @@
 jetty_version: '9.3.8.v20160314'
 jetty_basename: 'jetty-distribution-{{ jetty_version }}'
 jetty_filename: '{{ jetty_basename }}.tar.gz'
-jetty_mirror: 'http://ftp.acc.umu.se/mirror/eclipse.org/jetty/{{ jetty_version }}/dist/{{ jetty_filename }}'
+jetty_mirror: 'http://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/{{ jetty_version }}/{{ jetty_filename }}'
 jetty_checksum: 'fc4136c0abf8f86d99de1b11b3d2323bffda0d538a0f654bf741f5e84ea992bf'
 jetty_root: '/opt/jetty'
 jetty_temp: '{{ jetty_root }}/temp'
