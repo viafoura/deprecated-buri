@@ -3,7 +3,7 @@
 - name: Ubuntu Foundation Create
   hosts: localhost
   connection: local
-  sudo: True
+  become: true
   vars_files:
     - vars/distro/{{ ansible_distribution }}.yml
   vars: 

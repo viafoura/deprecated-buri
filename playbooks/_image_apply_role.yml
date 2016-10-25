@@ -3,7 +3,7 @@
   hosts: chroots
   connection: chroot
   user: root
-  sudo: True
+  become: true
   vars:
     image_build: true
     cloud_target: amazon
