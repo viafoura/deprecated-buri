@@ -91,50 +91,10 @@ def gen_ansible_command(args, playbook, cli_vars):
     cmd = 'ANSIBLE_NOCOWS=1 {0} python -u `which ansible-playbook` {1}/playbooks/{2}.yml -i {3} -e "BURI_BASE=\'{1}\' buri_environment=\'{4}\' {5} {6}{7}" -vvvv'.format(roles_param, args.BURI_BASE, playbook, inventory_path, args.environment, cli_vars, args.extravars, gen_vars)
     return cmd
 
-# Returns an array with as many elements as plays, each element the count of tasks for the play
-def estimate_ansible_run(cmd):
-    cmd += ' --list-tasks'
-    logging.info("Estimating ansible run using: " + cmd)
-    ret = []
-    play_no = 0
-    current_count = 0
-    handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-    while 1:
-        line = handle.stdout.readline()
-        if not line:
-            break
-        else:
-            l = line.rstrip()
-            if not l:
-                continue
-
-            m = re.match(r'^ERROR: (.*)$', l)
-            if m:
-                logging.critical('Error estimating play: {0}'.format(m.group(1)))
-                return 1, []
-
-            if (re.match(r'^playbook:', l)):
-                continue
-
-            if (re.match(r'^  play #', l)):
-                if not play_no == 0:
-                    ret.append(current_count)
-                play_no += 1
-                current_count = 0
-                continue
-
-            current_count += 1
-    ret.append(current_count)
-    return handle.returncode, ret
 
 # Run a playbook, first taking an estimation, and monitoring/filtering output. Ensures all text since the last successful task is included on error output
 def run_ansible_playbook(args, playbook, cli_vars):
     cmd = gen_ansible_command(args, playbook, cli_vars)
-    est_err, est = estimate_ansible_run(cmd)
-    if est_err:
-        return est_err
-    tasks_total = sum(est)
-    logging.info('executing {0} tasks in ansible run: {1}'.format(tasks_total, cmd))
     handle = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
 
     # Setup state/reporting vars
@@ -146,10 +106,10 @@ def run_ansible_playbook(args, playbook, cli_vars):
     tasks_run = 0
 
     # Setup our regexes
-    test_play = re.compile(r"^PLAY: \[(.*?)\]( \**)?$")
-    test_task = re.compile(r"^TASK: \[(.*?)\]( \**)?$")
+    test_play = re.compile(r"^PLAY:? \[(.*?)\]( \**)?$")
+    test_task = re.compile(r"^TASK:? \[(.*?)\]( \**)?$")
     test_recap = re.compile(r"^PLAY RECAP( \**)?$")
-    test_error = re.compile(r'^ERROR: (.*)$')
+    test_error = re.compile(r'^ERROR:? (.*)$')
     test_fail = re.compile(r"failed=0")
     # May be useful for enhancing output
     #test_facts = re.compile(r"^GATHERING FACTS( \**)?$")
@@ -188,7 +148,7 @@ def run_ansible_playbook(args, playbook, cli_vars):
                     recent_lines = []
                     recent_lines.append(l)
                     if not args.verbose:
-                        logging.info("[{0}/{1}] {2}".format(tasks_run, tasks_total, current_task))
+                        logging.info("[{0}] {1}".format(tasks_run, current_task))
                     continue
                 # This marks the end, all remaining lines must contain "failures=0" to be successful
                 m = test_recap.match(l)
@@ -242,12 +202,12 @@ def buildhost(args):
     return run_ansible_playbook(args, "bootstrap-build-host", "machine_target='%s'" % args.host)
 
 def foundation(args):
-    dev = get_device_node(args.disk_type)
+    dev = get_device_node("notflat")
     logging.info('Creating foundation AMI for env {0} on device {1}'.format(args.environment, dev))
     return run_ansible_playbook(args, "create-foundation-ubuntu", "buri_role='foundation' buri_disk_device='{0}' buri_disk_type='{1}'".format(dev, args.disk_type))
 
 def resnap(args):
-    dev = get_device_node(args.disk_type)
+    dev = get_device_node("notflat")
     logging.info('Resnapshotting AMI for env {0} on device {1}'.format(args.environment, dev))
     return run_ansible_playbook(args, "resnap-from-buri", "buri_ami_ancestor_id='{0}' buri_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
 

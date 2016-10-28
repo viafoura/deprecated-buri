@@ -11,7 +11,7 @@
 - name: Adding deployment keys to host
   hosts: anshost
   user: "{{ buri_remote_user|default('dev') }}"
-  sudo: True
+  become: true
   vars: 
     image_build: false
   tasks:
@@ -21,7 +21,7 @@
 - name: Provisioning role against host
   hosts: anshost
   user: "{{ buri_remote_user|default('dev') }}"
-  sudo: True
+  become: true
   vars: 
     image_build: false
   roles:
@@ -30,7 +30,7 @@
 - name: Removing deployment keys from host
   hosts: anshost
   user: "{{ buri_remote_user|default('dev') }}"
-  sudo: True
+  become: true
   vars: 
     image_build: false
   tasks:

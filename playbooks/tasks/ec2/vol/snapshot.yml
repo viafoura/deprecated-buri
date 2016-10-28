@@ -6,7 +6,7 @@
 
 - name: Saving Snapshot ID as a fact for later use
   set_fact:
-    ebs_snapshot_id: '{{ item.split("\t")[4] }}'
+    ebs_snapshot_id: "{{ item.split('\t')[4] }}"
   with_items: snap.stdout
 
 - name: Waiting for completion of snapshot

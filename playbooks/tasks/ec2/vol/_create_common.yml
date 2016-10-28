@@ -1,15 +1,15 @@
 ---
 - name: Saving volume ID as a fact for later use (standard)
   set_fact:
-    ebs_volume_id: '{{ item.split("\t")[6] }}'
+    ebs_volume_id: "{{ item.split('\t')[6] }}"
   with_items: amivol.stdout
   when: buri_volume_type|default('standard') == 'standard'
 
 - name: Saving volume ID as a fact for later use (gp2)
   set_fact:
-    ebs_volume_id: '{{ item.split("\t")[7] }}'
+    ebs_volume_id: "{{ item.split('\t')[7] }}"
   with_items: amivol.stdout
-  when: buri_volume_type|default('standard') == 'gp2'
+  when: buri_volume_type|default('gp2') == 'gp2'
 
 - name: Waiting for volume availability
   command: 'aws ec2 describe-volumes --region {{ ansible_ec2_placement_region }} --volume-ids {{ ebs_volume_id }} --output text'

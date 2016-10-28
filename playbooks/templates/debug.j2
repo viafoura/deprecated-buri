@@ -16,5 +16,5 @@ GROUPS Variables ("groups"):
 
 HOST Variables ("hostvars"):
 --------------------------------
-{{ hostvars | to_nice_json }} 
+{{ hostvars[inventory_hostname] | to_nice_json }} 
 
