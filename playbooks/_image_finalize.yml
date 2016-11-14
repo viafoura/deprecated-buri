@@ -11,17 +11,17 @@
     - include: tasks/buri/ami_set_build_info_post_build.yml
     - include: tasks/chroot/unmount.yml
     - include: tasks/ec2/bundle/create_and_upload.yml
-      when: buri_ami_build_pvm_instance|bool or buri_ami_build_hvm_instance|bool
+      when: (buri_ami_build_pvm_instance|bool and ami_aki_id|match("aki-.*")) or buri_ami_build_hvm_instance|bool
     - include: tasks/ec2/ami/register/s3_pvm.yml
-      when: buri_ami_build_pvm_instance|bool
+      when: buri_ami_build_pvm_instance|bool and ami_aki_id|match("aki-.*")
     - include: tasks/ec2/ami/register/s3_hvm.yml
       when: buri_ami_build_hvm_instance|bool
     - include: tasks/ec2/vol/detach.yml
     - include: tasks/ec2/vol/snapshot.yml
-      when: buri_ami_build_pvm_ebs|bool or buri_ami_build_hvm_ebs|bool
+      when: (buri_ami_build_pvm_ebs|bool and ami_aki_id|match("aki-.*")) or buri_ami_build_hvm_ebs|bool
     - include: tasks/ec2/vol/delete.yml
     - include: tasks/ec2/ami/register/ebs_pvm.yml
-      when: buri_ami_build_pvm_ebs|bool
+      when: buri_ami_build_pvm_ebs|bool and ami_aki_id|match("aki-.*")
     - include: tasks/ec2/ami/register/ebs_hvm.yml
       when: buri_ami_build_hvm_ebs|bool
     - include: tasks/ec2/vol/tagsnapshot.yml
