@@ -1,3 +1,8 @@
 ---
-- name: Tagging snapshot
-  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"HVM_AMI_ID\",\"Value\":\"{{ ami_id_hvm }}\"}, {\"Key\":\"PVM_AMI_ID\",\"Value\":\"{{ ami_id_pvm }}\"}]"'
+- name: Tagging snapshot with PVM_AMI_ID
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"PVM_AMI_ID\",\"Value\":\"{{ ami_id_pvm }}\"}]"'
+  when: ami_id_pvm is defined
+
+- name: Tagging snapshot with HVM_AMI_ID
+  command: 'aws ec2 create-tags --region {{ ansible_ec2_placement_region }} --resources "{{ ebs_snapshot_id }}" --tags "[{\"Key\":\"HVM_AMI_ID\",\"Value\":\"{{ ami_id_hvm }}\"}]"'
+  when: ami_id_hvm is defined
