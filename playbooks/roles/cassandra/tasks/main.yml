@@ -147,7 +147,7 @@
   when: image_build
 
 - name: Copy cassandra_status.py to its directory
-  copy: src=cassandra_status.py dest={{ cassandra_home }}/cassandra_status.py owner=jetty group=jetty mode=0755 force=yes
+  template: src=cassandra_status.py dest={{ cassandra_home }}/cassandra_status.py owner=jetty group=jetty mode=0755 force=yes
 
 - name: Create cronjob for Cassandra status script
   cron: name="Cassandra cluster status metric to AWS"
