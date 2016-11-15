@@ -5,6 +5,10 @@
   pip: name=boto state=latest
   when: cloud_target == "amazon"
 
+- name: Install boto3 Python library
+  command: pip install boto3
+  when: cloud_target == "amazon"
+
 - name: Install AWS CLI
   pip: name=awscli state=latest
   when: cloud_target == "amazon"

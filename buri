@@ -242,12 +242,12 @@ def buildhost(args):
     return run_ansible_playbook(args, "bootstrap-build-host", "machine_target='%s'" % args.host)
 
 def foundation(args):
-    dev = get_device_node(args.disk_type)
+    dev = get_device_node('notflat')
     logging.info('Creating foundation AMI for env {0} on device {1}'.format(args.environment, dev))
     return run_ansible_playbook(args, "create-foundation-ubuntu", "buri_role='foundation' buri_disk_device='{0}' buri_disk_type='{1}'".format(dev, args.disk_type))
 
 def resnap(args):
-    dev = get_device_node(args.disk_type)
+    dev = get_device_node('notflat')
     logging.info('Resnapshotting AMI for env {0} on device {1}'.format(args.environment, dev))
     return run_ansible_playbook(args, "resnap-from-buri", "buri_ami_ancestor_id='{0}' buri_role='{1}' buri_disk_device='{2}' buri_disk_type='{3}'".format(args.parent, args.role, dev, args.disk_type))
 

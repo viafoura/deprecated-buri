@@ -24,5 +24,5 @@ for i in data:
         val += 1
 
 conn = boto.ec2.cloudwatch.connect_to_region('us-east-1')
-conn.put_metric_data(namespace='Cassandra', name='Down', value=val, dimensions=[{'Cluster': {{ priam_cluster_name }} }])
+conn.put_metric_data(namespace='Cassandra', name='Down', value=val, dimensions=[{'Cluster': '{{ priam_cluster_name }}' }])
 

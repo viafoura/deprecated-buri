@@ -13,7 +13,7 @@
     - libapt-pkg4.12
     - make
     - qemu-utils
-    - git-core
+    - git
     - openssl
     - pigz
 

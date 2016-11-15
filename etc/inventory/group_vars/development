@@ -11,7 +11,7 @@ ami_bundle_bucket_path: 'yourbucket/basepath'
 
 # These are more likely to be set in a site config or on command line
 
-buri_ami_build_pvm_ebs: True
+buri_ami_build_pvm_ebs: False
 buri_ami_build_hvm_ebs: True
 buri_ami_build_pvm_instance: False
 buri_ami_build_hvm_instance: False
