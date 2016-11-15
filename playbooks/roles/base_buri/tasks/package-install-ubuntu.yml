@@ -8,7 +8,7 @@
     #- ca-certificates-java
     - curl
     - dnsutils
-    - git-core
+    - git
     - htop
     - less
     - linux-tools-common
