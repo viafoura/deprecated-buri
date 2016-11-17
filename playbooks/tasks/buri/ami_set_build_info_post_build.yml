@@ -8,7 +8,7 @@
 
 - name: Setting AMI full build name (less machine/disk suffixes)
   set_fact:
-    buri_ami_full_name: "{{ buri_ami_appversion }}-x86_64{% if buri_ami_suffix is defined %}-{{ buri_ami_suffix }}{% endif %}"
+    buri_ami_full_name: "{{ buri_ami_appversion }}-x86_64{% if buri_ami_suffix is defined %}-{{ buri_ami_suffix }}{% endif %}-{{ buri_ami_release_timestamp }}"
 
 - name: Setting AMI description
   set_fact:
