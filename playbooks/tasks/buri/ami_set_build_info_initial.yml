@@ -10,16 +10,26 @@
   set_fact:
     buri_ami_creation_time: "{{ ansible_date_time.date }} {{ ansible_date_time.time }} {{ ansible_date_time.tz }}"
 
-# Following two rules will create a composite name including cluster name if specified
-- name: Setting base build name (No Suffix)
+# Following three rules will create a composite name including cluster name and environment if specified
+- name: Setting base build name (No Enviroment, No Suffix)
   set_fact:
     buri_ami_base_name: '{{ buri_role }}'
-  when: buri_cluster_name is not defined or buri_cluster_name == ""
+  when: buri_environment is not defined and (buri_cluster_name is not defined or buri_cluster_name == "")
 
-- name: Setting base build name (With Suffix)
+- name: Setting base build name (No Enviroment, With Suffix)
   set_fact:
-    buri_ami_base_name: '{{ buri_role }}_{{ buri_cluster_name }}'
-  when: buri_cluster_name is defined and buri_cluster_name != ""
+    buri_ami_base_name: '{{ buri_cluster_name }}-{{ buri_role }}'
+  when: buri_environment is not defined and (buri_cluster_name is defined and buri_cluster_name != "")
+  
+- name: Setting base build name (With Environment, No Suffix)
+  set_fact:
+    buri_ami_base_name: '{{ buri_role }}'
+  when: buri_environment is defined and (buri_cluster_name is not defined or buri_cluster_name == "")
+
+- name: Setting base build name (With Environment, With Suffix)
+  set_fact:
+    buri_ami_base_name: '{{ buri_cluster_name }}-{{ buri_role }}'
+  when: buri_environment is defined and (buri_cluster_name is defined and buri_cluster_name != "")
 
 # TODO: a better location than /mnt, or a user controllable location
 - name: Calculating mount point
