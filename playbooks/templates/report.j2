@@ -10,7 +10,9 @@ AMI disk format:   {{ buri_disk_type }}
 AMI Parent Image:  {{ buri_ami_ancestor_id }}
 EBS Parent:        {{ ebs_parent_id }}
 {% endif %}
+{% if ami_aki_id|match("aki-.*") %}
 AMI AKI ID:        {{ ami_aki_id }}
+{% endif %}
 {% if ebs_volume_id is defined and ebs_volume_id != "" %}
 EBS volume ID:     {{ ebs_volume_id }} (deleted)
 {% endif %}

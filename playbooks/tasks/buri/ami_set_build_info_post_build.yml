@@ -4,7 +4,7 @@
 # New way, looks to the hostvars for what the chroot host set as facts for the build
 - name: Setting AMI appversion information
   set_fact:
-    buri_ami_appversion: "{{ buri_ami_base_name }}-{{ hostvars[buri_ami_mount_point]['buri_build_version']|default('version-unavailable') }}"
+    buri_ami_appversion: "{{ buri_ami_base_name }}-{{ hostvars[buri_ami_mount_point]['buri_build_version']|default(buri_ami_release_timestamp) }}"
 
 - name: Setting AMI full build name (less machine/disk suffixes)
   set_fact:
@@ -12,5 +12,5 @@
 
 - name: Setting AMI description
   set_fact:
-    buri_ami_description: "name={{ buri_ami_base_name }}, arch=x86_64, ancestor_name={{ buri_ami_ancestor_name|default('') }}, ancestor_id={{ buri_ami_ancestor_id|default('') }}, ancestor_version={% if buri_ami_ancestor_version is defined and not (buri_role == 'foundation' or buri_role == 'base') %}{{ buri_ami_ancestor_version }}{% else %}{{ buri_ami_appversion }}{% endif %}"
+    buri_ami_description: "name={{ buri_ami_base_name }}, ancestor_name={{ buri_ami_ancestor_name|default('') }}, ancestor_id={{ buri_ami_ancestor_id|default('') }}, ancestor_version={% if buri_ami_ancestor_version is defined and not (buri_role == 'foundation' or buri_role == 'base') %}{{ buri_ami_ancestor_version }}{% else %}{{ buri_ami_appversion }}{% endif %}"
 
