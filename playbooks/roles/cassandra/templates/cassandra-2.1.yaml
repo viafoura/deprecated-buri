@@ -188,7 +188,7 @@ row_cache_save_period: 0
 #
 # Default value is empty to make it "auto" (min(2.5% of Heap (in MB), 50MB)). Set to 0 to disable counter cache.
 # NOTE: if you perform counter deletes and rely on low gcgs, you should disable the counter cache.
-counter_cache_size_in_mb:
+#counter_cache_size_in_mb:
 
 # Duration in seconds after which Cassandra should
 # save the counter cache (keys only). Caches are saved to saved_caches_directory as
@@ -301,7 +301,7 @@ concurrent_counter_writes: 32
 #   heap_buffers:    on heap nio buffers
 #   offheap_buffers: off heap (direct) nio buffers
 #   offheap_objects: native memory, eliminating nio buffer heap overhead
-memtable_allocation_type: heap_buffers
+memtable_allocation_type: offheap_objects
 
 # Total space to use for commitlogs.  Since commitlog segments are
 # mmapped, and hence use up address space, the default size is 32
@@ -755,3 +755,4 @@ internode_compression: all
 # latency if you block for cross-datacenter responses.
 inter_dc_tcp_nodelay: false
 
+commitlog_segment_recycling: false
