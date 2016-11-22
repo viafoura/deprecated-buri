@@ -17,4 +17,4 @@ riemann:
         - "^org.apache.cassandra.metrics.ClientRequest.+"
         - "^org.apache.cassandra.metrics.Storage.+"
         - "^org.apache.cassandra.metrics.ThreadPools.+"
-        - '^org.apache.cassandra.metrics.ColumnFamily.\w+
+        - '^org.apache.cassandra.metrics.ColumnFamily.\w+'
