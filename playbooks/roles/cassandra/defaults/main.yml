@@ -12,6 +12,7 @@ cassandra_checksums:
     "2.1.14": "6f79830829c058899890e18bd881c5fe0ff949774b86aca5930cb6f01e7a1999"
     "2.1.16": "a95ba4e2c9345b31310d14507e8889797cc626bc793fd341fff8ff8cba3131cd"
     "2.0.14": "5396cda7a66929e9c9ea0a2eeb9f2b54327df1a42f407bc82fb1cc1648d87a1b"
+    "2.0.17": "ba56e3176c385a4be16f48bf8bbbf6ffee10774dcf909c19fd77783ac402071c"
 
 cassandra_build_source: False
 # this one's really slow? also a mirror
