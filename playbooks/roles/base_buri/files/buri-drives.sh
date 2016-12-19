@@ -225,8 +225,9 @@ if [ $ephemeral_count -gt 0 ] ; then
 fi
 
 raid_count=0
-mylog "Truncating /etc/mdadm/mdadm.conf"
-truncate --size 0 /etc/mdadm/mdadm.conf
+mylog "Initializing /etc/mdadm/mdadm.conf"
+echo "CREATE owner=root group=disk mode=0660 auto=yes" > /etc/mdadm/mdadm.conf
+echo "MAILADDR root" >> /etc/mdadm/mdadm.conf
 
 if [ $ephemeral_count -gt 0 ] ; then
     relevant_ephemeral=''
