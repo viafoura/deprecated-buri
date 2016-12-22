@@ -1,6 +1,20 @@
 ---
 
 instance_types: 
+  t2-nano:
+    memory_size: 64
+  t2-micro:
+    memory_size: 250
+  t2-small:
+    memory_size: 1250
+  t2-medium:
+    memory_size: 2500
+  t2-large:
+    memory_size: 5000
+  t2-xlarge:
+    memory_size: 10000
+  t2-2xlarge:
+    memory_size: 20000
   r3-large: 
     memory_size: 10410
   r3-xlarge: 
@@ -11,4 +25,16 @@ instance_types:
     memory_size: 83285
   r3-8xlarge:
     memory_size: 166570
+  r4-large:
+    memory_size: 10410
+  r4-xlarge:
+    memory_size: 20821
+  r4-2xlarge:
+    memory_size: 41642
+  r4-4xlarge:
+    memory_size: 83285
+  r4-8xlarge:
+    memory_size: 166570
+  r4-16xlarge:
+    memory_size: 333140
 
