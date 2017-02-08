@@ -50,6 +50,10 @@ for e in $ebses; do
     fi
 done
 
+# sort devices by device name
+ebs_devices=$(echo $ebs_devices | tr ' ' '\n' | sort | tr '\n' ' ')
+ephemeral_devices=$(echo $ephemeral_devices | tr ' ' '\n' | sort | tr '\n' ' ')
+
 read -r -a ephemeral_array <<< $ephemeral_devices
 read -r -a ephemeral_array_unused <<< $ephemeral_devices
 read -r -a ebs_array <<< $ebs_devices
