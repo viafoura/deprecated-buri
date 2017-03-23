@@ -2,7 +2,19 @@
 
 # Ephemeral RAID
 - name: Add first-boot disk setup script
-  copy: src=ephemeral-raid.conf dest=/etc/init owner=root mode=0644
+  copy: src=etc/init/ephemeral-raid.conf dest=/etc/init owner=root mode=0644
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version|int < 16
+
+- name: Add first boot systemd disk setup
+  copy: src=etc/systemd/system/ephemeral-raid.service dest=/etc/systemd/system/ephemeral-raid.service
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version|int >= 16
+
+- name: enable node_exporter systemd service
+  file:
+    src: /etc/systemd/system/ephemeral-raid.service
+    path: /etc/systemd/system/multi-user.target.wants/ephemeral-raid.service
+    state: link
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version|int >= 16
 
 - name: Add disk, raid, and directory main script
   copy: src=buri-drives.sh dest=/usr/local/bin/buri-drives.sh owner=root mode=0774
@@ -10,11 +22,12 @@
 - name: Copy default buri device maps
   copy: src={{ item }} dest=/etc/ owner=root mode=0644
   with_fileglob:
-    - buri-device-map-*
+    - etc/buri-device-map-*
 
 # Keep support for legacy ephemeral-mkdirs.conf script
 - name: Add ephemeral mkdir script
-  copy: src=ephemeral-mkdirs.conf dest=/etc/init owner=root mode=0644
+  copy: src=etc/init/ephemeral-mkdirs.conf dest=/etc/init owner=root mode=0644
+  when: ansible_distribution_major_version <= "14"
 
 # Necessary else cloud-init will interfere with us
 - name: Telling cloud-init not to perform disk setup

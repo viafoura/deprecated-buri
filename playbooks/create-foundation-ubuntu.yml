@@ -29,5 +29,7 @@
     - name: Register chroot target in ansible inventory
       add_host: hostname={{ buri_ami_mount_point }} groups=foundation,chroots
 
+- include: _image_prep.yml
+  when: ansible_distribution_major_version > "14"
 - include: _image_apply_role.yml
 - include: _image_finalize.yml

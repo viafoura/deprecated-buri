@@ -18,7 +18,6 @@ sudo -E apt-get install --no-install-recommends -y \
  coreutils                \
  ec2-ami-tools            \
  python                   \
- python-support           \
  python-dev               \
  python-pip               \
  python-jinja2            \
@@ -28,7 +27,13 @@ sudo -E apt-get install --no-install-recommends -y \
  git-core                 \
  build-essential          \
  pigz                     \
- openssl                  
+ libssl-dev               \
+ libffi-dev               \
+openssl
+
+if [[ $(lsb_release -rs) -lt 16 ]]; then 
+  sudo -E apt-get install --no-install-recommends -y python-support
+fi
 
 sudo pip install boto
 sudo pip install awscli

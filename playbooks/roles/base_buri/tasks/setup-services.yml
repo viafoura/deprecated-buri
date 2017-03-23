@@ -18,3 +18,4 @@
 - name: Add motd additions
   template: src=motd-20-sysinfo dest=/etc/update-motd.d/20-sysinfo mode=0755 owner=root
   when: cloud_target == "amazon"
+

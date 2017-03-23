@@ -1,0 +1,9 @@
+[Unit]
+Description=Automagically formats ebs & ephemeral disks and creates defined symlinks
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/buri-drives.sh
+
+[Install]
+WantedBy=multi-user.target
