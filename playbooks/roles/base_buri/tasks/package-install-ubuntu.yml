@@ -2,6 +2,18 @@
 - name: Update APT repo information
   apt: update-cache=yes
 
+- name: remove /sbin/start
+  file: path=/sbin/start state=absent
+  when: ansible_distribution_major_version <= "14"
+
+- name: Copy in fake /sbin/start to fool upstart
+  copy: src=sbin/start dest=/sbin/start owner=root mode=744
+  when: ansible_distribution_major_version <= "14"
+
+- name: Install enhanced networking kernel
+  apt: pkg=linux-aws state=latest
+  when: ansible_distribution_major_version >= "16"
+
 - name: Install packages
   apt: pkg={{ item }} state=latest
   with_items:
@@ -10,6 +22,7 @@
     - dnsutils
     - git
     - htop
+    - jq
     - less
     - linux-tools-common
     - linux-tools-generic
@@ -24,9 +37,9 @@
     - perl
     - perl-modules
     - python
-    - python-support
     - python-pip
     - rsync
+    - runit
     - ssh
     - sudo
     - sysstat
@@ -37,3 +50,16 @@
     - vim
     - xfsprogs
     - zip
+
+- name: install python-support
+  apt: pkg=python-support state=latest
+  when: ansible_distribution_major_version <= "14"
+
+- name: remove /sbin/start again
+  file: path=/sbin/start state=absent
+  when: ansible_distribution_major_version <= "14"
+
+- name: relink /sbin/start
+  file: src=/sbin/initctl dest=/sbin/start owner=root state=link
+  when: ansible_distribution_major_version <= "14"
+

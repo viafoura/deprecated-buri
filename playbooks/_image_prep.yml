@@ -1,0 +1,12 @@
+- hosts: chroots
+  gather_facts: False
+  connection: chroot
+  user: root
+  sudo: True
+  tasks:
+  - name: update apt
+    raw: apt -y update 
+  - name: Install python for Ansible
+    raw: apt install -y python-minimal
+    changed_when: False
+  - setup: # aka gather_facts

@@ -11,7 +11,7 @@
     - news
     - proxy
     - uucp
-  
+
 - name: Set shell to nologin for users
   user: name={{ item }} shell=/usr/sbin/nologin
   with_items:
@@ -25,7 +25,7 @@
     - nobody
     - libuuid
   when: ansible_distribution == 'Ubuntu'
-  
+
 - name: Remove unnecessary groups
   group: name={{ item }} state=absent
   with_items:
@@ -37,10 +37,28 @@
     - src
     - gnats
     - games
-  
+
 - name: Secure root's home directory
   file: dest=/root state=directory mode=700
-  
+
 # Shared memory
 - name: Secure tmpfs read only
   mount: name=/dev/shm src=tmpfs fstype=tmpfs opts=rw,nosuid,nodev,noexec state=present
+
+- name: Disable password ssh logins
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#?PasswordAuthentication .*" line="PasswordAuthentication no"
+
+# - name: Install  IAM user importer
+#   copy: dest=/usr/local/sbin/import_users.sh  src=usr/local/sbin/import_users.sh owner=root group=root mode=0755
+#
+# - name: Install authorized_keys_command
+#   copy: dest=/usr/local/sbin/authorized_keys_command.sh  src=usr/local/sbin/authorized_keys_command.sh owner=root group=root mode=0755
+#
+# - name: Add cron job for IAM user importer
+#   cron: name="IAM User importer" minute="10" job="/usr/local/sbin/import_users.sh"
+#
+# - name: Add IAM ssh key importer to sshd_config
+#   lineinfile: dest=/etc/ssh/sshd_config line="AuthorizedKeysCommand /usr/local/sbin/authorized_keys_command.sh"
+#
+# - name: Add IAM ssh key import user
+#   lineinfile: dest=/etc/ssh/sshd_config line="AuthorizedKeysCommandUser nobody"

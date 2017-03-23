@@ -11,4 +11,4 @@
 - include: monitoring-cloudwatch.yml
   when: cloud_target == 'amazon' and monitoring_cloudwatch
 - include: update-ixgbevf.yml
-  when: cloud_target == 'amazon'
+  when: cloud_target == 'amazon' and ansible_distribution_major_version <= "14"
