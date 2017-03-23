@@ -1,4 +1,4 @@
-Unit]
+[Unit]
 Description=Automagically formats ebs & ephemeral disks and creates defined symlinks
 After=network.target
 
