@@ -48,17 +48,3 @@
 - name: Disable password ssh logins
   lineinfile: dest=/etc/ssh/sshd_config regexp="^#?PasswordAuthentication .*" line="PasswordAuthentication no"
 
-# - name: Install  IAM user importer
-#   copy: dest=/usr/local/sbin/import_users.sh  src=usr/local/sbin/import_users.sh owner=root group=root mode=0755
-#
-# - name: Install authorized_keys_command
-#   copy: dest=/usr/local/sbin/authorized_keys_command.sh  src=usr/local/sbin/authorized_keys_command.sh owner=root group=root mode=0755
-#
-# - name: Add cron job for IAM user importer
-#   cron: name="IAM User importer" minute="10" job="/usr/local/sbin/import_users.sh"
-#
-# - name: Add IAM ssh key importer to sshd_config
-#   lineinfile: dest=/etc/ssh/sshd_config line="AuthorizedKeysCommand /usr/local/sbin/authorized_keys_command.sh"
-#
-# - name: Add IAM ssh key import user
-#   lineinfile: dest=/etc/ssh/sshd_config line="AuthorizedKeysCommandUser nobody"
