@@ -6,8 +6,7 @@
 
 - name: Saving Snapshot ID as a fact for later use
   set_fact:
-    ebs_snapshot_id: '{{ item.split("\t")[4] }}'
-  with_items: snap.stdout
+    ebs_snapshot_id: "{{ snap.stdout.split('\t')[4] }}"
 
 - name: Waiting for completion of snapshot
   command: 'aws ec2 describe-snapshots --region {{ ansible_ec2_placement_region }} --snapshot-ids {{ ebs_snapshot_id }} --output text'

@@ -1,5 +1,5 @@
 ---
 - name: Registering cross-account permissions
   command: aws ec2 modify-image-attribute --region us-east-1 --image-id '{{ perm_ami_id }}' --launch-permission "{\"Add\":[{\"UserId\":\"{{ item.value.account }}\"}]}"
-  with_dict: ami_cross_account | default({})
+  with_dict: "{{ ami_cross_account | default({}) }}"
   when: ami_cross_account is defined

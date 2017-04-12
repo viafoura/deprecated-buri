@@ -3,12 +3,11 @@
   set_fact:
     distro_aki_suffix: "{% if ansible_distribution_major_version >= '16' %}-ssd{% else %}{% endif %}"
 
-- name: Find correct AKI ID for PV registration 
+- name: Find correct AKI ID for PV registration
   shell: 'wget -qO- {{ distro_image_query }} | egrep "ebs{{ distro_aki_suffix }}.amd64.{{ ansible_ec2_placement_region }}.*paravirtual"'
   register: aki
 
 - name: Saving AKI ID as a fact for later use
   set_fact:
-    ami_aki_id: '{{ item.split("\t")[8] }}'
-  with_items: aki.stdout
+    ami_aki_id: "{{ aki.stdout.split('\t')[8] }}"
 
