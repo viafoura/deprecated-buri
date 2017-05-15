@@ -7,20 +7,20 @@
   #ignore_errors: yes
 
 - name: Unmount /proc filesystem from chroot
-  command: 'chroot {{ item }} umount /proc'
+  command: 'chroot {{ old_mount.stdout }} umount /proc'
   ignore_errors: yes
-  with_items: old_mount.stdout
+  # with_items: old_mount.stdout
   when: old_mount.stdout != ""
 
 - name: Unmount /dev filesystem from chroot
-  command: 'umount {{ item }}/dev'
+  command: 'umount {{ old_mount.stdout }}/dev'
   ignore_errors: yes
-  with_items: old_mount.stdout
+  # with_items: old_mount.stdout
   when: old_mount.stdout != ""
 
 - name: Unmount EBS volume for chroot
-  command: 'umount {{ item }}'
-  with_items: old_mount.stdout
+  command: 'umount {{ old_mount.stdout }}'
+  # with_items: old_mount.stdout
   when: old_mount.stdout != ""
 
 - name: Discover Volume ID to detatch
@@ -29,8 +29,8 @@
 
 - name: Saving Volume ID as a fact for later use
   set_fact:
-    ebs_volume_id: '{{ item.split("\t")[4] }}'
-  with_items: ebsvol.stdout
+    ebs_volume_id: "{{ ebsvol.stdout.split('\t')[4] }}"
+    # with_items: ebsvol.stdout
 
 - name: Detatch failed working volume
   command: 'aws ec2 detach-volume --region {{ ansible_ec2_placement_region }} --volume-id {{ ebs_volume_id }}'

@@ -6,8 +6,7 @@
 
 - name: Saving AKI ID as a fact for later use
   set_fact:
-    ami_aki_id: '{{ item.split("\t")[8] }}'
-  with_items: aki.stdout
+    ami_aki_id: "{{ aki.stdout.split('\t')[8] }}"
 
 # Since PVM is used for legacy only, allow resnapping off HVM AMIs
 # If no AKI is available, simply don't build any PVM AMI
@@ -21,8 +20,7 @@
 
 - name: Saving ebs_parent_id as a fact for later use
   set_fact:
-    ebs_parent_id: '{{ item.split("\t")[3] }}'
-  with_items: ebsparent.stdout
+    ebs_parent_id: "{{ ebsparent.stdout.split('\t')[3] }}"
 
 - name: Find ancestor image name
   shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^IMAGES'
@@ -30,8 +28,7 @@
 
 - name: Saving buri_ami_ancestor_name value
   set_fact:
-    buri_ami_ancestor_name: '{{ item.split("\t")[8]|default("") }}'
-  with_items: ancestor_name_out.stdout
+    buri_ami_ancestor_name: "{{ ancestor_name_out.stdout.split('\t')[8]|default({}) }}"
 
 - name: Find ancestor image appversion tag
   shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^TAGS | grep appversion'
@@ -39,8 +36,7 @@
 
 - name: Saving buri_ami_ancestor_appversion value
   set_fact:
-    buri_ami_ancestor_appversion: '{{ item.split("\t")[2]|default("") }}'
-  with_items: ancestor_appversion_out.stdout
+    buri_ami_ancestor_appversion: "{{ ancestor_appversion_out.stdout.split('\t')[2]|default({}) }}"
 
 - name: Find ancestor image base_ami_version tag
   shell: 'aws ec2 describe-images --region {{ ansible_ec2_placement_region }} --image-ids {{ buri_ami_ancestor_id }} --output text | grep ^TAGS | grep base_ami_version'
@@ -48,7 +44,6 @@
 
 - name: Saving buri_ami_ancestor_version value
   set_fact:
-    buri_ami_ancestor_version: '{{ item.split("\t")[2]|default("") }}'
-  with_items: ancestor_base_ami_version_out.stdout
+    buri_ami_ancestor_version: "{{ ancestor_base_ami_version_out.stdout.split('\t')[2]|default({}) }}"
 
 
