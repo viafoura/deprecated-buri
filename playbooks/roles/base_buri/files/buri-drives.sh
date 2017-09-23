@@ -28,12 +28,19 @@ block_devices=$(curl --silent $metadata_url_base/meta-data/block-device-mapping/
 ephemerals=$(echo "$block_devices" | grep ephemeral)
 ebses=$(echo "$block_devices" | grep ebs)
 
+# The NVMe driver creates /dev/nvme{X}n1 but instance-data still reports the
+# block-device-mapping as sd or xvd, so we have to special case NVMe disks
+# in storage-optimized instances:(
 for e in $ephemerals; do
     mylog "Probing $e..."
     device_name=$(curl --silent $metadata_url_base/meta-data/block-device-mapping/$e)
     device_name=$(echo $device_name | sed "s/sd/$drive_scheme/")
     device_path="/dev/$device_name"
     if [ -b $device_path ]; then
+        ephemeral_devices="$ephemeral_devices $device_path"
+        ((ephemeral_count++))
+    elif [ -b /dev/nvme${e: -1}n1 ]; then
+        device_path="/dev/nvme${e: -1}n1"
         ephemeral_devices="$ephemeral_devices $device_path"
         ((ephemeral_count++))
     fi
